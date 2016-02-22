@@ -11,6 +11,13 @@ class socketmgr(object):
                socketmgr.client[client_id] = cls
 
           socketmgr.show_all()
+
+
+      @staticmethod
+      def remove(client_id):
+          if socketmgr.client.has_key(client_id):
+              del socketmgr.client[client_id]
+          
       
       @staticmethod
       def get(client_id):
@@ -31,6 +38,9 @@ class socketmgr(object):
 def main():
     socketmgr.add(1,"ss")
     socketmgr.add(2,"dd")
+    socketmgr.add(3,"cc")
+
+    socketmgr.remove(3)
 
     if socketmgr.get(1) == "ss" and socketmgr.get(2) == "dd":
         print "main test ok"

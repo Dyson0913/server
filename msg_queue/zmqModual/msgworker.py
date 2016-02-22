@@ -14,7 +14,8 @@ class zmqWorker(object):
       def receive(self):
 
           msg = self._socket.recv_json()
-#          print "reciev %s" % msg
+          #msg = self._socket.recv()
+          print "reciev %s" % msg
 
           #receive handle
           if msg['cmd'] == "login":
@@ -24,6 +25,8 @@ class zmqWorker(object):
               rep['client_id'] = msg['client_id']
               self._socket.send_json(rep)
           
+          if msg['cmd'] == "close":
+              #remnove sockmgr
           print rep
           
 
