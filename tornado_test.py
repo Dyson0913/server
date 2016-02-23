@@ -78,9 +78,7 @@ class wshandler(tornado.websocket.WebSocketHandler):
         #self.write_message(msg)
     def on_close(self):
         print "close"
-        #TODO leaveing
         msg = dict()
-        msg['id'] = wshandler.cnt
         msg['cmd'] = "close"
         msg['client'] = self
         wshandler.sender.send(msg)
@@ -88,8 +86,11 @@ class wshandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         print message
 
-        #TODO client res
-#        wshandler.send.send
+        msg= dict()
+        msg['id'] = wshandler.cnt
+        msg['cmd'] = "request"
+        msg['msg'] = message
+        wshandler.sender.send(msg)
 
 
 

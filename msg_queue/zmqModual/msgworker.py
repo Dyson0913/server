@@ -1,5 +1,4 @@
 import zmq
-#from zmq.eventloop.zmqstream import ZMQStream
 
 class zmqWorker(object):
 
@@ -14,7 +13,6 @@ class zmqWorker(object):
       def receive(self):
 
           msg = self._socket.recv_json()
-          #msg = self._socket.recv()
           print "reciev %s" % msg
 
           #receive handle

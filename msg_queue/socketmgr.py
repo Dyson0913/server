@@ -3,21 +3,26 @@
 class socketmgr(object):
 
       client = {}
+      val_to_key ={}
 
       @staticmethod
-      def add(client_id,cls):
+      def add(client_id,client):
 
           if socketmgr.client.has_key(client_id) == False:
-               socketmgr.client[client_id] = cls
+               socketmgr.client[client_id] = client
+               socketmgr.val_to_key[client] = client_id
 
           socketmgr.show_all()
 
 
       @staticmethod
-      def remove(client_id):
-          if socketmgr.client.has_key(client_id):
+      def remove(client):
+          if socketmgr.val_to_key.has_key(client):
+              client_id = socketmgr.val_to_key[client]
               del socketmgr.client[client_id]
+              del socketmgr.val_to_key[client]
           
+          socketmgr.show_all()
       
       @staticmethod
       def get(client_id):
@@ -40,7 +45,7 @@ def main():
     socketmgr.add(2,"dd")
     socketmgr.add(3,"cc")
 
-    socketmgr.remove(3)
+    socketmgr.remove("cc")
 
     if socketmgr.get(1) == "ss" and socketmgr.get(2) == "dd":
         print "main test ok"

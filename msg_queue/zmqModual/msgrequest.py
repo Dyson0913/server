@@ -33,24 +33,28 @@ class zmq_request(object):
          self._socket.connect('tcp://localhost:'+ str(port))
 
     def send(self,data):
-          
-         socketmgr.add(data['client_id'],data['client'])
-               
-         del data['client']
-         self._socket.send_json(data)
-         #self._socket.send(data)
+         
+        if data['cmd'] == 'login':
+            socketmgr.add(data['client_id'],data['client'])
+            del data['client']
+
+        if data['cmd'] == 'close':
+            socketmgr.remove(data['client'])
+
+#        if data['cmd'] == 'request':
+        self._socket.send_json(data)
 
     def handle_reply(self,msg):
 #          print "handle_reply  %s" % msg
 
-          #rece_json with [{data:value}], so get msg[0]
-         parsed = json.loads(msg[0])
-         client_id = parsed['client_id']
+        #rece_json with [{data:value}], so get msg[0]
+        parsed = json.loads(msg[0])
+        client_id = parsed['client_id']
 
-         myclient = socketmgr.get(client_id)  #zmq_request.client[client_id]
+        myclient = socketmgr.get(client_id)
 
         #ws
-         myclient.write_message(parsed)
+        myclient.write_message(parsed)
 
 def main():    
     a = zmq_request(7788)
