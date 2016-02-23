@@ -33,13 +33,16 @@ class zmq_request(object):
          self._socket.connect('tcp://localhost:'+ str(port))
 
     def send(self,data):
-         
+        
+        #zmq can't serial object , need handle login and close in here 
         if data['cmd'] == 'login':
             socketmgr.add(data['client_id'],data['client'])
             del data['client']
 
         if data['cmd'] == 'close':
-            socketmgr.remove(data['client'])
+            socketmgr.remove(data['client'])            
+            del data['client']
+            return
 
 #        if data['cmd'] == 'request':
         self._socket.send_json(data)

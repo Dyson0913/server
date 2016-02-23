@@ -24,14 +24,15 @@ class zmqWorker(object):
               self._socket.send_json(rep)
           
           if msg['cmd'] == "close":
+              pass
               #remnove sockmgr
           print rep
           
 
 
 def main():
-    worker = zmqWorker(localhost,8899)
-    worker.receiver
+    worker = zmqWorker('localhost',8899)
+    worker.receive()
 
 if __name__ == "__main__":
 
