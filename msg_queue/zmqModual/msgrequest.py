@@ -14,6 +14,7 @@ import json
 import sys
 sys.path.append('../')
 
+#import socketmgr
 from socketmgr import *
 
 class zmq_request(object):
@@ -36,11 +37,11 @@ class zmq_request(object):
         
         #zmq can't serial object , need handle login and close in here 
         if data['cmd'] == 'login':
-            socketmgr.add(data['client_id'],data['client'])
+            add(data['client_id'],data['client'])
             del data['client']
 
         if data['cmd'] == 'close':
-            socketmgr.remove(data['client'])            
+            remove(data['client'])            
             del data['client']
             return
 
@@ -54,7 +55,7 @@ class zmq_request(object):
         parsed = json.loads(msg[0])
         client_id = parsed['client_id']
 
-        myclient = socketmgr.get(client_id)
+        myclient = get(client_id)
 
         #ws
         myclient.write_message(parsed)

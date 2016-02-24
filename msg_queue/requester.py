@@ -11,6 +11,7 @@ class msg_sender(object):
 
     def __init__(self,module):
          self._module = module
+         print module
          self._pid = os.getpid()
 
     def send(self,data):
