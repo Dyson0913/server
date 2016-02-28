@@ -6,17 +6,38 @@ from zmq.eventloop.zmqstream import ZMQStream
 
 class zmqWorker(object):
 
-      def __init__(self,domain,port):
+      def __init__(self,domain,port,back_port):
 
           self._context = zmq.Context()
-          self._socket = self._context.socket(zmq.REP)
+          #self._socket = self._context.socket(zmq.REP)
 #          self.linger = 0
-          print "link to "+domain + " "+ str(port)
-          self._socket.connect("tcp://" + domain + ":" + str(port) )
+          url = "tcp://"+domain + ":" + str(port)
+          print "link front to " + url
+          
+          #self._socket.connect(url )
           self.loop = IOLoop.instance()
+
+          self.receiver = self._context.socket(zmq.PULL)
+          self.receiver.connect(url)
+
+          back_url = "tcp://"+domain + ":" + str(back_port)
+          print "link back to " + back_url
+          self._send = self._context.socket(zmq.PUSH)
+          self._send.connect(back_url)
+
 
       def start(self):
 
+          while True:
+              work = self.receiver.recv_json()
+              print work
+              if work['id'] == 2:
+                  self._send.send_json(work)
+                  #print "fake return"
+              else:
+                  #print "normal"
+                  self._send.send_json(work)
+          return
           stream = ZMQStream(self._socket)
           stream.on_recv(self.receive)
           self.loop.start()

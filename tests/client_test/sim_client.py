@@ -12,8 +12,8 @@ import time
 import tornado.options
 from tornado.options import define,options
 
-define("num", default=1, help="run num on the given", type=int)
-define("core", default=2, help="run num on the given", type=int)
+define("num", default=100, help="run num on the given", type=int)
+define("core", default=10, help="run num on the given", type=int)
 define("port", default=7000, help="run on the given port", type=int)
 
 
@@ -77,7 +77,7 @@ class ClientMgr(object):
             myclient.core_id = core_id
             myclient.totalClient = i
             myclient.creat_ws()
-            time.sleep(0.5)
+            #time.sleep(0.5)
             self.client.append(myclient)
 
     def info_colle(self,report_info):

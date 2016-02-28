@@ -20,7 +20,7 @@ class questWorker(object):
 
 def main():
     # create any kind receiver module you want
-    work = questWorker(zmqWorker('localhost',8899))
+    work = questWorker(zmqWorker('localhost',6665,5558))
     work.Receive()
    
 

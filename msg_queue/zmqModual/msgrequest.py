@@ -14,24 +14,20 @@ import json
 import sys
 sys.path.append('../')
 
-#import socketmgr
 from socketmgr import *
 
 class zmq_request(object):
 
-      #temp places
-    client = {}
-
     def __init__(self,port):
 
          self._context = zmq.Context()
-         self._socket = self._context.socket(zmq.REQ)
-         self.stream = ZMQStream(self._socket)
-         self.stream.on_recv(self.handle_reply)
-         url = "tcp://localhost:" + str(port)
+         #self._socket = self._context.socket(zmq.REQ)
+         #self.stream = ZMQStream(self._socket)
+         #self.stream.on_recv(self.handle_reply)
+         self._soc = self._context.socket(zmq.PUSH)
+         url = "tcp://*:" + str(port)
          print url
-         #self._socket.bind(url)
-         self._socket.connect('tcp://localhost:'+ str(port))
+         self._soc.bind(url)
 
     def send(self,data):
         
@@ -46,7 +42,8 @@ class zmq_request(object):
             return
 
 #        if data['cmd'] == 'request':
-        self._socket.send_json(data)
+        #self._socket.send_json(data)
+        self._soc.send_json(data)
 
     def handle_reply(self,msg):
         print "handle_reply  %s" % msg

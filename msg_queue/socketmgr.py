@@ -16,7 +16,6 @@ def add(client_id,client):
         my_globals['client'][client_id] = client
         my_globals['val_to_key'][client] = client_id
 
-    show_all()
 
 def remove(client):
     if my_globals['val_to_key'].has_key(client):
@@ -24,7 +23,7 @@ def remove(client):
         del my_globals['client'][client_id]
         del my_globals['val_to_key'][client]
           
-    show_all()
+#    show_all()
       
 def get(client_id):
 
