@@ -14,8 +14,9 @@ class questWorker(object):
 
 
       def Receive(self):
-          while True:
-              self._module.receive()
+#          while True:
+#              self._module.receive()
+          self._module.start()           
 
 def main():
     # create any kind receiver module you want

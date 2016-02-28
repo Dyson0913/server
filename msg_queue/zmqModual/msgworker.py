@@ -1,4 +1,8 @@
 import zmq
+import json
+from zmq.eventloop.ioloop import IOLoop
+from zmq.eventloop.zmqstream import ZMQStream
+
 
 class zmqWorker(object):
 
@@ -9,14 +13,25 @@ class zmqWorker(object):
 #          self.linger = 0
           print "link to "+domain + " "+ str(port)
           self._socket.connect("tcp://" + domain + ":" + str(port) )
+          self.loop = IOLoop.instance()
 
-      def receive(self):
+      def start(self):
 
-          msg = self._socket.recv_json()
+          stream = ZMQStream(self._socket)
+          stream.on_recv(self.receive)
+          self.loop.start()
+          print "start"
+
+      def receive(self,msg):
+          msg = json.loads(msg[0])
+#          msg = self._socket.recv_json()
           print "reciev %s" % msg
 
           #receive handle
           if msg['cmd'] == "login":
+              if msg['id'] == 2:
+                  print "get 1 no re"
+                  return
               rep = dict()
               rep['message_type'] = "login"
               rep['result'] = 0
@@ -25,14 +40,13 @@ class zmqWorker(object):
           
           if msg['cmd'] == "close":
               pass
-              #remnove sockmgr
           print rep
           
 
 
 def main():
     worker = zmqWorker('localhost',8899)
-    worker.receive()
+    worker.start()
 
 if __name__ == "__main__":
 

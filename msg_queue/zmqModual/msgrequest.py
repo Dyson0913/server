@@ -49,7 +49,7 @@ class zmq_request(object):
         self._socket.send_json(data)
 
     def handle_reply(self,msg):
-#          print "handle_reply  %s" % msg
+        print "handle_reply  %s" % msg
 
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])
