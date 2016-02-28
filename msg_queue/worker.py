@@ -3,6 +3,9 @@ import os
 import sys
 sys.path.append("zmqModual/")
 
+from optparse import OptionParser
+
+
 from msgworker import *
 
 class questWorker(object):
@@ -20,7 +23,16 @@ class questWorker(object):
 
 def main():
     # create any kind receiver module you want
-    work = questWorker(zmqWorker('localhost',6665,5558))
+    usage = "usage: %prog [options] arg"
+
+    parser = OptionParser(usage)
+    parser.add_option("-f", "--file", default="worker1.json")
+    (options, args) = parser.parse_args()
+
+    config_file = open(options.file)
+    data = json.load(config_file)
+
+    work = questWorker(zmqWorker(data["domain"],data["front_port"],data["back_port"]))
     work.Receive()
    
 

@@ -19,19 +19,23 @@ import tornado.options
 import tornado.websocket
 from tornado.options import define, options
 
+import tornado.gen
+from tornado.gen import *
 import os.path
 import json
 
 #game 
 import sys
-sys.path.append("msg_queue/")
-sys.path.append("msg_queue/zmqModual/")
-sys.path.append("app/")
+#sys.path.append("msg_queue/")
+#sys.path.append("msg_queue/zmqModual/")
+#sys.path.append("app/")
 from requester import *
 
 import uuid
 
 define("port", default=7000, help="run on the given port", type=int)
+define("msgport", default=6665, help="run on the given port", type=int)
+
 
 #zmq ioloop conflact with tornado ioloop,need call this asap befort
 #tonado ioloop
@@ -62,10 +66,10 @@ class wshandler(tornado.websocket.WebSocketHandler):
     def check_origin(self,origin):
         return True
 
-#    @gen.coroutine
+   # @gen.coroutine
     def open(self,token):
         wshandler.cnt = wshandler.cnt+1
-        print wshandler.cnt
+        print "cliet open %d" % wshandler.cnt
 
         #worker & client send to back
         msg = dict()
@@ -98,8 +102,9 @@ def main():
     tornado.options.parse_command_line()
     app = Application()
     app.listen(options.port)
-   
-    wshandler.sender = msg_sender(zmq_request("7788"))
+    print options.msgport  
+ 
+    wshandler.sender = msg_sender(zmq_request(options.msgport))
 
     print tornado.ioloop.IOLoop.instance()
     tornado.ioloop.IOLoop.instance().start()
