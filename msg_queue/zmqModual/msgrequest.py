@@ -21,9 +21,6 @@ class zmq_request(object):
     def __init__(self,port):
 
          self._context = zmq.Context()
-         #self._socket = self._context.socket(zmq.REQ)
-         #self.stream = ZMQStream(self._socket)
-         #self.stream.on_recv(self.handle_reply)
          self._soc = self._context.socket(zmq.PUSH)
          url = "tcp://*:" + str(port)
          print url
