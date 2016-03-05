@@ -5,7 +5,6 @@ sys.path.append("zmqModual/")
 
 from optparse import OptionParser
 
-
 from msgworker import *
 
 class questWorker(object):
@@ -32,7 +31,7 @@ def main():
     config_file = open(options.file)
     data = json.load(config_file)
 
-    work = questWorker(zmqWorker(data["domain"],data["front_port"],data["back_port"]))
+    work = questWorker(zmqWorker(data))
     work.Receive()
    
 

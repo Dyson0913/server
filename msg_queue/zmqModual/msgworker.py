@@ -6,42 +6,36 @@ from zmq.eventloop.zmqstream import ZMQStream
 
 class zmqWorker(object):
 
-      def __init__(self,domain,port,back_port):
+      def __init__(self,data):
+
+          self._domain = data["domain"]
+          self._front_port = data["front_port"]
+          self._back_port = data["back_port"]
 
           self._context = zmq.Context()
-          #self._socket = self._context.socket(zmq.REP)
 #          self.linger = 0
-          url = "tcp://"+domain + ":" + str(port)
+          url = "tcp://"+self._domain + ":" + str(self._front_port)
           print "link front to " + url
-          
-          #self._socket.connect(url )
-          self.loop = IOLoop.instance()
 
+          #send Front 
           self.receiver = self._context.socket(zmq.PULL)
           self.receiver.connect(url)
 
-          back_url = "tcp://"+domain + ":" + str(back_port)
+          back_url = "tcp://"+self._domain + ":" + str(self._back_port)
           print "link back to " + back_url
+
+          #push to back & front
           self._send = self._context.socket(zmq.PUSH)
           self._send.connect(back_url)
 
 
       def start(self):
 
+          print "start"
           while True:
               work = self.receiver.recv_json()
-              print work
-              if work['id'] == 2:
-                  self._send.send_json(work)
-                  #print "fake return"
-              else:
-                  #print "normal"
-                  self._send.send_json(work)
-          return
-          stream = ZMQStream(self._socket)
-          stream.on_recv(self.receive)
-          self.loop.start()
-          print "start"
+              self.blocking_test(work);
+
 
       def receive(self,msg):
           msg = json.loads(msg[0])
@@ -63,7 +57,14 @@ class zmqWorker(object):
               pass
           print rep
           
-
+      def blocking_test(self,work):
+          if work['id'] == 2:
+              self._send.send_json(work)
+              print "fake return"
+          else:
+              print "normal"
+              self._send.send_json(work)
+        
 
 def main():
     worker = zmqWorker('localhost',8899)
