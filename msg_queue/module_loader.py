@@ -2,8 +2,8 @@ import sys,os
 
 
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__),'..', '..','db','plugins'))
-sys.path.append('../../db')
+sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','plugins'))
+sys.path.append('../modules')
 
 from plugins import *
 
