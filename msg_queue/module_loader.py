@@ -2,9 +2,13 @@ import sys,os
 
 sys.path.append('../modules')
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','plugins'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','auth'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','lobby'))
 
 #module
 from plugins import *
+from auth import *
+from lobby import * 
 
 from importlib import import_module 
 

@@ -12,8 +12,8 @@ import time
 import tornado.options
 from tornado.options import define,options
 
-define("num", default=1, help="run num on the given", type=int)
-define("core", default=1, help="run num on the given", type=int)
+define("num", default=2, help="run num on the given", type=int)
+define("core", default=10, help="run num on the given", type=int)
 define("port", default=7000, help="run on the given port", type=int)
 
 

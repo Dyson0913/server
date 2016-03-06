@@ -22,20 +22,16 @@ from tornado.options import define, options
 import tornado.gen
 from tornado.gen import *
 import os.path
-import json
 
 #game 
 import sys
-#sys.path.append("msg_queue/")
-#sys.path.append("msg_queue/zmqModual/")
-#sys.path.append("app/")
 from requester import *
 
 import uuid
 
-define("port", default=7000, help="run on the given port", type=int)
-define("msgport", default=6665, help="run on the given port", type=int)
+from config_parser import * 
 
+define("port", default=7000, help="run on the given port", type=int)
 
 #zmq ioloop conflact with tornado ioloop,need call this asap befort
 #tonado ioloop
@@ -102,9 +98,9 @@ def main():
     tornado.options.parse_command_line()
     app = Application()
     app.listen(options.port)
-    print options.msgport  
  
-    wshandler.sender = msg_sender(zmq_request(options.msgport))
+    data = config_parser()
+    wshandler.sender = msg_sender(zmq_request(data))
 
     print tornado.ioloop.IOLoop.instance()
     tornado.ioloop.IOLoop.instance().start()

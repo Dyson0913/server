@@ -4,30 +4,48 @@ from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 
 
+import sys
+sys.path.append('../')
+
+import module_loader
+
 class zmqWorker(object):
 
       def __init__(self,data):
 
           self._domain = data["domain"]
-          self._front_port = data["front_port"]
+          self._front_push_port = data["front_push_port"]
+          self._front_pull_port = data["front_pull_port"]
           self._back_port = data["back_port"]
+          self._module =[];
+          self._module.append( data['module']['auth'] )
+          self._module.append( data['module']['lobby'] )
+          modual_list = data["module"]['app']
+          for item in modual_list:
+              self._module.append( item['game'] )
+          print self._module
 
           self._context = zmq.Context()
-#          self.linger = 0
-          url = "tcp://"+self._domain + ":" + str(self._front_port)
-          print "link front to " + url
+          url = "tcp://"+self._domain + ":"
 
-          #send Front 
+          #send from front 
           self.receiver = self._context.socket(zmq.PULL)
-          self.receiver.connect(url)
+          front = url + str(self._front_push_port)
+          self.receiver.connect(front)
+          print "link front to " + front
+          
+          #send to front
+          self._front_push = self._context.socket(zmq.PUSH)
+          front_pull = url + str(self._front_pull_port)
+          self._front_push.connect(front_pull)
+          print "link front pull to " + front_pull
 
           back_url = "tcp://"+self._domain + ":" + str(self._back_port)
           print "link back to " + back_url
 
-          #push to back & front
+          #push to back
           self._send = self._context.socket(zmq.PUSH)
           self._send.connect(back_url)
-
 
       def start(self):
 
@@ -60,10 +78,17 @@ class zmqWorker(object):
       def blocking_test(self,work):
           if work['id'] == 2:
               self._send.send_json(work)
+            
               print "fake return"
           else:
               print "normal"
               self._send.send_json(work)
+              #send back to connect
+              rep = dict()
+              rep['message_type'] = "login"
+              rep['result'] = 0
+              rep['client_id'] = work['client_id']
+              self._front_push.send_json(rep)
         
 
 def main():

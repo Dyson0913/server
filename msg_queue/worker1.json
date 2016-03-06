@@ -1,9 +1,10 @@
 {
- "domain":"localhost","front_port":6665,"back_port":6669,
+ "domain":"localhost","front_push_port":6665,"front_pull_port":6666,"back_port":6669,
  "module":{
-           "auth":"fake","lobby":"ormal_lobby",
+           "auth":"fake",
+           "lobby":"normal",
            "app":[
-                   {"game":"baccarat"},
+                   {"game":"baccart"},
                    {"game":"slot"}
                  ]
           }

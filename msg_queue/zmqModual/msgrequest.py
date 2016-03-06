@@ -18,14 +18,36 @@ from socketmgr import *
 
 class zmq_request(object):
 
-    def __init__(self,port):
+    def __init__(self,data):
 
-         self._context = zmq.Context()
-         self._soc = self._context.socket(zmq.PUSH)
-         url = "tcp://*:" + str(port)
-         print url
-         self._soc.bind(url)
+        self._domain = data["domain"]
+        self._front_push_port = data["front_push_port"]
+        self._front_pull_port = data["front_pull_port"]
 
+        url = "tcp://*:"
+        self._context = zmq.Context()
+        self._soc = self._context.socket(zmq.PUSH)
+        push_url = url + str(self._front_push_port)
+        print "push to worker "+ push_url
+        self._soc.bind(push_url)
+
+        #send from work
+        self.receiver = self._context.socket(zmq.PULL)
+        pull_url = url + str(self._front_pull_port)
+        self.receiver.bind(pull_url)
+        print "pull from worker " + pull_url
+
+        self.receiver = ZMQStream(self.receiver)
+        self.receiver.on_recv(self.handle_worker_msg)
+ 
+        #work = self.receiver.recv_json()
+        #self.blocking_test(work);
+    def run(self):
+        while True:
+             work = self.receiver.recv_json()
+             #self.blocking_test(work);
+             print work
+ 
     def send(self,data):
         
         #zmq can't serial object , need handle login and close in here 
@@ -42,7 +64,7 @@ class zmq_request(object):
         #self._socket.send_json(data)
         self._soc.send_json(data)
 
-    def handle_reply(self,msg):
+    def handle_worker_msg(self,msg):
         print "handle_reply  %s" % msg
 
         #rece_json with [{data:value}], so get msg[0]
@@ -51,7 +73,7 @@ class zmq_request(object):
 
         myclient = get(client_id)
 
-        #ws
+        
         myclient.write_message(parsed)
 
 def main():    
