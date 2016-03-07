@@ -1,22 +1,25 @@
 import sys,os
 
 sys.path.append('../modules')
-sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','plugins'))
+#sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','plugins'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','auth'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','lobby'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','game'))
 
 #module
 from plugins import *
 from auth import *
 from lobby import * 
+from game import * 
 
 from importlib import import_module 
 
-class load(object):
+class module_load(object):
 
-    def __init__(self):
-        self.config = ['myplugin1','myplugin2']
+    def __init__(self,module_list):
+        self.config = module_list
  
+        self.modules = []
         self.mypath = os.path.realpath(os.path.dirname(sys.path[0]))
 #        self.ppath = os.path.abspath(os.path.join(self.mypath,'../')) up one level
         print self.mypath
@@ -32,7 +35,6 @@ class load(object):
 #            self.plugins.__path__.append(mypath)
 
         ##dynamic load modules
-        self.modules = []
         self.modules = [ import_module(module) for module in self.config]
         for module in self.modules: 
             reload(module)

@@ -40,14 +40,6 @@ class zmq_request(object):
         self.receiver = ZMQStream(self.receiver)
         self.receiver.on_recv(self.handle_worker_msg)
  
-        #work = self.receiver.recv_json()
-        #self.blocking_test(work);
-    def run(self):
-        while True:
-             work = self.receiver.recv_json()
-             #self.blocking_test(work);
-             print work
- 
     def send(self,data):
         
         #zmq can't serial object , need handle login and close in here 

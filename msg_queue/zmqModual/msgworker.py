@@ -7,7 +7,8 @@ from zmq.eventloop.zmqstream import ZMQStream
 import sys
 sys.path.append('../')
 
-import module_loader
+from  module_loader import *
+
 
 class zmqWorker(object):
 
@@ -17,13 +18,16 @@ class zmqWorker(object):
           self._front_push_port = data["front_push_port"]
           self._front_pull_port = data["front_pull_port"]
           self._back_port = data["back_port"]
-          self._module =[];
-          self._module.append( data['module']['auth'] )
-          self._module.append( data['module']['lobby'] )
+          self._module_list =[];
+          self._module_list.append( data['module']['auth'] )
+          self._module_list.append( data['module']['lobby'] )
           modual_list = data["module"]['app']
           for item in modual_list:
-              self._module.append( item['game'] )
-          print self._module
+              self._module_list.append( item['game'] )
+          print self._module_list
+
+          self._module = module_load(self._module_list)
+          self._module.dynamicLoadModules()
 
           self._context = zmq.Context()
           url = "tcp://"+self._domain + ":"
@@ -44,8 +48,9 @@ class zmqWorker(object):
           print "link back to " + back_url
 
           #push to back
-          self._send = self._context.socket(zmq.PUSH)
-          self._send.connect(back_url)
+          self._result_send = self._context.socket(zmq.PUSH)
+          self._result_send.connect(back_url)
+
 
       def start(self):
 
@@ -57,19 +62,6 @@ class zmqWorker(object):
 
       def receive(self,msg):
           msg = json.loads(msg[0])
-#          msg = self._socket.recv_json()
-          print "reciev %s" % msg
-
-          #receive handle
-          if msg['cmd'] == "login":
-              if msg['id'] == 2:
-                  print "get 1 no re"
-                  return
-              rep = dict()
-              rep['message_type'] = "login"
-              rep['result'] = 0
-              rep['client_id'] = msg['client_id']
-              self._socket.send_json(rep)
           
           if msg['cmd'] == "close":
               pass
@@ -82,13 +74,15 @@ class zmqWorker(object):
               print "fake return"
           else:
               print "normal"
-              self._send.send_json(work)
+
               #send back to connect
               rep = dict()
               rep['message_type'] = "login"
               rep['result'] = 0
               rep['client_id'] = work['client_id']
               self._front_push.send_json(rep)
+
+              self._send.send_json(work)
         
 
 def main():
