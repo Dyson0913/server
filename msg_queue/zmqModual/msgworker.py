@@ -18,15 +18,15 @@ class zmqWorker(object):
           self._front_push_port = data["front_push_port"]
           self._front_pull_port = data["front_pull_port"]
           self._back_port = data["back_port"]
-          self._module_list =[];
-          self._module_list.append( data['module']['auth'] )
-          self._module_list.append( data['module']['lobby'] )
+          module_list =[]
+          module_list.append( data['module']['auth'] )
+          module_list.append( data['module']['lobby'] )
           modual_list = data["module"]['app']
           for item in modual_list:
-              self._module_list.append( item['game'] )
-          print self._module_list
+              module_list.append( item['game'] )
+          print module_list
 
-          self._module = module_load(self._module_list)
+          self._module = module_load(module_list)
           self._module.dynamicLoadModules()
 
           self._context = zmq.Context()
@@ -56,9 +56,14 @@ class zmqWorker(object):
 
           print "start"
           while True:
-              work = self.receiver.recv_json()
-              self.blocking_test(work);
+              json_msg = self.receiver.recv_json()
+              result = self._module.execute_work(json_msg) 
+              
+              #response to client
+              self._front_push.send_json(result) 
 
+              #report to back
+              self._result_send.send_json(result)
 
       def receive(self,msg):
           msg = json.loads(msg[0])
@@ -66,23 +71,7 @@ class zmqWorker(object):
           if msg['cmd'] == "close":
               pass
           print rep
-          
-      def blocking_test(self,work):
-          if work['id'] == 2:
-              self._send.send_json(work)
-            
-              print "fake return"
-          else:
-              print "normal"
 
-              #send back to connect
-              rep = dict()
-              rep['message_type'] = "login"
-              rep['result'] = 0
-              rep['client_id'] = work['client_id']
-              self._front_push.send_json(rep)
-
-              self._send.send_json(work)
         
 
 def main():

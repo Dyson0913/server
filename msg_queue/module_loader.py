@@ -1,7 +1,6 @@
 import sys,os
 
 sys.path.append('../modules')
-#sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','plugins'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','auth'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','lobby'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','game'))
@@ -17,12 +16,13 @@ from importlib import import_module
 class module_load(object):
 
     def __init__(self,module_list):
+        self._default_module = ['auth','lobby']
         self.config = module_list
  
         self.modules = []
         self.mypath = os.path.realpath(os.path.dirname(sys.path[0]))
 #        self.ppath = os.path.abspath(os.path.join(self.mypath,'../')) up one level
-        print self.mypath
+#        print self.mypath
       
     def dynamicLoadModules(self):
         #TODO dynamic load module
@@ -38,8 +38,20 @@ class module_load(object):
         self.modules = [ import_module(module) for module in self.config]
         for module in self.modules: 
             reload(module)
-        for module in self.modules:
-            module.init()
+        #for module in self.modules:
+        #    module.init()
+
+    def execute_work(self,json_msg):
+
+        module_idx = 0 
+        if json_msg['module'] in self._default_module:
+           module_idx = self._default_module.index(json_msg['module'])
+        print module_idx
+        print self.modules[module_idx]
+        result = self.modules[module_idx].p(json_msg)
+        return result
+        #msg['cmd'] = "login"
+         
 
 def main():
     p = load() 
