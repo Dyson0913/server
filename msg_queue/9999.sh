@@ -1,2 +1,1 @@
-python tornado_test.py -port=9999 -msgport=6665
-
+python connector.py -p 9999 -f worker2.json

@@ -1,2 +1,1 @@
-python tornado_test.py -port=8888 -msgport=6666
-
+python connector.py -p 8888 -f worker1.json

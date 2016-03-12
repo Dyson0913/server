@@ -1,26 +1,13 @@
 #!/usr/bin/env python
-#
-# Copyright 2009 Facebook
-#
-# ddLicensed under the Apache License, Version 2.0 (the "License"); you may
-# not use this file except in compliance with the License. You may obtain
-# a copy of the License at
-#
 #     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
 
 import tornado.ioloop
 import tornado.options
 import tornado.websocket
-from tornado.options import define, options
+#from tornado.options import define, options
+from tornado.httpserver import HTTPServer
 
-import tornado.gen
-from tornado.gen import *
+
 import os.path
 
 #game 
@@ -31,12 +18,20 @@ import uuid
 
 from config_parser import * 
 
-define("port", default=7000, help="run on the given port", type=int)
+#define("port", default=7000, help="run on the given port", type=int)
 
 #zmq ioloop conflact with tornado ioloop,need call this asap befort
 #tonado ioloop
 # reference https://pyzmq.readthedocs.org/en/latest/eventloop.html
 ioloop.install()
+
+settings = dict(
+    ssl_options = {
+        "certfile":"server.crt",
+        "keyfile":"server.key",
+    }
+)
+
 
 class Application(tornado.web.Application):
 
@@ -60,6 +55,7 @@ class wshandler(tornado.websocket.WebSocketHandler):
     # nginx + websocket connect to tornado default value is false for tornado 4.0+
     # override and return True let the connection success
     def check_origin(self,origin):
+        print origin
         return True
 
    # @gen.coroutine
@@ -96,14 +92,18 @@ class wshandler(tornado.websocket.WebSocketHandler):
 
 
 def main():
-    tornado.options.parse_command_line()
-    app = Application()
-    app.listen(options.port)
- 
+#    tornado.options.parse_command_line()
     data = config_parser()
+    app = Application()
+    app.listen(data['port'])
+ 
     wshandler.sender = msg_sender(zmq_request(data))
-
     print tornado.ioloop.IOLoop.instance()
+
+#    wss
+#    http_server = HTTPServer(app,**settings)
+#    http_server.listen(data['port'])
+
     tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":
