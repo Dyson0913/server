@@ -48,7 +48,7 @@ class module_load(object):
            module_idx = self._default_module.index(json_msg['module'])
         print module_idx
         print self.modules[module_idx]
-        result = self.modules[module_idx].p(json_msg)
+        result = self.modules[module_idx].handle(json_msg)
         return result
         #msg['cmd'] = "login"
          

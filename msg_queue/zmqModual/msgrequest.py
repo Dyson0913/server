@@ -47,25 +47,26 @@ class zmq_request(object):
             add(data['client_id'],data['client'])
             del data['client']
 
+        if data['cmd'] == 'request':
+            del data['client']
+
         if data['cmd'] == 'close':
             remove(data['client'])            
             del data['client']
-            return
 
-#        if data['cmd'] == 'request':
-        #self._socket.send_json(data)
         self._soc.send_json(data)
 
     def handle_worker_msg(self,msg):
         print "handle_reply  %s" % msg
-
+        
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])
-        client_id = parsed['client_id']
+                
+        if parsed == None:
+            print "error"
+            return
 
-        myclient = get(client_id)
-
-        
+        myclient = get(parsed['client_id'])
         myclient.write_message(parsed)
 
 def main():    

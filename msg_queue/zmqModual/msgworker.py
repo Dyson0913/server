@@ -65,15 +65,6 @@ class zmqWorker(object):
               #report to back
               self._result_send.send_json(result)
 
-      def receive(self,msg):
-          msg = json.loads(msg[0])
-          
-          if msg['cmd'] == "close":
-              pass
-          print rep
-
-        
-
 def main():
     worker = zmqWorker('localhost',8899)
     worker.start()
