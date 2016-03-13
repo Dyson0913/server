@@ -14,6 +14,15 @@ def remove(cli):
         del client[client_id]
         del val_to_key[cli]
 #    show_all()
+
+def get_client_id(cli):
+    print "get_client_by_id"
+    print val_to_key.has_key(cli)
+ 
+    if val_to_key.has_key(cli) == False:
+        return None
+    else:
+        return val_to_key[cli]
       
 def get(client_id):
 

@@ -77,7 +77,7 @@ class wshandler(tornado.websocket.WebSocketHandler):
         print "close"
         msg = dict()
         msg['module'] = "auth"
-        msg['cmd'] = "close"
+        msg['cmd'] = "self_close"
         msg['client'] = self
         wshandler.sender.send(msg)
 

@@ -51,7 +51,9 @@ class zmq_request(object):
             del data['client']
 
         if data['cmd'] == 'close':
-            remove(data['client'])            
+            #tell work remove
+#            remove(data['client'])
+            data['client_id'] = get_client_id(data['client'])
             del data['client']
 
         self._soc.send_json(data)
@@ -66,7 +68,14 @@ class zmq_request(object):
             print "error"
             return
 
+        #TODO handle logout
         myclient = get(parsed['client_id'])
+        print "myclient ="
+        print myclient
+        if myclient == None:
+            print "get client error"
+            return
+
         myclient.write_message(parsed)
 
 def main():    

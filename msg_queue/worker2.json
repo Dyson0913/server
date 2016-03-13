@@ -1,5 +1,6 @@
 {
  "domain":"localhost","front_push_port":7775,"front_pull_port":7776,"back_port":6669,
+ "db": {"host":"52.193.112.227","port":6379, "db":0},
  "module":{
            "auth":"fake",
            "lobby":"normal",
