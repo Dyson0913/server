@@ -27,9 +27,11 @@ class tavern(object):
 
     def handle(self,json_msg):
         print "tavern handle %s " % json_msg 
-        if json_msg['state'] == "log_out":
-            self._db.clean(json_msg['client_id'])
-            return
+
+        if json_msg['state'] == "self_close":
+            #TODO in game handle
+#            self._db.clean(json_msg['client_id'])
+#            return
 
         self._db.save(json_msg)
 
