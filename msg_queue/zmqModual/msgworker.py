@@ -24,7 +24,6 @@ class zmqWorker(object):
           modual_list = data["module"]['app']
           for item in modual_list:
               module_list.append( item['game'] )
-          print module_list
 
           self._module = module_load(module_list)
           self._module.dynamicLoadModules()
@@ -36,16 +35,14 @@ class zmqWorker(object):
           self.receiver = self._context.socket(zmq.PULL)
           front = url + str(self._front_push_port)
           self.receiver.connect(front)
-          print "link front to " + front
           
           #send to front
           self._front_push = self._context.socket(zmq.PUSH)
           front_pull = url + str(self._front_pull_port)
           self._front_push.connect(front_pull)
-          print "link front pull to " + front_pull
 
           back_url = "tcp://"+self._domain + ":" + str(self._back_port)
-          print "link back to " + back_url
+          print "front to " + front + " front_pull " + front_pull + " back to " + back_url
 
           #push to back
           self._result_send = self._context.socket(zmq.PUSH)

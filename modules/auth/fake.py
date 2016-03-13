@@ -14,9 +14,9 @@ def normal_handle(json_msg):
        rep['uuid'] = json_msg['client_id']
        return rep
 
-    if json_msg['cmd'] == "close":
+    if json_msg['cmd'] == "self_close":
        rep = header(json_msg)
-       rep['state'] = "log_out"
+       rep['state'] = "self_close"
        return rep
 
 def blocking_test(json_msg):

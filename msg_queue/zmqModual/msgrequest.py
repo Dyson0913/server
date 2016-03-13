@@ -28,17 +28,16 @@ class zmq_request(object):
         self._context = zmq.Context()
         self._soc = self._context.socket(zmq.PUSH)
         push_url = url + str(self._front_push_port)
-        print "push to worker "+ push_url
         self._soc.bind(push_url)
 
         #send from work
         self.receiver = self._context.socket(zmq.PULL)
         pull_url = url + str(self._front_pull_port)
         self.receiver.bind(pull_url)
-        print "pull from worker " + pull_url
 
         self.receiver = ZMQStream(self.receiver)
         self.receiver.on_recv(self.handle_worker_msg)
+        print "pull to " + push_url + "pull from" + pull_url
  
     def send(self,data):
         
@@ -50,9 +49,7 @@ class zmq_request(object):
         if data['cmd'] == 'request':
             del data['client']
 
-        if data['cmd'] == 'close':
-            #tell work remove
-#            remove(data['client'])
+        if data['cmd'] == 'self_close':
             data['client_id'] = get_client_id(data['client'])
             del data['client']
 
@@ -68,12 +65,16 @@ class zmq_request(object):
             print "error"
             return
 
-        #TODO handle logout
         myclient = get(parsed['client_id'])
-        print "myclient ="
-        print myclient
+
+        # handle self close
+        if parsed['state'] == "self_close":
+            remove(myclient)
+            print "client self close"
+            return 
+
         if myclient == None:
-            print "get client error"
+            print "get client None error"
             return
 
         myclient.write_message(parsed)
