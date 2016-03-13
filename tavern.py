@@ -1,8 +1,8 @@
 import zmq
 
 import sys
-sys.path.append("../modules/db")
-sys.path.append("../modules/db/noSQL")
+sys.path.append("modules/db")
+sys.path.append("modules/db/noSQL")
 
 
 from db_proxy import *
@@ -28,8 +28,8 @@ class tavern(object):
     def handle(self,json_msg):
         print "tavern handle %s " % json_msg 
 
-        if json_msg['state'] == "self_close":
-            #TODO in game handle
+#        if json_msg['state'] == "self_close":
+#            TODO in game handle
 #            self._db.clean(json_msg['client_id'])
 #            return
 

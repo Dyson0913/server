@@ -8,14 +8,15 @@ import tornado.websocket
 from tornado.httpserver import HTTPServer
 
 
+import uuid
 import os.path
 
 #game 
 import sys
+sys.path.append('modules/msg_queue')
+sys.path.append('modules/msg_queue/zmqModual')
+
 from requester import *
-
-import uuid
-
 from config_parser import * 
 
 #define("port", default=7000, help="run on the given port", type=int)

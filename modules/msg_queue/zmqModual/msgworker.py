@@ -5,7 +5,7 @@ from zmq.eventloop.zmqstream import ZMQStream
 
 
 import sys
-sys.path.append('../')
+#sys.path.append('../')
 
 from  module_loader import *
 

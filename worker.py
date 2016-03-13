@@ -1,7 +1,8 @@
 import os
 
 import sys
-sys.path.append("zmqModual/")
+sys.path.append("modules/msg_queue/zmqModual/")
+sys.path.append("modules/")
 
 from config_parser import * 
 

@@ -1,4 +1,3 @@
-
 import sys
 sys.path.append("noSQL/")
 
@@ -27,8 +26,6 @@ class db_proxy(object):
 
 def main():
     # create any kind db module you want
-    #data = config_parser()
-
     db = db_proxy('127.0.0.1',6379,None)
     while (True):
         pass

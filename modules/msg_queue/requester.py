@@ -1,7 +1,7 @@
 import os
 
 import sys
-sys.path.append("zmqModual/")
+#sys.path.append("zmqModual/")
 
 #import modual in diffenent implement
 from msgrequest import *

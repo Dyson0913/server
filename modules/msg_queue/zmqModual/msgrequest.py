@@ -12,7 +12,7 @@ import uuid
 import json
 
 import sys
-sys.path.append('../')
+#sys.path.append('../')
 
 from socketmgr import *
 
