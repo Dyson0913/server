@@ -7,7 +7,7 @@ import tornado.websocket
 #from tornado.options import define, options
 from tornado.httpserver import HTTPServer
 
-
+import json
 import uuid
 import os.path
 
@@ -82,14 +82,14 @@ class wshandler(tornado.websocket.WebSocketHandler):
         msg['client'] = self
         wshandler.sender.send(msg)
 
-    def on_message(self, message):
-        print message
+    def on_message(self,data):
+        print data
+        json_msg = json.loads(data)
 
         msg= dict()
-        msg['module'] = message['module']
-        msg['cmd'] = "request"
-        msg['client_id'] = message['uuid']
-        msg['msg'] = message
+        msg['module'] = json_msg['module']
+        msg['cmd'] = json_msg['cmd']
+        msg['client_id'] = json_msg['uuid']
         wshandler.sender.send(msg)
 
 

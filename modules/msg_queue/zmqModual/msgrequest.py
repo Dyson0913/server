@@ -46,9 +46,6 @@ class zmq_request(object):
             add(data['client_id'],data['client'])
             del data['client']
 
-        if data['cmd'] == 'request':
-            del data['client']
-
         if data['cmd'] == 'self_close':
             data['client_id'] = get_client_id(data['client'])
             del data['client']
