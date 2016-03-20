@@ -1,4 +1,5 @@
-import sys,os
+import sys
+import os
 
 sys.path.append('../modules')
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','auth'))
@@ -6,7 +7,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','lobby'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','game'))
 
 #module
-from plugins import *
 from auth import *
 from lobby import * 
 from game import * 
@@ -53,7 +53,7 @@ class module_load(object):
          
 
 def main():
-    p = load() 
+    p = module_load(['baccart','slot']) 
     p.dynamicLoadModules()
 
 if __name__ == "__main__":

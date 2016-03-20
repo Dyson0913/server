@@ -3,11 +3,15 @@ import json
 def handle(json_msg):
     print json_msg
     return normal_handle(json_msg)
-#    return blocking_test(json_msg)
 
 def normal_handle(json_msg):
 
     if json_msg['cmd'] == "request_join":
+#    if json_msg['cmd'] == "request_open":
+#       wait in backi( match algo),ready, open a game to service
+
+       # get info from redis
+       # 
        rep = header(json_msg)
        rep['state'] = "game_join_ok"
 

@@ -2,7 +2,6 @@ import random
 import itertools
 from collections import Counter
 
-#this object only for poker shuffle and deal
 class Poker(object):
     def __init__(self):
         self._dealed_cards = 0
@@ -30,8 +29,6 @@ class Poker(object):
         remain = len(self._cards) - self._dealed_cards
         return remain
 
-#this object is for checking all kinds of poker game point 
-#e.g. baccarat, show hand, bigwin, newnew
 class PokerPoint(object):
     #showhand type
     POKER_ROYAL_FLUSH =       11
@@ -64,16 +61,6 @@ class PokerPoint(object):
            "ic", "id", "ih", "is", "jc", "jd", "jh", "js", "qc", "qd", "qh", "qs",
            "kc", "kd", "kh", "ks"]
 
-    SKY_ORDER = ["1s","2s","3s","4s","5s","6s","7s","8s","9s","is","js","qs","ks","1h", 
-            "2h","3h", "4h", "5h", "6h", "7h", "8h", "9h", "ih", "jh", "qh", "kh", "1d", 
-            "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d", "id", "jd", "qd", "kd", "1c", 
-            "2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c", "ic", "jc", "qc", "kc"]
-
-    @staticmethod
-    def get_sky_card_map(num):
-        #print PokerPoint.SKY_ORDER[num-1:num]
-        return PokerPoint.SKY_ORDER[num-1:num]
-
     @staticmethod
     def get_card_point(card):
         l = list(card)
@@ -87,29 +74,6 @@ class PokerPoint(object):
             point = 13
         else:
             point = int(card[0])
-        return point
-
-    @staticmethod
-    def get_db_card(card):
-        point = card[1].upper()
-        if card[0] == "i":
-            point += "T"
-        elif card[0] == "j":
-            point += "J"
-        elif card[0] == "q":
-            point += "Q"
-        elif card[0] == "k":
-            point += "K"
-        else:
-            point += card[0]
-        return point
-
-    @staticmethod
-    def get_db_mapping(cards):
-        point = ""
-        for card in cards:
-            card_point = PokerPoint.get_db_card(card)
-            point += card_point
         return point
 
     @staticmethod
@@ -205,29 +169,6 @@ class PokerPoint(object):
     
         return PokerPoint.POKER_NONE
  
-    @staticmethod
-    def check_big_win_show_hand(cards):
-        is_straight = PokerPoint.check_straight(cards)
-
-        if is_straight != PokerPoint.POKER_NONE:
-            if PokerPoint.check_flush(cards) == PokerPoint.POKER_FLUSH:
-                if is_straight == PokerPoint.POKER_BIG_STRAIGHT:
-                    return PokerPoint.POKER_ROYAL_FLUSH
-                else:
-                    return PokerPoint.POKER_STRAIGHT_FLUSH
-            else:
-                return PokerPoint.POKER_STRAIGHT
-        elif PokerPoint.check_flush(cards) == PokerPoint.POKER_FLUSH:
-            return PokerPoint.POKER_FLUSH   
-        else: 
-            value = PokerPoint.check_pair_type(cards)
-            if value == PokerPoint.POKER_FOUR_OF_A_KIND:
-                return PokerPoint.POKER_FOUR_OF_A_KIND
-            elif value == PokerPoint.POKER_FULL_HOUSE:
-                return PokerPoint.POKER_FULL_HOUSE
-            else:
-                return PokerPoint.POKER_NONE
-
     @staticmethod
     def check_show_hand(cards):
         is_straight = PokerPoint.check_straight(cards)
