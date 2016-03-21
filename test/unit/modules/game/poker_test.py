@@ -1,9 +1,8 @@
-#import os,sys
 #parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # sys.path.insert(0,parentdir)
 
 import sys
-sys.path.append("../..")
+sys.path.append("../../../../modules/game")
 
 import unittest
 from poker import *
@@ -171,82 +170,6 @@ class pokerTestCase(unittest.TestCase):
         poker = ["2d", "7s", "2h", "1s", "5d"]
         point = PokerPoint.check_pair_type(poker)
         self.assertEqual(point, PokerPoint.POKER_ONE_PAIR_NORMAL)
-
-    def test_check_big_win_show_hand(self):
-
-        poker = ["id", "jd", "qd", "kd", "1d"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_ROYAL_FLUSH)
-
-        poker = ["5d", "6d", "7d", "8d", "9d"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_STRAIGHT_FLUSH)
-
-        poker = ["5d", "6d", "7h", "8s", "9s"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_STRAIGHT)
-
-        poker = ["5s", "6s", "7s", "8s", "is"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_FLUSH)
-
-        poker = ["5d", "5s", "5h", "5c", "9d"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_FOUR_OF_A_KIND)
-
-        poker = ["5d", "5s", "5h", "6c", "6d"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_FULL_HOUSE)
-
-        poker = ["5d", "5d", "6h", "6s", "9d"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_NONE)
-
-        poker = ["5d", "5s", "7h", "1c", "9d"]
-        point = PokerPoint.check_big_win_show_hand(poker)
-        self.assertEqual(point, PokerPoint.POKER_NONE)
-
-    def test_get_newnew_point(self):
-
-        poker = ["7c", "8h", "qs", "1s", "5c"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 1)
-
-        poker = ["3c", "4d", "kh", "kc", "5h"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 0)
-
-        poker = ["2h", "5d", "jc", "id", "3s"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 10)
-
-        poker = ["3c", "4c", "3h", "jc", "kh"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 10)
-
-        poker = ["id", "8c", "6h", "qh", "5s"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 0)
-
-        poker = ["3s", "is", "7s", "1s", "8d"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 9)
-
-        poker = ["9h", "3d", "8s", "6h", "8c"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 4)
-
-        poker = ["4c", "2h", "4s", "qd", "qh"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 10)
-
-        poker = ["jc", "qh", "ks", "2d", "qh"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 2)
-
-        poker = ["jc", "qh", "ks", "1d", "qh"]
-        point = PokerPoint.get_newnew_point(poker)
-        self.assertEqual(point, 1)
 
     def test_bacc_player_extra_rule(self):
 
@@ -435,20 +358,6 @@ class pokerTestCase(unittest.TestCase):
         result = PokerPoint.check_baccarat_top_card_rule(new)
         self.assertEqual(True, result)
 
-    def test_front_end_point(self):
-        poker = ["is","jh","qd","kc"]
-        point = PokerPoint.get_db_mapping(poker)
-        self.assertEqual(point, "STHJDQCK")
-
-        poker = ["1s","2h","3d","4c","5c","6d","7s","8d","9s"]
-        point = PokerPoint.get_db_mapping(poker)
-        self.assertEqual(point, "S1H2D3C4C5D6S7D8S9")
-
-    def test_cards_max_order(self):
-
-        poker = ["1d","9d","id", "jd", "qd", "kd"]
-        point = PokerPoint.get_cards_max_order(poker)
- 
 
 if __name__ == '__main__':
     unittest.main()
