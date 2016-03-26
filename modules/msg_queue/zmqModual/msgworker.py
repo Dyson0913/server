@@ -56,11 +56,15 @@ class zmqWorker(object):
               json_msg = self.receiver.recv_json()
               result = self._module.execute_work(json_msg) 
               
-              #response to client
-              self._front_push.send_json(result) 
-
               #report to back
               self._result_send.send_json(result)
+
+              #del data just for db
+              if 'for_db' in result:
+                 del result['for_db']
+                 
+              #response to client
+              self._front_push.send_json(result) 
 
 def main():
     worker = zmqWorker('localhost',8899)
