@@ -2,10 +2,10 @@
  "domain":"localhost","front_push_port":6665,"front_pull_port":6666,"back_port":6669,
  "db": {"host":"52.193.112.227","port":6379, "db":0},
  "module":{
-           "auth":"fake",
+           "auth":"hojo_auth",
            "lobby":"normal",
            "app":[
-                   {"game":"baccart"},
+                   {"game":"hope_slot"},
                    {"game":"slot"}
                  ]
           }

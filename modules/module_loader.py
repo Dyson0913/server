@@ -18,7 +18,7 @@ class module_load(object):
     def __init__(self,module_list):
         self._default_module = ['auth','lobby']
         self.config = module_list
- 
+        #print self.config 
         self.modules = []
         self.mypath = os.path.realpath(os.path.dirname(sys.path[0]))
 #        self.ppath = os.path.abspath(os.path.join(self.mypath,'../')) up one level

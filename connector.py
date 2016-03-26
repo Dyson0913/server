@@ -69,6 +69,7 @@ class wshandler(tornado.websocket.WebSocketHandler):
         msg['id'] = wshandler.cnt
         msg['module'] = "auth"
         msg['cmd'] = "login"
+        msg['token'] = token
         msg['client'] = self
         msg['client_id'] = uuid.uuid1().hex
         wshandler.sender.send(msg)

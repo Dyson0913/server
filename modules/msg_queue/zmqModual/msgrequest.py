@@ -57,7 +57,7 @@ class zmq_request(object):
         
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])
-                
+
         if parsed == None:
             print "error"
             return
@@ -74,6 +74,8 @@ class zmq_request(object):
             print "get client None error"
             return
 
+        #before send del client
+        del parsed["client_id"]
         myclient.write_message(parsed)
 
 def main():    
