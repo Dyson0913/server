@@ -1,6 +1,7 @@
 import sys
 sys.path.append("noSQL/")
 
+import json
 import myredis
 from myredis import *
 
@@ -13,12 +14,28 @@ class db_proxy(object):
         print "redis listen in {0}:{1}".format(host,port)
 
     def save(self,json_msg):
-        key = json_msg['client_id']
-        del json_msg['client_id']
-        self._module.save(key,json_msg)
+        key = json_msg['key']
+ 
+        new_json = dict() 
+        new_json['state'] = json_msg['state']
+        new_json['key'] = json_msg['key']
+
+        json_data = self.get(json_msg)
+        if json_data != None:
+            db_json_data = json.loads(json_data)
+            new_json['for_db'] = db_json_data['for_db']
+        else:
+            new_json['for_db'] = json_msg['for_db']
+        
+        self._module.save(key,json.dumps(new_json))
 
     def get(self,json_msg):
-        key = json_msg['client_id']
+        key = json_msg['key']
+
+        if key == None:
+           print "no key return None"
+           return None
+
         return self._module.get(key)
 
     def clean(self,client_id):

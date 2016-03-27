@@ -59,23 +59,33 @@ class zmq_request(object):
         parsed = json.loads(msg[0])
 
         if parsed == None:
-            print "error"
+            print "handle work msg  error = None"
             return
 
-        myclient = get(parsed['client_id'])
+        if 'cmd' in parsed:
+            if parsed['cmd'] == 'login':
+                #remove temp client_id ,using uuid
+                wait_login_client = get(parsed['client_id'])
+                remove(wait_login_client)
+                add(parsed['uuid'],wait_login_client)
 
-        # handle self close
-        if parsed['state'] == "self_close":
-            remove(myclient)
-            print "client self close"
-            return 
+                #before send del client
+                del parsed["client_id"]
+                del parsed["cmd"]
+
+            #handle self close
+            elif parsed['cmd'] == "self_close":
+                self_close_client = get(parsed['client_id'])
+                remove(self_close_client)
+                print "client self close"
+                return
+
+        myclient = get(parsed['uuid'])
 
         if myclient == None:
             print "get client None error"
             return
 
-        #before send del client
-        del parsed["client_id"]
         myclient.write_message(parsed)
 
 def main():    

@@ -62,6 +62,7 @@ class zmqWorker(object):
               #del data just for db
               if 'for_db' in result:
                  del result['for_db']
+                 del result['key']
                  
               #response to client
               self._front_push.send_json(result) 

@@ -87,11 +87,11 @@ class wshandler(tornado.websocket.WebSocketHandler):
         print data
         json_msg = json.loads(data)
 
-        msg= dict()
-        msg['module'] = json_msg['module']
-        msg['cmd'] = json_msg['cmd']
-        msg['client_id'] = json_msg['uuid']
-        wshandler.sender.send(msg)
+#        msg= dict()
+#        msg['module'] = json_msg['module']
+#        msg['cmd'] = json_msg['cmd']
+#        msg['uuid'] = json_msg['uuid']
+        wshandler.sender.send(json_msg)
 
 
 

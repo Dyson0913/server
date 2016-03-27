@@ -19,6 +19,8 @@ def normal_handle(json_msg):
 def header(json_msg):
 
     rep = dict()
-    rep['client_id'] = json_msg['client_id']
+    rep['uuid'] = json_msg['uuid']
+    rep['key'] = json_msg['uuid']
+    rep['for_db'] = None
     return rep
 
