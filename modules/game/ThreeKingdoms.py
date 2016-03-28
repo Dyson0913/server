@@ -1,7 +1,7 @@
 import json
 
 def handle(json_msg):
-    print "hope_slot"
+    print "threeKingdoms"
     print json_msg
     #return normal_handle(json_msg)
     return temp_handle(json_msg)
@@ -16,7 +16,7 @@ def temp_handle(json_msg):
        rep['init_info'] = "you get init"
 
        rep['UserPoint'] = 100
-       rep['Line'] = 30
+       rep['Line'] = 25
        rep['Symbol_Num'] = 8
        odds = dict()
        odds['N0'] = [0 , 0 , 5  , 15 , 50]
