@@ -19,10 +19,16 @@ class State(object):
         logging.info( "on_enter " + self._module.__class__.__name__ )
         self._module.execute()
         self._next_state = self._module._next_state
+        self.msg()
 
     def on_update(self):
         pass
-        print self.get_remain_time()
+#        print self.get_remain_time()
+
+    def msg(self):
+        mymsg =  self._module.msg()
+        mymsg['rest_time'] = self.get_remain_time()
+        return mymsg
 
     def timeout(self):
         timediff = time.time() - self._state_time
@@ -82,7 +88,8 @@ class fms(object):
        else:
           logging.info("error !! no such state")
 
-
+   def msg(self):
+       self._current_state.msg()
 
 
 

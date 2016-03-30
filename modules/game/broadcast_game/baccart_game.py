@@ -1,8 +1,6 @@
 import sys
-import os
 
 sys.path.append('../')
-sys.path.append('../broadcast_game')
 
 from fsm import *
 from poker import *
@@ -14,10 +12,24 @@ import ba_paytable
 
 class baccarat(object):
       
-    def __init__(self):
+    def __init__(self,name):
         self._poker = Poker()
         self._player =[]
         self._banker =[]
+        self._name = name
+        self._info_to_client = None 
+
+    def flush_state(self,state):
+        msg = dict()
+        msg['state'] = state
+        msg['playerpoker'] = self._player
+        msg['bankerpoker'] = self._banker
+
+        self._info_to_client = msg
+
+    def msg(self):
+        logging.info( "client msg " + str(self._info_to_client))
+        return self._info_to_client
 
     def reset(self):
         del self._banker[:]
@@ -80,6 +92,7 @@ class baccarat(object):
         #TODO redis
 #        self.publish(msg)
 
+
 class init(object):
 
     def __init__(self,game):
@@ -88,6 +101,10 @@ class init(object):
 
     def execute(self):
         self._game.reset()
+        self._game.flush_state("init")
+
+    def msg(self):
+        return self._game.msg()
 
 class wait_bet(object):
 
@@ -96,7 +113,11 @@ class wait_bet(object):
         self._next_state = "player_card"
 
     def execute(self):
+        self._game.flush_state("wait_bet")
         pass
+
+    def msg(self):
+        return self._game.msg()
 
 class player_card(object):
 
@@ -112,6 +133,10 @@ class player_card(object):
         else:
             self._next_state = "settle"
  
+        self._game.flush_state("player_card")
+
+    def msg(self):
+        return self._game.msg()
 
 class banker_card(object):
 
@@ -136,6 +161,10 @@ class banker_card(object):
            else:
               self._next_state = "settle"
 
+        self._game.flush_state("banker_card")
+
+    def msg(self):
+        return self._game.msg()
 
 class settle(object):
 
@@ -145,10 +174,14 @@ class settle(object):
 
     def execute(self):
         self._game.settle()
+        self._game.flush_state("settle")
+
+    def msg(self):
+        return self._game.msg()
 
 def main():
     
-    mygame = baccarat()
+    mygame = baccarat("main_baccarat")
 
     myfms = fms()
     myfms.add(State(init(mygame),1))
