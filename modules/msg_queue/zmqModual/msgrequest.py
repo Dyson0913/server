@@ -37,7 +37,7 @@ class zmq_request(object):
 
         self.receiver = ZMQStream(self.receiver)
         self.receiver.on_recv(self.handle_worker_msg)
-        print "pull to " + push_url + "pull from" + pull_url
+        print "push to " + push_url + "pull from" + pull_url
  
     def send(self,data):
         
@@ -53,7 +53,7 @@ class zmq_request(object):
         self._soc.send_json(data)
 
     def handle_worker_msg(self,msg):
-        print "handle_reply  %s" % msg
+        #print "handle_reply  %s" % msg
         
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])

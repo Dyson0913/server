@@ -7,7 +7,9 @@ def http_query(query_cmd,name,pw,balance):
     http_client = httpclient.HTTPClient()
 
     response = None
+    time = None
     if query_cmd == "login":
+        time = datetime.datetime.now()
         request = get_acc(name,pw)
     elif query_cmd == "get_credit":
         request = get_credit(name,pw)
@@ -17,6 +19,7 @@ def http_query(query_cmd,name,pw,balance):
     try:
 #        body = urllib.urlencode(request)
         json_msg = json.dumps(request)
+        time = datetime.datetime.now()
         httpresponse = http_client.fetch("http://slot.hq-game.com/api/index.php", method='POST',body=json_msg)
         response =  httpresponse.body
 
@@ -24,8 +27,10 @@ def http_query(query_cmd,name,pw,balance):
         print("Error: " + str(e))
     except Exception as e:
         print("Error: " + str(e))
-    print "get"
-    print response
+    if query_cmd == "login":
+        print datetime.datetime.now() - time
+#    print "get"
+#    print response
     return json.loads(response)
 
 def get_acc(name,pw):

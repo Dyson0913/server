@@ -4,8 +4,8 @@ sys.path.append('../')
 from httpquery import *
 
 def handle(json_msg):
-    print "hojo_auth"
-    print json_msg
+#    print "hojo_auth"
+#    print json_msg
     return normal_handle(json_msg) 
 
 def normal_handle(json_msg):
