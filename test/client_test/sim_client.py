@@ -37,15 +37,15 @@ class Client(object):
  
         if self.connect == False:
            self.connect = True
-        #print "core "+ str(self.core_id)+" client = "+ str(self.totalClient) + " on_message"
+        print "core "+ str(self.core_id)+" client = "+ str(self.totalClient) + " on_message"
         result = self.socket.recv()
         #print result
         #count time
-        #self._mgr.info_colle(self.delta_time())
+        self._mgr.info_colle(self.delta_time())
 
-        parse = json.loads(result)
-        self.parse(self,parse)
-        print self.delta_time()
+        #parse = json.loads(result)
+        #self.parse(self,parse)
+        #print self.delta_time()
 
     def delta_time(self):
         self._delta_time = datetime.datetime.now() - self.time
@@ -82,12 +82,14 @@ class ClientMgr(object):
             self.client.append(myclient)
 
     def info_colle(self,report_info):
+        print report_info
         self.total_time += report_info
         self.cnt +=1
         if self.clientNum == self.cnt:
             print self.total_time
 
     def check_user(self):
+        print "check_user"
         for i in range(self.clientNum):            
             self.client[i].on_message()
        
@@ -108,7 +110,7 @@ def thread_():
     time.sleep(1)
 
 def check(core_id,port):
-    clientMgr = ClientMgr('ws://108.61.246.195:'+str(port)+'/gamesocket/1')
+    clientMgr = ClientMgr('ws://52.193.112.227:'+str(port)+'/gamesocket/test_test')
     #clientMgr = ClientMgr('ws://106.186.116.216:7000/gamesocket/1')
     clientMgr.create_user(options.num,core_id)
 
