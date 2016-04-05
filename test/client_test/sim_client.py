@@ -41,10 +41,11 @@ class Client(object):
         result = self.socket.recv()
         #print result
         #count time
-        self._mgr.info_colle(self.delta_time())
+        #self._mgr.info_colle(self.delta_time())
 
         parse = json.loads(result)
         self.parse(self,parse)
+        print self.delta_time()
 
     def delta_time(self):
         self._delta_time = datetime.datetime.now() - self.time

@@ -1,17 +1,11 @@
-from collections import *
-import datetime
+from httpquery import *
 
 
 def handler(client,data):
+   
+    http_query("login","test","test",0) 
     
-    if data["message_type"] == "login":
-         pass
-#        print data['result']
-        #client.write_message(msg)
+    #client.write_message(msg)
  
-def header(msg_type):
-    header = OrderedDict()
-    header["message_type"] = msg_type
-    return header
 
        

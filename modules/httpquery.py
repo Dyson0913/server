@@ -57,7 +57,7 @@ def update_credit(name,pw,balance):
     return request
 
 def main():
-    http_query("gamelogin","test","test",0)
+    http_query("login","test","test",0)
 
 if __name__ == "__main__":
     main()

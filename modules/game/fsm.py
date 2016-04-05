@@ -19,7 +19,6 @@ class State(object):
         logging.info( "on_enter " + self._module.__class__.__name__ )
         self._module.execute()
         self._next_state = self._module._next_state
-        self.msg()
 
     def on_update(self):
         pass
