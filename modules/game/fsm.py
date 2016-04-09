@@ -7,25 +7,25 @@ from threading import Timer
 
 class State(object):
 
-    def __init__(self,module,stay_period = 1):
+    def __init__(self,state_unit,stay_period = 1):
 
         self._period = stay_period
-        self._module = module
-        self._next_state = module._next_state
+        self._state_unit = state_unit
+        self._next_state = state_unit._next_state
         #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
 
     def on_enter(self):
         self._state_time = time.time()
-        logging.info( "on_enter " + self._module.__class__.__name__ )
-        self._module.execute()
-        self._next_state = self._module._next_state
+        logging.info( "on_enter " + self._state_unit.__class__.__name__ )
+        self._state_unit.execute()
+        self._next_state = self._state_unit._next_state
 
     def on_update(self):
         pass
 #        print self.get_remain_time()
 
     def msg(self):
-        mymsg =  self._module.msg()
+        mymsg =  self._state_unit.msg()
         mymsg['rest_time'] = self.get_remain_time()
         return mymsg
 
@@ -56,7 +56,7 @@ class fms(object):
 
    def add(self,state):
 #       logging.info( "state_name = " + state._module.__class__.__name__ )
-       self._all_state[state._module.__class__.__name__] = state
+       self._all_state[state._state_unit.__class__.__name__] = state
 
    def start(self,init_state):
 
@@ -64,9 +64,7 @@ class fms(object):
            logging.info( "init state error "+ init_state )
            return
 
-       state = self._all_state[init_state]
-       self._current_state = state
-       self._current_state.on_enter()
+       self.kick(init_state)
        threading.Timer(0.1, self.time).start()
 
    def time(self):
@@ -81,11 +79,14 @@ class fms(object):
    def transitions(self,state_name):
 #       logging.info("transistion to " + state_name)
        if self._all_state.has_key(state_name):
-           state = self._all_state[state_name]
-           self._current_state = state
-           self._current_state.on_enter()
+           self.kick(state_name)
        else:
           logging.info("error !! no such state")
+
+   def kick(self,init_state):
+       state = self._all_state[init_state]
+       self._current_state = state
+       self._current_state.on_enter()
 
    def msg(self):
        self._current_state.msg()
