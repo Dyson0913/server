@@ -93,102 +93,83 @@ class baccarat(object):
 #        self.publish(msg)
 
 
-class init(object):
+class init(State):
 
-    def __init__(self,game):
-        self._game = game
-        self._next_state = "wait_bet"
-
-    def execute(self):
-        self._game.reset()
-        self._game.flush_state("init")
-
-    def msg(self):
-        return self._game.msg()
-
-class wait_bet(object):
-
-    def __init__(self,game):
-        self._game = game
-        self._next_state = "player_card"
+    def __init__(self,stay_period):
+        self.period = stay_period
+        self.name = self.__class__.__name__
+        self.next_state = "wait_bet" 
 
     def execute(self):
-        self._game.flush_state("wait_bet")
-        pass
+        self.app.reset()
 
-    def msg(self):
-        return self._game.msg()
+class wait_bet(State):
 
-class player_card(object):
+    def __init__(self,stay_period):
+        self.period = stay_period
+        self.name = self.__class__.__name__
+        self.next_state = "player_card"
 
-    def __init__(self,game):
-        self._game = game
-        self._next_state = "banker_card"
+class player_card(State):
+
+    def __init__(self,stay_period):
+        self.period = stay_period
+        self.name = self.__class__.__name__
+        self.next_state = "banker_card"
 
     def execute(self):
-        self._game.deal_player_card()
+        self.app.deal_player_card()
         
-        if self._game.banker_extra_card():
-            self._next_state = "banker_card"
+        if self.app.banker_extra_card():
+            self.next_state = "banker_card"
         else:
-            self._next_state = "settle"
- 
-        self._game.flush_state("player_card")
+            self.next_state = "settle"
 
-    def msg(self):
-        return self._game.msg()
+class banker_card(State):
 
-class banker_card(object):
-
-    def __init__(self,game):
-        self._game = game
-        self._next_state = "player_card"
+    def __init__(self,stay_period):
+        self.period = stay_period
+        self.name = self.__class__.__name__
+        self.next_state = "player_card"
 
     def execute(self):
-        self._game.deal_banker_card()
+        self.app.deal_banker_card()
 
-        if self._game.get_banker_card_num() < 2:
+        if self.app.get_banker_card_num() < 2:
             return
 
-        if self._game.top_card_rule():
-            self._next_state = "settle"
+        if self.app.top_card_rule():
+            self.next_state = "settle"
 
-        if self._game.player_extra_card():
-            self._next_state = "player_card"
+        if self.app.player_extra_card():
+            self.next_state = "player_card"
         else:
-           if self._game.banker_extra_card():
-              self._next_state = "banker_card"
+           if self.app.banker_extra_card():
+              self.next_state = "banker_card"
            else:
-              self._next_state = "settle"
+              self.next_state = "settle"
 
-        self._game.flush_state("banker_card")
+class settle(State):
 
-    def msg(self):
-        return self._game.msg()
-
-class settle(object):
-
-    def __init__(self,game):
-        self._game = game
-        self._next_state = "init"
+    def __init__(self,stay_period):
+        self.period = stay_period
+        self.name = self.__class__.__name__
+        self.next_state = "init"
 
     def execute(self):
-        self._game.settle()
-        self._game.flush_state("settle")
-
-    def msg(self):
-        return self._game.msg()
+        self.app.settle()
 
 def main():
     
     mygame = baccarat("main_baccarat")
 
     myfms = fms()
-    myfms.add(State(init(mygame),1))
-    myfms.add(State(wait_bet(mygame),1))
-    myfms.add(State(player_card(mygame),2))
-    myfms.add(State(banker_card(mygame),1))
-    myfms.add(State(settle(mygame),1))
+    setattr(myfms,'app',mygame)
+    myfms.add(init(1))
+    myfms.add(wait_bet(1))
+    myfms.add(player_card(2))
+    myfms.add(banker_card(1))
+    myfms.add(settle(1))
 
     myfms.start("init")
 

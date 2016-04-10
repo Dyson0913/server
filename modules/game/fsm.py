@@ -7,31 +7,38 @@ from threading import Timer
 
 class State(object):
 
-    def __init__(self,state_unit,stay_period = 1):
-
-        self._period = stay_period
-        self._state_unit = state_unit
-        self._next_state = state_unit._next_state
-        #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
+    period = 0
+    name = None
+    next_state = None
 
     def on_enter(self):
         self._state_time = time.time()
-        logging.info( "on_enter " + self._state_unit.__class__.__name__ )
-        self._state_unit.execute()
-        self._next_state = self._state_unit._next_state
+        logging.info( "on_enter " + self.name)
+        self.enter()
+
+    def enter(self):         
+        self.execute()
+        self.app.flush_state(self.name)
+#        self.app.msg()
+        
+    def execute(self):
+        pass
+
+    def next_state(self,next_state):
+        self._next_state = next_state
 
     def on_update(self):
         pass
 #        print self.get_remain_time()
 
     def msg(self):
-        mymsg =  self._state_unit.msg()
+        mymsg =  self.app.msg()
         mymsg['rest_time'] = self.get_remain_time()
         return mymsg
 
     def timeout(self):
         timediff = time.time() - self._state_time
-        if timediff > self._period:
+        if timediff > self.period:
             return True
         else:
             return False
@@ -40,10 +47,10 @@ class State(object):
     def get_remain_time(self):
         timediff = time.time() - self._state_time
         
-        if timediff > self._period:
-            diff = self._period
+        if timediff > self.period:
+            diff = self.period
         else:
-            diff = self._period - int(timediff)
+            diff = self.period - int(timediff)
 
         return diff
 
@@ -56,7 +63,9 @@ class fms(object):
 
    def add(self,state):
 #       logging.info( "state_name = " + state._module.__class__.__name__ )
-       self._all_state[state._state_unit.__class__.__name__] = state
+#       logging.info( "state_name = " + state.name )
+       self._all_state[state.name] = state
+       setattr(state,'app',self.app) 
 
    def start(self,init_state):
 
@@ -66,11 +75,12 @@ class fms(object):
 
        self.kick(init_state)
        threading.Timer(0.1, self.time).start()
+       #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
 
    def time(self):
 
        if self._current_state.timeout():
-           self.transitions(self._current_state._next_state)
+           self.transitions(self._current_state.next_state)
        else:
            self._current_state.on_update()
 
@@ -89,7 +99,7 @@ class fms(object):
        self._current_state.on_enter()
 
    def msg(self):
-       self._current_state.msg()
+       self.app.msg()
 
 
 

@@ -13,11 +13,12 @@ class baccaratTestCase(unittest.TestCase):
         mygame = baccarat("test_baccart")
 
         self.myfms = fms()
-        self.myfms.add(State(init(mygame),1))
-        self.myfms.add(State(wait_bet(mygame),1))
-        self.myfms.add(State(player_card(mygame),2))
-        self.myfms.add(State(banker_card(mygame),2))
-        self.myfms.add(State(settle(mygame),1))
+        setattr(self.myfms,'app',mygame)
+        self.myfms.add(init(1))
+        self.myfms.add(wait_bet(5))
+        self.myfms.add(player_card(2))
+        self.myfms.add(banker_card(1))
+        self.myfms.add(settle(1))
         #myfms.start("init")
 
     # clean work after every test
@@ -27,9 +28,9 @@ class baccaratTestCase(unittest.TestCase):
     def test_baccarat_state(self):
 
         self.myfms.kick("init")
-        self.assertEqual("wait_bet",self.myfms._current_state._state_unit._next_state)
-        self.assertEqual([],self.myfms._current_state._state_unit._game._player)
-        self.assertEqual([],self.myfms._current_state._state_unit._game._banker)
+        self.assertEqual("wait_bet",self.myfms._current_state.next_state)
+        self.assertEqual([],self.myfms._current_state.app._player)
+        self.assertEqual([],self.myfms._current_state.app._banker)
 
 
     #@unittest.skip("skipping")
