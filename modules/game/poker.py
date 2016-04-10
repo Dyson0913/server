@@ -5,6 +5,7 @@ from collections import Counter
 class Poker(object):
     def __init__(self):
         self._dealed_cards = 0
+        self._test_data = None
         self._cards = ["1c", "1d", "1h", "1s", "2c", "2d", "2h", "2s", "3c", "3d", "3h", "3s",
            "4c", "4d", "4h", "4s", "5c", "5d", "5h", "5s", "6c", "6d", "6h", "6s",
            "7c", "7d", "7h", "7s", "8c", "8d", "8h", "8s", "9c", "9d", "9h", "9s",
@@ -17,6 +18,12 @@ class Poker(object):
         self._dealed_cards = 0
 
     def deal_cards(self, numbers):
+
+        if self._test_data != None:
+           card = self._test_data[0]
+           self._test_data.pop(0)
+           return card
+
         if (numbers + self._dealed_cards) <= len(self._cards):
             start = self._dealed_cards
             end = self._dealed_cards + numbers
@@ -28,6 +35,10 @@ class Poker(object):
     def get_remain_cards(self):
         remain = len(self._cards) - self._dealed_cards
         return remain
+
+    def test_script(self,test_data):
+        self._test_data = test_data
+
 
 class PokerPoint(object):
     #showhand type

@@ -80,11 +80,14 @@ class fms(object):
    def time(self):
 
        if self._current_state.timeout():
-           self.transitions(self._current_state.next_state)
+           self.next()
        else:
            self._current_state.on_update()
 
        threading.Timer(1, self.time).start()
+
+   def next(self):
+       self.transitions(self._current_state.next_state)
 
    def transitions(self,state_name):
 #       logging.info("transistion to " + state_name)
@@ -97,6 +100,9 @@ class fms(object):
        state = self._all_state[init_state]
        self._current_state = state
        self._current_state.on_enter()
+
+   def test_script(self,script_name,args):
+       self.app.test_script(script_name,args)
 
    def msg(self):
        self.app.msg()

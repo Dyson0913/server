@@ -16,6 +16,7 @@ class baccarat(object):
         self._poker = Poker()
         self._player =[]
         self._banker =[]
+        self._win = ""
         self._name = name
         self._info_to_client = None 
 
@@ -26,6 +27,9 @@ class baccarat(object):
         msg['bankerpoker'] = self._banker
 
         self._info_to_client = msg
+
+    def test_script(self,script_name,args):
+        self._poker.test_script(args)
 
     def msg(self):
         logging.info( "client msg " + str(self._info_to_client))
@@ -38,12 +42,12 @@ class baccarat(object):
 
     def deal_player_card(self):
         card = self._poker.deal_cards(1)
-        self._player += card
+        self._player.append(card)
         logging.info( "player card " + str(self._player))
 
     def deal_banker_card(self):
         card = self._poker.deal_cards(1)
-        self._banker += card
+        self._banker.append(card)
         logging.info( "banker card " + str(self._banker))
 
     def banker_extra_card(self):
@@ -71,12 +75,15 @@ class baccarat(object):
         winstate = ""
         if playerpoint > bankerpoint:
             logging.info("player win")
+            self._win = "player win"
             winstate += ba_paytable.combine_winstate(Baccarat_player,ba_odds_1)
         elif playerpoint < bankerpoint:
             logging.info("banker win")
+            self._win = "banker win"
             winstate += ba_paytable.combine_winstate(Baccarat_banker,ba_odds_095)
         else:
             logging.info("tie")
+            self._win = "tie"
             winstate += ba_paytable.combine_winstate(Baccarat_tie,ba_odds_8)
             # pair
             # playerpoint = PokerPoint.get_baccarat_point(self.playerpoker[2:])

@@ -28,9 +28,32 @@ class baccaratTestCase(unittest.TestCase):
     def test_baccarat_state(self):
 
         self.myfms.kick("init")
-        self.assertEqual("wait_bet",self.myfms._current_state.next_state)
+        self.myfms.test_script("tie",["3d","5d","5s","3c"])
         self.assertEqual([],self.myfms._current_state.app._player)
         self.assertEqual([],self.myfms._current_state.app._banker)
+
+        self.myfms.next()
+        self.assertEqual([],self.myfms._current_state.app._player)
+        self.assertEqual([],self.myfms._current_state.app._banker)
+        
+        self.myfms.next()
+        self.assertEqual(["3d"],self.myfms._current_state.app._player)
+        self.assertEqual([],self.myfms._current_state.app._banker)
+
+        self.myfms.next()
+        self.assertEqual(["3d"],self.myfms._current_state.app._player)
+        self.assertEqual(["5d"],self.myfms._current_state.app._banker)
+
+        self.myfms.next()
+        self.assertEqual(["3d","5s"],self.myfms._current_state.app._player)
+        self.assertEqual(["5d"],self.myfms._current_state.app._banker)
+
+        self.myfms.next()
+        self.assertEqual(["3d","5s"],self.myfms._current_state.app._player)
+        self.assertEqual(["5d","3c"],self.myfms._current_state.app._banker)
+
+        self.myfms.next()
+        self.assertEqual("tie",self.myfms._current_state.app._win)
 
 
     #@unittest.skip("skipping")
