@@ -28,8 +28,11 @@ class State(object):
         self._next_state = next_state
 
     def on_update(self):
-        pass
+        self.update()
 #        print self.get_remain_time()
+
+    def update(self):
+        pass
 
     def msg(self):
         mymsg =  self.app.msg()
@@ -37,6 +40,10 @@ class State(object):
         return mymsg
 
     def timeout(self):
+       
+        if self.period == -1:
+            return False
+
         timediff = time.time() - self._state_time
         if timediff > self.period:
             return True
