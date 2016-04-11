@@ -29,11 +29,12 @@ class game_mgr(object):
         serial_id = self._mgrname + str(len(self._running_game))
         new_game = baccarat(serial_id)
         myfms = fms()
-        myfms.add(State(init(new_game),1))
-        myfms.add(State(wait_bet(new_game),1))
-        myfms.add(State(player_card(new_game),2))
-        myfms.add(State(banker_card(new_game),1))
-        myfms.add(State(settle(new_game),1))
+        setattr(myfms,'app',new_game)
+        myfms.add(init(1))
+        myfms.add(wait_bet(1))
+        myfms.add(player_card(2))
+        myfms.add(banker_card(1))
+        myfms.add(settle(1))
         myfms.start("init")
 
         self._running_game[serial_id] = myfms

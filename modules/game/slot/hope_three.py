@@ -32,7 +32,6 @@ class hope_three(object):
     def flush_state(self,state):
         msg = dict()
         msg['state'] = state
-
         self._info_to_client = msg
 
     def test_script(self,script_name,args):
@@ -57,6 +56,9 @@ class init(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.next_state = "NG"
+
+    def update(self):
+        print "ini update"
 
 class NG(State):
 
@@ -96,7 +98,7 @@ def main():
 
     myfms = fms()
     setattr(myfms,'app',mygame)
-    myfms.add(init(1))
+    myfms.add(init(-1))
     myfms.add(NG(-1))
     myfms.add(FG(-1))
     myfms.add(JP(-1))

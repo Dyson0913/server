@@ -29,6 +29,7 @@ class State(object):
 
     def on_update(self):
         self.update()
+        self.app.flush_state(self.name)
 #        print self.get_remain_time()
 
     def update(self):

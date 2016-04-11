@@ -1,12 +1,21 @@
 import json
 
+#TODO
+#msg_proxy = msg_proxy(zmq_proxy(data))
+#msg_proxy.callback(temp_hanle)
+
 def handle(json_msg):
     print "hope_slot"
     print json_msg
     #return normal_handle(json_msg)
+
+    #TODO how to syc
+    #msg_proxy.send(json_msg)
     return temp_handle(json_msg)
 
 def temp_handle(json_msg):
+
+    #
 
     if json_msg['cmd'] == "request_join":
        rep = header(json_msg)
