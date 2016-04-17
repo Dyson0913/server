@@ -17,6 +17,7 @@ class zmqWorker(object):
           self._domain = data["domain"]
           self._front_push_port = data["front_push_port"]
           self._front_pull_port = data["front_pull_port"]
+          self._sub_mgr_port = data["sub_mgr_port"]
           self._back_port = data["back_port"]
           module_list =[]
           module_list.append( data['module']['auth'] )
@@ -48,6 +49,14 @@ class zmqWorker(object):
           self._result_send = self._context.socket(zmq.PUSH)
           self._result_send.connect(back_url)
 
+          #sub from mgr
+          #self._sub_from_mgr = self._context.socket(zmq.SUB)
+          #sub_mgr = url + str(self._sub_mgr_port)
+          #self._sub_from_mgr.connect (sub_mgr)
+          #topicfilter = "9999"
+          #self._sub_from_mgr.setsockopt(zmq.SUBSCRIBE, topicfilter)
+
+
 
       def start(self):
 
@@ -56,6 +65,12 @@ class zmqWorker(object):
               json_msg = self.receiver.recv_json()
               result = self._module.execute_work(json_msg) 
               
+          #    string,jsonmsg = self._sub_from_mgr.recv_multipart()
+          #    print string
+          #    print jsonmsg
+              continue
+
+              #TODO move to sub 
               #report to back
               self._result_send.send_json(result)
 
