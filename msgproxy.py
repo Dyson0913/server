@@ -7,13 +7,14 @@ sys.path.append("modules/")
 from config_parser import * 
 
 from msgworker import *
+from msg_proxy import *
 
-class questWorker(object):
+class msg_proxy(object):
 
       def __init__(self,module):
           self._module = module
           self._pid = os.getpid()
-          print 'Worker %s is running ...' % self._pid
+          print 'msg proxy %s is running ...' % self._pid
 
 
       def Receive(self):
@@ -25,8 +26,8 @@ def main():
     # create any kind receiver module you want
     data = config_parser()
 
-    work = questWorker(zmqWorker(data))
-    work.Receive()
+    proxy = msg_proxy(zmq_msg_proxy(data))
+    proxy.Receive()
    
 
 if __name__ == "__main__":
