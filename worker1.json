@@ -1,5 +1,9 @@
 {
- "domain":"localhost","front_push_port":6665,"front_pull_port":6666,"sub_mgr_port":5556,"back_port":6669,
+ "domain":"localhost",
+ "front_push_port":6007,"front_pull_port":6011,
+ "pub_broker_port":6029,"sub_broker_port":6037,
+ "back_port":6669,
+ "identity":1,
  "db": {"host":"52.193.112.227","port":6379, "db":0},
  "module":{
            "auth":"hojo_auth",

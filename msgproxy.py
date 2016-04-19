@@ -6,7 +6,7 @@ sys.path.append("modules/")
 
 from config_parser import * 
 
-from msgworker import *
+#from msgworker import *
 from msg_proxy import *
 
 class msg_proxy(object):
@@ -18,8 +18,6 @@ class msg_proxy(object):
 
 
       def Receive(self):
-#          while True:
-#              self._module.receive()
           self._module.start()           
 
 def main():

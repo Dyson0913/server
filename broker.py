@@ -1,4 +1,5 @@
 import zmq
+from config_parser import *
 
 
 def start_msgqueue(frontend_port, backend_port):
@@ -32,25 +33,26 @@ def start_msgqueue(frontend_port, backend_port):
     context.term()
 
 
-def start_pub_sub_proxy(frontend_port, backend_port):
+def start_pub_sub_proxy(sub_port, pub_port):
 
     context = zmq.Context()
 
     sub = context.socket(zmq.XSUB)
-    sub_addr = "tcp://*:%d" % frontend_port
+    sub_addr = "tcp://*:%d" % sub_port
     sub.bind(sub_addr)
 
     pub = context.socket(zmq.XPUB)
-    pub_addr = "tcp://*:%d" % backend_port
+    pub_addr = "tcp://*:%d" % pub_port
     pub.bind(pub_addr)
 
-    print "pub/sub start"
     zmq.proxy(pub,sub,None)
 
 def main():
+
+    data = config_parser()
     
     #start_msgqueue(7777,8888)
-    start_pub_sub_proxy(7777,8888)
+    start_pub_sub_proxy(data["sub_broker_port"],data["pub_broker_port"])
 
 
 if __name__ == "__main__":

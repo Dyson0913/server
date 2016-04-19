@@ -19,7 +19,7 @@ class zmq_msg_proxy(object):
           self._domain = data["domain"]
           self._front_push_port = data["front_push_port"]
           self._front_pull_port = data["front_pull_port"]
-          self._sub_mgr_port = data["sub_mgr_port"]
+          self._id = data["id"]
 
           self._context = zmq.Context()
           url = "tcp://"+self._domain + ":"
@@ -38,35 +38,22 @@ class zmq_msg_proxy(object):
           self._front_push  = ZMQStream(self._front_push)
           self._front_push.on_recv(self.push_handle)
 
-          print "front to " + front + " front_pull " + front_pull
+          print "pull front " + front + "push to front " + front_pull
 
-          #send to msg broker dealer 
+          #send to broker
+          #data["pub_broker_port"]
           self.pub = self._context.socket(zmq.PUB)
-          pub = url + "7777"
+          pub = url + str(data["sub_broker_port"])
           self.pub.connect(pub)
           
-          print "pub to  " +pub 
-          #recever from msg broker
-#          self.sub= self._context.socket(zmq.SUB)
-#          sub = url + "7788"
-#          self.sub.connect(sub)
-#          self.sub = ZMQStream(self.sub)
-#          self.sub.on_recv(self.sub_handle)
-
-
-          #sub from mgr
-          #self._sub_from_mgr = self._context.socket(zmq.SUB)
-          #sub_mgr = url + str(self._sub_mgr_port)
-          #self._sub_from_mgr.connect (sub_mgr)
-          #topicfilter = "9999"
-          #self._sub_from_mgr.setsockopt(zmq.SUBSCRIBE, topicfilter)
+          print "pub to " +pub
 
       def pull_handle(self,msg):
           
           print "pull_handle"
           parsed = json.loads(msg[0])
           print parsed
-          self.pub.send_multipart([str(1),str(msg)])
+          self.pub.send_multipart([str(self._id),str(msg)])
           #self.pub.send(msg)
 
       def push_handle(self,msg):
@@ -85,19 +72,3 @@ class zmq_msg_proxy(object):
           print "start"
           loop = IOLoop.current()
           loop.start()
-#          while True:
-#              json_msg = self.receiver.recv_json()
-#              result = self._module.execute_work(json_msg) 
-              
-          #    string,jsonmsg = self._sub_from_mgr.recv_multipart()
-          #    print string
-          #    print jsonmsg
-
-def main():
-    worker = zmqWorker('localhost',8899)
-    worker.start()
-
-if __name__ == "__main__":
-
-    main()
-

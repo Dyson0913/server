@@ -25,11 +25,10 @@ class msgworker(object):
 
           #send from front 
           self.recever = self._context.socket(zmq.SUB)
-          front = url + str("8888")
-          topicfilter = "1"
+          front = url + str(data["pub_broker_port"])
+          topicfilter = str(data["id"])
           self.recever.setsockopt(zmq.SUBSCRIBE, topicfilter)
           self.recever.connect(front)
-#          self.recever.bind("tcp://*:"+"8899")
           
           self.recever  = ZMQStream(self.recever)
           self.recever.on_recv(self.sub_handle)
