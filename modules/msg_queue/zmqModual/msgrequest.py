@@ -51,6 +51,7 @@ class zmq_request(object):
             del data['client']
 
         self._soc.send_json(data)
+        
 
     def handle_worker_msg(self,msg):
         #print "handle_reply  %s" % msg

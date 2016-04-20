@@ -17,17 +17,15 @@ class msgworker(object):
       def __init__(self,data):
 
           self._domain = data["domain"]
-          self._front_push_port = data["front_push_port"]
-          self._front_pull_port = data["front_pull_port"]
 
           self._context = zmq.Context()
           url = "tcp://"+self._domain + ":"
 
           #send from front 
-          self.recever = self._context.socket(zmq.SUB)
-          front = url + str(data["pub_broker_port"])
-          topicfilter = str(data["id"])
-          self.recever.setsockopt(zmq.SUBSCRIBE, topicfilter)
+          self.recever = self._context.socket(zmq.PULL)
+          front = url + str(data["broker_back_port"])
+#          topicfilter = str(data["id"])
+#          self.recever.setsockopt(zmq.SUBSCRIBE, topicfilter)
           self.recever.connect(front)
           
           self.recever  = ZMQStream(self.recever)

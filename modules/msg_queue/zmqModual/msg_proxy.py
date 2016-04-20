@@ -42,8 +42,8 @@ class zmq_msg_proxy(object):
 
           #send to broker
           #data["pub_broker_port"]
-          self.pub = self._context.socket(zmq.PUB)
-          pub = url + str(data["sub_broker_port"])
+          self.pub = self._context.socket(zmq.PUSH)
+          pub = url + str(data["broker_front_port"])
           self.pub.connect(pub)
           
           print "pub to " +pub
@@ -51,10 +51,10 @@ class zmq_msg_proxy(object):
       def pull_handle(self,msg):
           
           print "pull_handle"
+          print msg
           parsed = json.loads(msg[0])
-          print parsed
-          self.pub.send_multipart([str(self._id),str(msg)])
-          #self.pub.send(msg)
+          #self.pub.send_multipart([str(self._id),str(msg)])
+          self.pub.send_json(msg)
 
       def push_handle(self,msg):
 
