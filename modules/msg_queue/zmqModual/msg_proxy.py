@@ -54,7 +54,7 @@ class zmq_msg_proxy(object):
           print msg
           parsed = json.loads(msg[0])
           #self.pub.send_multipart([str(self._id),str(msg)])
-          self.pub.send_json(msg)
+          self.pub.send_json(parsed)
 
       def push_handle(self,msg):
 

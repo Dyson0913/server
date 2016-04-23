@@ -2,8 +2,8 @@ import json
 
 def handle(json_msg):
     print json_msg
-    return normal_handle(json_msg) 
-#    return blocking_test(json_msg) 
+#    return normal_handle(json_msg) 
+    return blocking_test(json_msg) 
 
 def normal_handle(json_msg):
 

@@ -5,9 +5,10 @@ from zmq.eventloop.ioloop import IOLoop
 from zmq.eventloop.zmqstream import ZMQStream
 from zmq.eventloop import ioloop
 
-
 import sys
-#sys.path.append('../../../')
+sys.path.append('../../')
+
+from  module_loader import *
 
 ioloop.install()
 
@@ -18,32 +19,35 @@ class msgworker(object):
 
           self._domain = data["domain"]
 
+          # load module
+          module_list =[]
+          module_list.append( data['module']['auth'] )
+          module_list.append( data['module']['lobby'] )
+          modual_list = data["module"]['app']
+          for item in modual_list:
+              module_list.append( item['game'] )
+
+          self._module = module_load(module_list)
+          self._module.dynamicLoadModules()
+
           self._context = zmq.Context()
           url = "tcp://"+self._domain + ":"
 
-          #send from front 
+          #send from broker 
           self.recever = self._context.socket(zmq.PULL)
           front = url + str(data["broker_back_port"])
-#          topicfilter = str(data["id"])
-#          self.recever.setsockopt(zmq.SUBSCRIBE, topicfilter)
           self.recever.connect(front)
           
           self.recever  = ZMQStream(self.recever)
-          self.recever.on_recv(self.sub_handle)
-          print "sub from " + front
+          self.recever.on_recv(self.handle_from_broker)
+          print "pull from broker" + front
 
-          #sub_mgr = url + str(self._sub_mgr_port)
-          #self._sub_from_mgr.connect (sub_mgr)
-          #topicfilter = "9999"
-          #self._sub_from_mgr.setsockopt(zmq.SUBSCRIBE, topicfilter)
-
-      def sub_handle(self,msg):
+      def handle_from_broker(self,msg):
           
-          print "sub_handle"
-          #parsed = json.loads(msg[0])
-          print msg
-          ##self.pub.send_multipart([str("1"),str(msg)])
-
+          parsed = json.loads(msg[0])
+          
+          #dispatch to module
+          self._module.execute_work(parsed)
 
       def push_handle(self,msg):
 
