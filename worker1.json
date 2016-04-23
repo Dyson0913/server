@@ -1,5 +1,5 @@
 {
- "domain":"localhost",
+ "domain":"52.193.112.227",
  "front_push_port":6007,"front_pull_port":6011,
  "broker_front_port":6029,"broker_back_port":6037,
  "back_port":6669,
