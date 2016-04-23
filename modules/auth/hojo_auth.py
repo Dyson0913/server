@@ -3,10 +3,11 @@ sys.path.append('../')
 
 from httpquery import *
 
-def handle(json_msg):
+def handle(json_msg,socket):
 #    print "hojo_auth"
 #    print json_msg
-    return normal_handle(json_msg) 
+    rep = normal_handle(json_msg)
+    socket.send_json(rep)
 
 def normal_handle(json_msg):
 

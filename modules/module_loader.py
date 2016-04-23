@@ -41,7 +41,7 @@ class module_load(object):
         #for module in self.modules:
         #    module.init()
 
-    def execute_work(self,json_msg):
+    def execute_work(self,json_msg,socket):
 #        print "modula"
 #        print json_msg
         module_idx = 0 
@@ -49,7 +49,7 @@ class module_load(object):
            module_idx = self._default_module.index(json_msg['module'])
         else:
            module_idx = self.config.index(json_msg['module'])
-        result = self.modules[module_idx].handle(json_msg)
+        result = self.modules[module_idx].handle(json_msg,socket)
         return result
          
 

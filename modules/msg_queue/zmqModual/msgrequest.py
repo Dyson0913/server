@@ -21,18 +21,18 @@ class zmq_request(object):
     def __init__(self,data):
 
         self._domain = data["domain"]
-        self._front_push_port = data["front_push_port"]
-        self._front_pull_port = data["front_pull_port"]
+        self._proxy_push_port = data["proxy_push_port"]
+        self._proxy_pull_port = data["proxy_pull_port"]
 
         url = "tcp://*:"
         self._context = zmq.Context()
         self._soc = self._context.socket(zmq.PUSH)
-        push_url = url + str(self._front_push_port)
+        push_url = url + str(self._proxy_push_port)
         self._soc.bind(push_url)
 
         #send from work
         self.receiver = self._context.socket(zmq.PULL)
-        pull_url = url + str(self._front_pull_port)
+        pull_url = url + str(self._proxy_pull_port)
         self.receiver.bind(pull_url)
 
         self.receiver = ZMQStream(self.receiver)

@@ -67,12 +67,12 @@ def start_back_push_pull(frontend_port, backend_port):
     context = zmq.Context()
 
     # Socket facing clients
-    frontend = context.socket(zmq.PULL)
+    frontend = context.socket(zmq.PUSH)
     frontend_addr = "tcp://*:%d" % frontend_port
     frontend.bind(frontend_addr)
 
     # Socket facing services
-    backend  = context.socket(zmq.PUSH)
+    backend  = context.socket(zmq.PULL)
     back_addr = "tcp://*:%d" % backend_port
     backend.bind(back_addr)
 
@@ -84,8 +84,8 @@ def start_back_push_pull(frontend_port, backend_port):
 def main():
 
     data = config_parser()
-    start_push_pull(data["broker_to_worker_front_port"],data["broker_to_worker_back_port"])
-#    start_back_push_pull(data["woker_to_broker_front_port"],data["woker_to_brocker_back_port"])
+#    start_push_pull(data["broker_to_worker_front_port"],data["broker_to_worker_back_port"])
+    start_back_push_pull(data["worker_to_broker_front_port"],data["worker_to_broker_back_port"])
     #start_msgqueue(data["broker_front_port"],data["broker_back_port"])
     #start_pub_sub_proxy(data["broker_front_port"],data["pub_broker_port"])
 

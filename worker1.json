@@ -1,8 +1,8 @@
 {
  "domain":"52.193.112.227",
- "front_push_port":6007,"front_pull_port":6011,
- "broker_front_port":6029,"broker_back_port":6037,
- "back_port":6669,
+ "proxy_push_port":6007,"proxy_pull_port":6011,
+ "broker_to_worker_front_port":6029,"broker_to_worker_back_port":6037,
+ "worker_to_broker_front_port":6043,"worker_to_broker_back_port":6047,
  "identity":1,
  "db": {"host":"52.193.112.227","port":6379, "db":0},
  "module":{

@@ -17,8 +17,8 @@ class zmq_msg_proxy(object):
       def __init__(self,data):
 
           self._domain = data["domain"]
-          self._front_push_port = data["front_push_port"]
-          self._front_pull_port = data["front_pull_port"]
+          self._proxy_push_port = data["proxy_push_port"]
+          self._proxy_pull_port = data["proxy_pull_port"]
           self._id = data["id"]
 
           self._context = zmq.Context()
@@ -26,46 +26,50 @@ class zmq_msg_proxy(object):
 
           #send from front 
           self.recever = self._context.socket(zmq.PULL)
-          front = url + str(self._front_push_port)
+          front = url + str(self._proxy_push_port)
           self.recever.connect(front)
           self.recever  = ZMQStream(self.recever)
           self.recever.on_recv(self.pull_handle)
           
           #send to front
           self._front_push = self._context.socket(zmq.PUSH)
-          front_pull = url + str(self._front_pull_port)
+          front_pull = url + str(self._proxy_pull_port)
           self._front_push.connect(front_pull)
-          self._front_push  = ZMQStream(self._front_push)
-          self._front_push.on_recv(self.push_handle)
+          #self._front_push  = ZMQStream(self._front_push)
+          #self._front_push.on_recv(self.push_handle)
 
           print "pull front " + front + "push to front " + front_pull
 
           #send to broker
           #data["pub_broker_port"]
-          self.pub = self._context.socket(zmq.PUSH)
-          pub = url + str(data["broker_front_port"])
-          self.pub.connect(pub)
+          self.broker_push = self._context.socket(zmq.PUSH)
+          push = url + str(data["broker_to_worker_front_port"])
+          self.broker_push.connect(push)
           
-          print "pub to " +pub
+          self.broker_pull = self._context.socket(zmq.PULL)
+          pull = url + str(data["worker_to_broker_front_port"])
+          self.broker_pull.connect(pull)
+          self.broker  = ZMQStream(self.broker_pull)
+          self.broker.on_recv(self.push_handle)
+          print "push to " + push + "pull from " + pull
 
       def pull_handle(self,msg):
           
-          print "pull_handle"
-          print msg
           parsed = json.loads(msg[0])
           #self.pub.send_multipart([str(self._id),str(msg)])
-          self.pub.send_json(parsed)
+          self.broker_push.send_json(parsed)
 
       def push_handle(self,msg):
 
+          result = json.loads(msg[0])
+          print result
           #del data just for db
           if 'for_db' in result:
               del result['for_db']
               del result['key']
                  
           #response to client
-          print "msg_broker %s" + msg
-#          self._front_push.send_json(msg)
+          self._front_push.send_json(msg)
 
       def start(self):
 

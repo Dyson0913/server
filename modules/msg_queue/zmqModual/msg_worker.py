@@ -35,19 +35,24 @@ class msgworker(object):
 
           #send from broker 
           self.recever = self._context.socket(zmq.PULL)
-          front = url + str(data["broker_back_port"])
+          front = url + str(data["broker_to_worker_back_port"])
           self.recever.connect(front)
-          
           self.recever  = ZMQStream(self.recever)
           self.recever.on_recv(self.handle_from_broker)
-          print "pull from broker" + front
+          
+          self.push = self._context.socket(zmq.PUSH)
+          broker_back = url + str(data["worker_to_broker_back_port"])
+          self.push.connect(broker_back)
+          print "pull from broker" + front + "push to broker "+ broker_back
+
+          #TODO sub implement
 
       def handle_from_broker(self,msg):
           
           parsed = json.loads(msg[0])
           
           #dispatch to module
-          self._module.execute_work(parsed)
+          self._module.execute_work(parsed,self.push)
 
       def push_handle(self,msg):
 
