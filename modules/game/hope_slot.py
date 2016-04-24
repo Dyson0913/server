@@ -4,14 +4,15 @@ import json
 #msg_proxy = msg_proxy(zmq_proxy(data))
 #msg_proxy.callback(temp_hanle)
 
-def handle(json_msg):
+def handle(json_msg,socket):
     print "hope_slot"
     print json_msg
     #return normal_handle(json_msg)
 
     #TODO how to syc
     #msg_proxy.send(json_msg)
-    return temp_handle(json_msg)
+    rep = temp_handle(json_msg)
+    socket.send_json(rep)
 
 def temp_handle(json_msg):
 

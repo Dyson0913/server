@@ -69,7 +69,7 @@ class zmq_msg_proxy(object):
               del result['key']
                  
           #response to client
-          self._front_push.send_json(msg)
+          self._front_push.send_json(result)
 
       def start(self):
 

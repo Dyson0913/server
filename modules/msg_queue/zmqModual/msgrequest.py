@@ -58,7 +58,8 @@ class zmq_request(object):
         
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])
-
+        print parsed
+        
         if parsed == None:
             print "handle work msg  error = None"
             return
