@@ -1,9 +1,10 @@
 import json
 
-def handle(json_msg,socket):
+def handle(json_msg,socket_list):
     print json_msg
 #    return normal_handle(json_msg) 
     rep = blocking_test(json_msg)
+    socket = socket_list[0]
     socket.send_json(rep)
 
 def normal_handle(json_msg):

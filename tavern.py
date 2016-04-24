@@ -11,7 +11,7 @@ from config_parser import *
 class tavern(object):
 
     def __init__(self,data):
-        port_from_worker = data["back_port"]
+        port_from_worker = data["db_proxy_port"]
         domain = "*"
 
         self.context = zmq.Context()

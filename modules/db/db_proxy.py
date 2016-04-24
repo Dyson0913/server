@@ -29,8 +29,12 @@ class db_proxy(object):
         
         self._module.save(key,json.dumps(new_json))
 
-    def get(self,json_msg):
-        key = json_msg['key']
+    def create_game(self,room_name,player):
+        game = dict()
+        game['creater'] = player
+        self._module.save(room_name,json.dumps(game))
+
+    def get(self,key):
 
         if key == None:
            print "no key return None"

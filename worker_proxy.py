@@ -4,6 +4,11 @@ import sys
 sys.path.append("modules/msg_queue/zmqModual/")
 sys.path.append("modules/")
 
+sys.path.append("modules/db")
+sys.path.append("modules/db/noSQL")
+sys.path.append('modules/game/slot/')
+
+
 from config_parser import * 
 
 from msg_worker import *

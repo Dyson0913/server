@@ -1,24 +1,41 @@
 import json
 
-#TODO
-#msg_proxy = msg_proxy(zmq_proxy(data))
-#msg_proxy.callback(temp_hanle)
+from slot_mgr import *
 
-def handle(json_msg,socket):
-    print "hope_slot"
+
+slot_mgr = game_mgr("slot_mgr")
+
+
+def handle(json_msg,socket_list):
     print json_msg
-    #return normal_handle(json_msg)
 
-    #TODO how to syc
-    #msg_proxy.send(json_msg)
-    rep = temp_handle(json_msg)
+    socket = socket_list[0]
+    rep = temp_handle(json_msg,socket_list[1])
     socket.send_json(rep)
 
-def temp_handle(json_msg):
+def temp_handle(json_msg,db):
 
-    #
+    #TODO asking gmr in db, ok
+
+    #create by return id or fail repley ( ex, join fail or open fail) ok
+
+    #creat game ok ,leave remove
 
     if json_msg['cmd'] == "request_join":
+       join_room = json_msg['module']
+       result = db.get(join_room)
+
+       #create db game data
+       if result == None :
+           db.create_game(join_room,json_msg['uuid'])
+       else:
+          print "room open"
+          print result
+ 
+       #create game instance
+       create_msg = slot_mgr.order("test")
+       print create_msg
+
        rep = header(json_msg)
        rep['state'] = "game_join_ok"
 

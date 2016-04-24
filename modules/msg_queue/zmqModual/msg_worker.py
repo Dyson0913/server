@@ -8,7 +8,9 @@ from zmq.eventloop import ioloop
 import sys
 sys.path.append('../../')
 
-from  module_loader import *
+from module_loader import *
+from db_proxy import *
+
 
 ioloop.install()
 
@@ -45,6 +47,12 @@ class msgworker(object):
           self.push.connect(broker_back)
           print "pull from broker" + front + "push to broker "+ broker_back
 
+          #db_proxy
+          db_host = data['db']['host']
+          db_port = data['db']['port']
+          db_pw = data['dbpw']
+          self._db = db_proxy(db_host,db_port,db_pw)
+
           #TODO sub implement
 
       def handle_from_broker(self,msg):
@@ -52,7 +60,7 @@ class msgworker(object):
           parsed = json.loads(msg[0])
           
           #dispatch to module
-          self._module.execute_work(parsed,self.push)
+          self._module.execute_work(parsed,[self.push,self._db])
 
       def push_handle(self,msg):
 
