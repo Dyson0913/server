@@ -25,38 +25,33 @@ def temp_handle(json_msg,db):
        join_room = json_msg['module']
        result = db.get(join_room)
 
+       rep = header(json_msg)
+
        #create db game data
        if result == None :
            db.create_game(join_room,json_msg['uuid'])
+
+           #create game instance
+           ini_msg = slot_mgr.spawn(join_room)
+           #create game instance
+           rep['state'] = "game_join_ok"
+           rep['Line'] = ini_msg['Line']
+           rep['Symbol_Num'] = init_msg['Symbol_num']
+           rep['odds'] = init_msg['odds']
+
        else:
           print "room open"
-          print result
+          game_info = json.loads(result)
+          #not myself 
+          if game_info['creater'] != json_msg['uuid'] :
+              rep['state'] = "game_join_fail"
+          else:
+              print "self game get init msg"
+              #ini_msg = slot_mgr.spawn(join_room)
  
-       #create game instance
-       create_msg = slot_mgr.order("test")
-       print create_msg
 
-       rep = header(json_msg)
-       rep['state'] = "game_join_ok"
-
-       #TODO gamestart
-       rep['init_info'] = "you get init"
-
+       #TODO game
        rep['UserPoint'] = 100
-       rep['Line'] = 30
-       rep['Symbol_Num'] = 8
-       odds = dict()
-       odds['N0'] = [0 , 0 , 5  , 15 , 50]
-       odds['N1'] = [0 , 0 , 10  , 20 , 60]
-       odds['N2'] = [0 , 0 , 15  , 40 , 80]
-       odds['N3'] = [0 , 0 ,20  , 60 , 100]
-       odds['N4'] = [0 , 5 , 25  , 80 , 150]
-       odds['N5'] = [0 , 10 ,30   ,100 , 200]
-       odds['N6'] = [0 , 15 ,50   ,200 , 200]
-       odds['N7'] = [0 , 15 ,100   ,300 ,600]
-       odds['W'] = [0 , 20 ,200   ,500 ,800]
-       odds['S'] = [0 , 0 ,0 ,0 ,0]
-       rep['odds'] = odds
 
        return rep
 

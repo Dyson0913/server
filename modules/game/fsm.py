@@ -112,14 +112,10 @@ class fms(object):
    def test_script(self,script_name,args):
        self.app.test_script(script_name,args)
 
+   def init_msg(self):
+       return self.app.init_msg()
+
    def msg(self):
        self.app.msg()
-
-
-
-
-
-
-
 
 

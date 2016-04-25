@@ -37,6 +37,15 @@ class hope_three(object):
     def test_script(self,script_name,args):
         self._poker.test_script(args)
 
+    def init_msg(self):
+        init = dict()
+        init['Line'] = self._line
+        init['Symbol_num'] = self.symbol_num
+        init['odds'] = self._odd
+
+        logging.info( "init msg " + str(init))
+        return init
+
     def msg(self):
         logging.info( "client msg " + str(self._info_to_client))
         return self._info_to_client

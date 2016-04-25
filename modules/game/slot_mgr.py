@@ -12,24 +12,23 @@ class game_mgr(object):
         self._running_game = {}
         self._mgrname = name
 
-    def order(self,json_msg):
+    def spawn(self,game_module):
         
-       #if json_msg['cmd'] == "request_join":
-  #     if json_msg['cmd'] == "request_open":
-          #TODO open self_config game by client
-#          json_msg['config']
-        msg = self.spawn()
+        #TODO open self_config game by client
+        msg = self.create(game_module)
         return msg
  
 #       wait in backi( match algo),ready, open a game to service
 
 
-    def spawn(self):
+    def create(self,game):
         
         serial_id = self._mgrname + str(len(self._running_game))
-        mygame = hope_three(serial_id,8,5,30)
-
         myfms = fms()
+        
+        if game == "hope_three":
+            mygame = hope_three(serial_id,8,5,30)
+
         setattr(myfms,'app',mygame)
         myfms.add(init(-1))
         myfms.add(NG(-1))
@@ -39,7 +38,7 @@ class game_mgr(object):
         myfms.start("init")
 
         self._running_game[serial_id] = myfms
-        return myfms.msg()
+        return myfms.init_msg()
 
 
 def main():
