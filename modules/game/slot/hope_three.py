@@ -40,7 +40,7 @@ class hope_three(object):
     def init_msg(self):
         init = dict()
         init['Line'] = self._line
-        init['Symbol_num'] = self.symbol_num
+        init['Symbol_num'] = self._symbol_num
         init['odds'] = self._odd
 
         logging.info( "init msg " + str(init))

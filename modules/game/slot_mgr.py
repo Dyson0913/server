@@ -12,21 +12,21 @@ class game_mgr(object):
         self._running_game = {}
         self._mgrname = name
 
-    def spawn(self,game_module):
+    def spawn(self,game_module,room):
         
         #TODO open self_config game by client
-        msg = self.create(game_module)
+        msg = self.create(game_module,room)
         return msg
  
 #       wait in backi( match algo),ready, open a game to service
 
 
-    def create(self,game):
+    def create(self,game,room):
         
-        serial_id = self._mgrname + str(len(self._running_game))
+        serial_id = game + "_" + room
         myfms = fms()
-        
-        if game == "hope_three":
+        mygame = None 
+        if game == "hope":
             mygame = hope_three(serial_id,8,5,30)
 
         setattr(myfms,'app',mygame)

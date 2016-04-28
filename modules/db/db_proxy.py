@@ -29,10 +29,12 @@ class db_proxy(object):
         
         self._module.save(key,json.dumps(new_json))
 
-    def create_game(self,room_name,player):
+    def create_game(self,player,module,room):
         game = dict()
         game['creater'] = player
-        self._module.save(room_name,json.dumps(game))
+        game['module'] = module
+        game['room'] = room
+        self._module.save( module + "_" + room,json.dumps(game))
 
     def get(self,key):
 

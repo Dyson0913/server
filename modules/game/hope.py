@@ -15,27 +15,25 @@ def handle(json_msg,socket_list):
 
 def temp_handle(json_msg,db):
 
-    #TODO asking gmr in db, ok
-
-    #create by return id or fail repley ( ex, join fail or open fail) ok
-
     #creat game ok ,leave remove
 
     if json_msg['cmd'] == "request_join":
-       join_room = json_msg['module']
-       result = db.get(join_room)
+       module = json_msg['module']
+       room = json_msg['room']
+       config = module + "_" + room
+       result = db.get(config)
 
        rep = header(json_msg)
 
        #create db game data
        if result == None :
-           db.create_game(join_room,json_msg['uuid'])
+           db.create_game(json_msg['uuid'],module,room)
 
            #create game instance
-           ini_msg = slot_mgr.spawn(join_room)
+           init_msg = slot_mgr.spawn(module,room)
            #create game instance
            rep['state'] = "game_join_ok"
-           rep['Line'] = ini_msg['Line']
+           rep['Line'] = init_msg['Line']
            rep['Symbol_Num'] = init_msg['Symbol_num']
            rep['odds'] = init_msg['odds']
 
@@ -47,11 +45,16 @@ def temp_handle(json_msg,db):
               rep['state'] = "game_join_fail"
           else:
               print "self game get init msg"
-              #ini_msg = slot_mgr.spawn(join_room)
- 
+              #TODO keep seat func ,creat game by db state
+              # game_info['module'] && config
+                 
+              init_msg = slot_mgr.spawn(game_info['module'],game_info['room'])
 
-       #TODO game
-       rep['UserPoint'] = 100
+       
+       playerstate = json.loads(db.get(json_msg['uuid']))
+       info = playerstate['for_db']
+       data =  info['playerinfo']
+       rep['UserPoint'] = data['credit']
 
        return rep
 

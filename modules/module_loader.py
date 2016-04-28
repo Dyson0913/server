@@ -18,7 +18,7 @@ class module_load(object):
     def __init__(self,module_list):
         self._default_module = ['auth','lobby']
         self.config = module_list
-#        print self.config 
+        print self.config 
         self.modules = []
         self.mypath = os.path.realpath(os.path.dirname(sys.path[0]))
 #        self.ppath = os.path.abspath(os.path.join(self.mypath,'../')) up one level
@@ -42,13 +42,14 @@ class module_load(object):
         #    module.init()
 
     def execute_work(self,json_msg,socket):
-#        print "modula"
-#        print json_msg
+        print "modula"
+        print json_msg
         module_idx = 0 
         if json_msg['module'] in self._default_module:
            module_idx = self._default_module.index(json_msg['module'])
         else:
            module_idx = self.config.index(json_msg['module'])
+        print module_idx
         result = self.modules[module_idx].handle(json_msg,socket)
         return result
          

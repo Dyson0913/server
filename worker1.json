@@ -7,10 +7,10 @@
  "identity":1,
  "db": {"host":"52.193.112.227","port":6379, "db":0},
  "module":{
-           "auth":"fake",
+           "auth":"hojo_auth",
            "lobby":"normal",
            "app":[
-                   {"game":"hope_slot"},
+                   {"game":"hope"},
                    {"game":"ThreeKingdoms"}
                  ]
           }
