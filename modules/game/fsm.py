@@ -74,6 +74,7 @@ class fms(object):
 #       logging.info( "state_name = " + state.name )
        self._all_state[state.name] = state
        setattr(state,'app',self.app) 
+       setattr(state,'fsm',self)
 
    def start(self,init_state):
 

@@ -31,11 +31,11 @@ def temp_handle(json_msg,db):
 
            #create game instance
            init_msg = slot_mgr.spawn(module,room)
-           #create game instance
            rep['state'] = "game_join_ok"
            rep['Line'] = init_msg['Line']
            rep['Symbol_Num'] = init_msg['Symbol_num']
            rep['odds'] = init_msg['odds']
+           rep['game_id'] = init_msg['game_id']
 
        else:
           print "room open"
@@ -49,6 +49,12 @@ def temp_handle(json_msg,db):
               # game_info['module'] && config
                  
               init_msg = slot_mgr.spawn(game_info['module'],game_info['room'])
+              rep['state'] = "game_join_ok"
+              rep['Line'] = init_msg['Line']
+              rep['Symbol_Num'] = init_msg['Symbol_num']
+              rep['odds'] = init_msg['odds']
+              rep['game_id'] = init_msg['game_id']
+#              rep['room'] = init_msg['']
 
        
        playerstate = json.loads(db.get(json_msg['uuid']))
@@ -57,6 +63,14 @@ def temp_handle(json_msg,db):
        rep['UserPoint'] = data['credit']
 
        return rep
+
+    if json_msg['cmd'] == "leave_game":
+        slot_mgr.del_game(json_msg['game_id'])
+        rep = header(json_msg)
+        rep['module'] = "lobby"
+        rep['cmd'] = "request_gamelist"
+
+        return rep
 
     if json_msg['cmd'] == "gamespin":
 #       json_msg['Line']

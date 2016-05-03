@@ -40,6 +40,10 @@ class game_mgr(object):
         self._running_game[serial_id] = myfms
         return myfms.init_msg()
 
+    def del_game(self,game_id):
+        print "del game"
+        del self._running_game[game_id]
+
 
 def main():
     

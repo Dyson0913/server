@@ -63,6 +63,13 @@ class zmq_msg_proxy(object):
 
           result = json.loads(msg[0])
           print result
+
+          #pass data to another module
+          if 'module' in result:
+              print "pass back"
+              self.broker_push.send_json(result)
+              return
+
           #del data just for db
           if 'for_db' in result:
               del result['for_db']

@@ -1,7 +1,6 @@
 import json
 
 def handle(json_msg,socket_list):
-    print json_msg
     rep =  normal_handle(json_msg)
     socket = socket_list[0]
     socket.send_json(rep)

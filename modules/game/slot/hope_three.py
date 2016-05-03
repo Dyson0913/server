@@ -42,7 +42,8 @@ class hope_three(object):
         init['Line'] = self._line
         init['Symbol_num'] = self._symbol_num
         init['odds'] = self._odd
-
+        init['game_id'] = self._name
+        
         logging.info( "init msg " + str(init))
         return init
 
@@ -68,6 +69,7 @@ class init(State):
 
     def update(self):
         print "ini update"
+        self.fsm.next()
 
 class NG(State):
 
