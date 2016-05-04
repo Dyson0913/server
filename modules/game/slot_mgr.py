@@ -29,7 +29,8 @@ class game_mgr(object):
         if game == "hope":
             mygame = hope_three(serial_id,8,5,30)
 
-        setattr(myfms,'app',mygame)
+        setattr(myfms,'game',mygame)
+        setattr(myfms,'game_mgr',self)
         myfms.add(init(-1))
         myfms.add(NG(-1))
         myfms.add(FG(-1))
@@ -41,9 +42,12 @@ class game_mgr(object):
         return myfms.init_msg()
 
     def del_game(self,game_id):
-        print "del game"
+         
+        game = self._running_game[game_id]
+        game.stop()
+         
         del self._running_game[game_id]
-
+        del game
 
 def main():
     

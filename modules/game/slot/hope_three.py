@@ -77,9 +77,19 @@ class NG(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.next_state = "NG"
+        self._idle_kickout_sec = 10
+        self._idle_sec = 0
+
+    def execute(self):
+        print "start time count"
+        self._idle_sec = 0
 
     def update(self):
         print "NG update"
+        self._idle_sec += 1
+        
+        if self._idle_sec == self._idle_kickout_sec:
+            self.fsm.stop_by_state(self.game._name)
             #self.next_state = "FG"
             #self.next_state = "JP"
 

@@ -18,8 +18,7 @@ class State(object):
 
     def enter(self):         
         self.execute()
-        self.app.flush_state(self.name)
-#        self.app.msg()
+        self.game.flush_state(self.name)
         
     def execute(self):
         pass
@@ -29,14 +28,14 @@ class State(object):
 
     def on_update(self):
         self.update()
-        self.app.flush_state(self.name)
+        self.game.flush_state(self.name)
 #        print self.get_remain_time()
 
     def update(self):
         pass
 
     def msg(self):
-        mymsg =  self.app.msg()
+        mymsg =  self.game.msg()
         mymsg['rest_time'] = self.get_remain_time()
         return mymsg
 
@@ -68,12 +67,13 @@ class fms(object):
    def __init__(self):
        self._all_state ={}
        self._current_state = None
+       self._stop_timer = False
 
    def add(self,state):
 #       logging.info( "state_name = " + state._module.__class__.__name__ )
 #       logging.info( "state_name = " + state.name )
        self._all_state[state.name] = state
-       setattr(state,'app',self.app) 
+       setattr(state,'game',self.game) 
        setattr(state,'fsm',self)
 
    def start(self,init_state):
@@ -85,6 +85,8 @@ class fms(object):
        self.kick(init_state)
        threading.Timer(0.1, self.time).start()
        #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
+#       self.timer = threading.Timer(1,self.time)
+#       self.timer.start()
 
    def time(self):
 
@@ -93,7 +95,15 @@ class fms(object):
        else:
            self._current_state.on_update()
 
-       threading.Timer(1, self.time).start()
+       if self._stop_timer == False:
+           threading.Timer(1, self.time).start()
+
+   
+   def stop(self):
+       self._stop_timer = True 
+   
+   def stop_by_state(self,game_id):
+       self.game_mgr.del_game(game_id)
 
    def next(self):
        self.transitions(self._current_state.next_state)
@@ -111,12 +121,12 @@ class fms(object):
        self._current_state.on_enter()
 
    def test_script(self,script_name,args):
-       self.app.test_script(script_name,args)
+       self.game.test_script(script_name,args)
 
    def init_msg(self):
-       return self.app.init_msg()
+       return self.game.init_msg()
 
    def msg(self):
-       self.app.msg()
+       self.game.msg()
 
 

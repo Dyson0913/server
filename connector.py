@@ -64,7 +64,6 @@ class wshandler(tornado.websocket.WebSocketHandler):
         wshandler.cnt = wshandler.cnt+1
         print "cliet open %d" % wshandler.cnt
 
-        #worker & client send to back
         msg = dict()
         msg['id'] = wshandler.cnt
         msg['module'] = "auth"
@@ -76,7 +75,6 @@ class wshandler(tornado.websocket.WebSocketHandler):
 
         #self.write_message(msg)
     def on_close(self):
-        print "close"
         msg = dict()
         msg['module'] = "auth"
         msg['cmd'] = "self_close"
@@ -86,11 +84,6 @@ class wshandler(tornado.websocket.WebSocketHandler):
     def on_message(self,data):
         #print data
         json_msg = json.loads(data)
-
-#        msg= dict()
-#        msg['module'] = json_msg['module']
-#        msg['cmd'] = json_msg['cmd']
-#        msg['uuid'] = json_msg['uuid']
         wshandler.sender.send(json_msg)
 
 
