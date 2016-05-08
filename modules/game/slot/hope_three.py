@@ -11,6 +11,11 @@ class hope_three(object):
     def __init__(self,name,symbol_num,rollerNum,line):
         self._win = ""
         self._name = name
+        
+        #system property
+        self._kick_by_idle = False
+         
+        #slot property
         self._rollerNum = rollerNum
         self._line = line
         self._symbol_num = symbol_num
@@ -27,6 +32,16 @@ class hope_three(object):
         odds['W'] = [0,0,50,500,5000]
         odds['S'] = [0, 0 ,0 ,0 ,0]
         self._odd = odds
+
+    def kick_by_idle(self):
+        self._kick_by_idle = True
+
+        #TODO send idle msg
+        msg = dict()
+        
+        msg['state'] = "idle_kick"
+        
+        #self.player.send_json(nmsg)
 
 
     def flush_state(self,state):
@@ -89,7 +104,8 @@ class NG(State):
         self._idle_sec += 1
         
         if self._idle_sec == self._idle_kickout_sec:
-            self.fsm.stop_by_state(self.game._name)
+             self.game.kick_by_idle():
+#            self.fsm.stop_by_state(self.game._name)
             #self.next_state = "FG"
             #self.next_state = "JP"
 

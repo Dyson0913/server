@@ -1,6 +1,21 @@
 import logging
 
-class playerList(object):
+
+class player_info(object):
+
+    def __init__(self,uuid,socket):
+        self._uuid = uuid
+        self._socket = socket
+
+    def header(self, msg_type):
+        rep = dict()
+        rep["uuid"] = uuid
+        return rep
+
+    def send_msg(self,msg):
+        self._socket.send_json(msg)
+
+class player_List(object):
 
     def __init__(self):
         self._players = list()

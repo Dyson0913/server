@@ -1,4 +1,5 @@
 import json
+import player_info
 
 from slot_mgr import *
 
@@ -10,12 +11,14 @@ def handle(json_msg,socket_list):
     print json_msg
 
     socket = socket_list[0]
-    rep = temp_handle(json_msg,socket_list[1])
+    rep = temp_handle(json_msg,socket_list)
     socket.send_json(rep)
 
-def temp_handle(json_msg,db):
+def temp_handle(json_msg,socket_list):
 
-    #creat game ok ,leave remove
+    player_socket = socket_list[0]
+    db = socket_list[1]
+    
 
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']
@@ -30,7 +33,9 @@ def temp_handle(json_msg,db):
            db.create_game(json_msg['uuid'],module,room)
 
            #create game instance
-           init_msg = slot_mgr.spawn(module,room)
+           #TODO player info % socket 
+           player_info = player_info(json_msg['uuid'],player_socket)
+           init_msg = slot_mgr.spawn(module,room,player_info)
            rep['state'] = "game_join_ok"
            rep['Line'] = init_msg['Line']
            rep['Symbol_Num'] = init_msg['Symbol_num']
@@ -46,9 +51,10 @@ def temp_handle(json_msg,db):
           else:
               print "self game get init msg"
               #TODO keep seat func ,creat game by db state
-              # game_info['module'] && config
-                 
-              init_msg = slot_mgr.spawn(game_info['module'],game_info['room'])
+              #TODO game_info['module'] && config
+              #TODO versu_game join player   
+              player_info = player_info(json_msg['uuid'],player_socket)
+              init_msg = slot_mgr.spawn(game_info['module'],game_info['room'],player_info)
               rep['state'] = "game_join_ok"
               rep['Line'] = init_msg['Line']
               rep['Symbol_Num'] = init_msg['Symbol_num']

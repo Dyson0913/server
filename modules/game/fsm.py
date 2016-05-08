@@ -101,9 +101,6 @@ class fms(object):
    
    def stop(self):
        self._stop_timer = True 
-   
-   def stop_by_state(self,game_id):
-       self.game_mgr.del_game(game_id)
 
    def next(self):
        self.transitions(self._current_state.next_state)
