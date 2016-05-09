@@ -7,15 +7,20 @@ class player_info(object):
         self._uuid = uuid
         self._socket = socket
 
-    def header(self, msg_type):
+    def header(self):
         rep = dict()
-        rep["uuid"] = uuid
+        rep['uuid'] = self._uuid
         return rep
 
     def send_msg(self,msg):
-        self._socket.send_json(msg)
+        header = self.header()
+        print "header"
+        print header
+        header.update(msg)
+        print header
+        self._socket.send_json(header)
 
-class player_List(object):
+class player_list(object):
 
     def __init__(self):
         self._players = list()
@@ -23,7 +28,7 @@ class player_List(object):
     def get_player_num(self):
         return len(self._players)
 
-    def add_player(self, player,):
+    def add_player(self, player):
         logging.info("add_player")
         self._players.append(player)
 
@@ -32,12 +37,12 @@ class player_List(object):
         self._players.remove(player)
         #TODO leave before settle
 
-    def broadcast(self, msgtype, msg):
+    def broadcast(self, msg):
         if self.get_player_num() == 0:
             return
 
         for player in self._players:
-            player.send_msg(msgtype, msg)
+            player.send_msg(msg)
 
     def broadcast_with_self_info(self, msgtype, msg):
         if self.get_player_num() == 0:
@@ -52,9 +57,6 @@ class player_List(object):
                 )
             player.send_msg(msgtype, msg)
 
-    def get_enter_player(self):
-        player = self._players[len(self._players) - 1]
-        return player.get_player_info()
 
     def write_back_info(self, wintype,recoder, msg):
         if self.get_player_num() == 0:

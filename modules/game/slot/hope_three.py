@@ -36,13 +36,9 @@ class hope_three(object):
     def kick_by_idle(self):
         self._kick_by_idle = True
 
-        #TODO send idle msg
-        msg = dict()
-        
-        msg['state'] = "idle_kick"
-        
-        #self.player.send_json(nmsg)
-
+        msg = dict()        
+        msg['state'] = "idle_kick"        
+        self.player_list.broadcast(msg)
 
     def flush_state(self,state):
         msg = dict()
@@ -104,7 +100,7 @@ class NG(State):
         self._idle_sec += 1
         
         if self._idle_sec == self._idle_kickout_sec:
-             self.game.kick_by_idle():
+             self.game.kick_by_idle()
 #            self.fsm.stop_by_state(self.game._name)
             #self.next_state = "FG"
             #self.next_state = "JP"

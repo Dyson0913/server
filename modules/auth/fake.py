@@ -2,22 +2,24 @@ import json
 
 def handle(json_msg,socket_list):
     print json_msg
-#    return normal_handle(json_msg) 
-    rep = blocking_test(json_msg)
+    rep = normal_handle(json_msg) 
+#    rep = blocking_test(json_msg)
     socket = socket_list[0]
     socket.send_json(rep)
 
 def normal_handle(json_msg):
 
     if json_msg['cmd'] == "login":
-       #name_pw = json_msg["token"].split("_")
-       res_json = fake_login() #http_query(json_msg['cmd'],name_pw[0],name_pw[1],-1)
+       name_pw = "test2_test2".split("_")
+       res_json = fake_login()
        rep = header(json_msg)
-       if res_json['result'] == "1":
+       if res_json['result'] == 1:
            rep['state'] = "login_ok"
            playerinfo_json = fake_playerinfo()
            playerinfo = dict()
            playerinfo['credit'] = playerinfo_json['result']
+           playerinfo['name'] = name_pw[0]
+           playerinfo['pw'] = name_pw[1]
 
            msg = dict()
            msg['playerinfo'] = playerinfo
@@ -26,11 +28,13 @@ def normal_handle(json_msg):
 
        else:
            rep['state'] = "login_fail"
-           res['reason'] = "no_such_account"
-       rep['uuid'] = "fake_tester" 
+           rep['reason'] = "no_such_account"
+       rep['uuid'] = name_pw[0]
        return rep
 
     if json_msg['cmd'] == "self_close":
+
+       #TODO get player now where
        rep = header(json_msg)
        rep['state'] = "self_close"
        return rep

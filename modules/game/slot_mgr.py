@@ -5,6 +5,9 @@ sys.path.append('slot/')
 from fsm import *
 from hope_three import *
 
+
+from player import *
+
 class game_mgr(object):
 
     def __init__(self,name):
@@ -27,7 +30,9 @@ class game_mgr(object):
         mygame = None 
         if game == "hope":
             mygame = hope_three(serial_id,8,5,30)
-            setattr(mygame,'player',player_info)
+            playerlist = player_list() 
+            playerlist.add_player(player_info)
+            setattr(mygame,'player_list',playerlist)
 
         setattr(myfms,'game',mygame)
         setattr(myfms,'game_mgr',self)
