@@ -47,7 +47,7 @@ class zmq_request(object):
             del data['client']
 
         if data['cmd'] == 'self_close':
-            data['client_id'] = get_client_id(data['client'])
+            data['uuid'] = get_client_id(data['client'])
             del data['client']
 
         self._soc.send_json(data)
@@ -77,7 +77,7 @@ class zmq_request(object):
 
             #handle self close
             elif parsed['cmd'] == "self_close":
-                self_close_client = get(parsed['client_id'])
+                self_close_client = get(parsed['uuid'])
                 remove(self_close_client)
                 print "client self close"
                 return

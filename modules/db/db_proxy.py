@@ -16,11 +16,12 @@ class db_proxy(object):
     def save(self,json_msg):
         key = json_msg['key']
  
-        new_json = dict() 
-        new_json['state'] = json_msg['state']
-        new_json['key'] = json_msg['key']
+        new_json = dict()
+        new_json.update(json_msg)
+        #new_json['state'] = json_msg['state']
+        #new_json['key'] = json_msg['key']
 
-        json_data = self.get(json_msg)
+        json_data = self.get(key)
         if json_data != None:
             db_json_data = json.loads(json_data)
             new_json['for_db'] = db_json_data['for_db']

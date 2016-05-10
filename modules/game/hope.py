@@ -36,6 +36,10 @@ def temp_handle(json_msg,socket_list):
            player = player_info(json_msg['uuid'],player_socket)
            init_msg = slot_mgr.spawn(module,room,player)
            rep['state'] = "game_join_ok"
+           rep['playing_module'] = module
+           rep['playing_group'] = config
+           db.save(rep)
+
            rep['Line'] = init_msg['Line']
            rep['Symbol_Num'] = init_msg['Symbol_num']
            rep['odds'] = init_msg['odds']
@@ -55,6 +59,10 @@ def temp_handle(json_msg,socket_list):
               player = player_info(json_msg['uuid'],player_socket)
               init_msg = slot_mgr.spawn(game_info['module'],game_info['room'],player)
               rep['state'] = "game_join_ok"
+              rep['playing_module'] = module
+              rep['playing_group'] = config
+              db.save(rep)
+
               rep['Line'] = init_msg['Line']
               rep['Symbol_Num'] = init_msg['Symbol_num']
               rep['odds'] = init_msg['odds']
@@ -74,8 +82,9 @@ def temp_handle(json_msg,socket_list):
         rep = header(json_msg)
         rep['module'] = "lobby"
         rep['cmd'] = "request_gamelist"
-
         return rep
+
+
 
     if json_msg['cmd'] == "gamespin":
 #       json_msg['Line']
