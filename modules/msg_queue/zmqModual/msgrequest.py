@@ -84,7 +84,11 @@ class zmq_request(object):
 
         #proxy level msg TODO not find ,how to handle
         if 'trans' in parsed:
+            print "get trans pass to other proxy "
             self._soc.send_json(parsed)
+            return
+
+        print "get package %s " % parsed['state']
            
 
         myclient = get(parsed['uuid'])
