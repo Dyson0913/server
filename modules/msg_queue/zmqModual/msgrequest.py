@@ -82,6 +82,11 @@ class zmq_request(object):
                 print "client self close"
                 return
 
+        #proxy level msg TODO not find ,how to handle
+        if 'trans' in parsed:
+            self._soc.send_json(parsed)
+           
+
         myclient = get(parsed['uuid'])
 
         if myclient == None:

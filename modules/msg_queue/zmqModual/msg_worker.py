@@ -20,6 +20,7 @@ class msgworker(object):
       def __init__(self,data):
 
           self._domain = data["domain"]
+          self._uniq_id = None
 
           # load module
           module_list =[]
@@ -60,12 +61,15 @@ class msgworker(object):
           parsed = json.loads(msg[0])
           
           #dispatch to module
-          self._module.execute_work(parsed,[self.push,self._db])
+          self._module.execute_work(parsed,[self.push,self._db,self._uniq_id])
 
       def push_handle(self,msg):
 
           print "msg_broker %s" + msg
 #          self._front_push.send_json(msg)
+
+      def set_identity(self,uniq_id):
+          self._uniq_id = uniq_id
 
       def start(self):
 

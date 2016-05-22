@@ -63,6 +63,8 @@ class wshandler(tornado.websocket.WebSocketHandler):
     def open(self,token):
         wshandler.cnt = wshandler.cnt+1
         print "cliet open %d" % wshandler.cnt
+        #real ip
+        #print self.request.remote_ip  
 
         msg = dict()
         msg['id'] = wshandler.cnt

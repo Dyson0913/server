@@ -21,6 +21,8 @@ class zmq_msg_proxy(object):
           self._proxy_pull_port = data["proxy_pull_port"]
           self._id = data["id"]
 
+          self._uniq_id = None
+
           self._context = zmq.Context()
           url = "tcp://"+self._domain + ":"
 
@@ -56,7 +58,14 @@ class zmq_msg_proxy(object):
       def pull_handle(self,msg):
           
           parsed = json.loads(msg[0])
+          parsed['proxy_id'] = self._uniq_id
           #self.pub.send_multipart([str(self._id),str(msg)])
+          
+          if 'trans' in parsed:
+               print "get trans inf"
+               print parsed
+               return
+
           self.broker_push.send_json(parsed)
 
       def push_handle(self,msg):
@@ -68,18 +77,24 @@ class zmq_msg_proxy(object):
           if 'module' in result:
               print "pass back"
               self.broker_push.send_json(result)
+
               return
 
           #del data just for db
           if 'for_db' in result:
               del result['for_db']
               del result['key']
+              if 'proxy_id' in result:
+                  del result['proxy_id']
                  
           #response to client
           self._front_push.send_json(result)
 
+      def set_identity(self,uniq_id):
+          self._uniq_id = uniq_id
+
       def start(self):
 
-          print "start"
+          print "%s start!!" % self._uniq_id
           loop = IOLoop.current()
           loop.start()

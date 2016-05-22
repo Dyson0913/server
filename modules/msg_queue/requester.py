@@ -6,16 +6,17 @@ import sys
 #import modual in diffenent implement
 from msgrequest import *
 
+
 #base 
 class msg_sender(object):
 
     def __init__(self,module):
-         self._module = module
-         print module
-         self._pid = os.getpid()
+        self._module = module
+        print module       
+        self._pid = os.getpid()
 
     def send(self,data):
-         self._module.send(data)
+        self._module.send(data)
 
 def main():
    

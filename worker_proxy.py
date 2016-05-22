@@ -1,5 +1,7 @@
 import os
 
+import socket
+
 import sys
 sys.path.append("modules/msg_queue/zmqModual/")
 sys.path.append("modules/")
@@ -18,7 +20,18 @@ class questWorker(object):
       def __init__(self,module):
           self._module = module
           self._pid = os.getpid()
-          print 'msg Worker %s is running ...' % self._pid
+          
+          #private ip
+          local_ip = socket.gethostbyname(socket.gethostname())
+          #print "private ip:%s "% local_ip
+
+          #private ip 2
+          #myname = socket.getfqdn(socket.gethostname())
+          #myaddr = socket.gethostbyname(myname)
+          #print "local ip:%s "% myaddr
+
+          self._module.set_identity(str(local_ip))
+          print 'msg Worker %s is running ...' % self._pid + local_ip
 
 
       def Receive(self):

@@ -36,6 +36,7 @@ def temp_handle(json_msg,socket_list):
            player = player_info(json_msg['uuid'],player_socket)
            init_msg = slot_mgr.spawn(module,room,player)
            rep['state'] = "game_join_ok"
+           rep['proxy_id'] = json_msg['proxy_id']
            rep['playing_module'] = module
            rep['playing_group'] = config
            db.save(rep)
@@ -59,6 +60,7 @@ def temp_handle(json_msg,socket_list):
               player = player_info(json_msg['uuid'],player_socket)
               init_msg = slot_mgr.spawn(game_info['module'],game_info['room'],player)
               rep['state'] = "game_join_ok"
+              rep['proxy_id'] = json_msg['proxy_id']
               rep['playing_module'] = module
               rep['playing_group'] = config
               db.save(rep)
@@ -78,7 +80,25 @@ def temp_handle(json_msg,socket_list):
        return rep
 
     if json_msg['cmd'] == "leave_game":
-        slot_mgr.del_game(json_msg['game_id'])
+        
+        #        
+        playerstate = json.loads(db.get(json_msg['uuid']))
+        uniq_id = playerstate['proxy_id']
+        ip_uid = uniq_id.split("_")
+        server_ip = socket_list[2]
+        if ip_uid[0] == server_ip:
+            print "self server!!! close"
+        else:
+            print "not my server pass"
+            
+            to_other_proxy = header(json_msg)
+            to_other_proxy['trans'] = ip_uid[0]
+#            to_other_proxy['module'] = "lobby"
+#            to_other_proxy['cmd'] = "request_gamelist"
+            return to_other_proxy
+
+        #TODO send to mgr to close
+        #slot_mgr.del_game(json_msg['game_id'])
         rep = header(json_msg)
         rep['module'] = "lobby"
         rep['cmd'] = "request_gamelist"
