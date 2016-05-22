@@ -23,6 +23,7 @@ class zmq_request(object):
         self._domain = data["domain"]
         self._proxy_push_port = data["proxy_push_port"]
         self._proxy_pull_port = data["proxy_pull_port"]
+        self._proxy_pub_port = data["proxy_pub_port"]
 
         url = "tcp://*:"
         self._context = zmq.Context()
@@ -34,10 +35,15 @@ class zmq_request(object):
         self.receiver = self._context.socket(zmq.PULL)
         pull_url = url + str(self._proxy_pull_port)
         self.receiver.bind(pull_url)
-
         self.receiver = ZMQStream(self.receiver)
         self.receiver.on_recv(self.handle_worker_msg)
         print "push to " + push_url + "pull from" + pull_url
+
+        
+        self.pub_to_proxy = self._context.socket(zmq.PUB)
+        pub_url = url + str(self._proxy_pub_port)
+        self.pub_to_proxy.bind(pub_url)
+
  
     def send(self,data):
         
@@ -85,8 +91,11 @@ class zmq_request(object):
         #proxy level msg TODO not find ,how to handle
         if 'trans' in parsed:
             print "get trans pass to other proxy "
-            #TODO pass by pub
-            self._soc.send_json(parsed)
+            
+            ip = parsed['trans']
+            self.pub_to_proxy.send_multipart([str(1),str(msg[0])])
+            #self.pub_to_proxy.send_json(parsed)
+            #self._soc.send_json(parsed)
             return
 
         print "get package %s " % parsed['state']

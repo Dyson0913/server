@@ -1,4 +1,4 @@
-import zmq
+ilmport zmq
 import random
 import sys
 import time
@@ -28,7 +28,7 @@ context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://*:%s" % port)
 
-url = "tcp://*:"+"9990"
+url = "tcp://*:"+"9991"
 
 receiver = context.socket(zmq.SUB)
 receiver.bind(url)
@@ -48,6 +48,7 @@ while True:
     messagedata = random.randrange(1,215) - 80
     print "%d %d" % (topic, messagedata)
     #socket.send("%d %d" % (topic, messagedata))
+    
     data = dict()
     data['msg']= messagedata   
     socket.send_multipart([str(topic),str(data)])

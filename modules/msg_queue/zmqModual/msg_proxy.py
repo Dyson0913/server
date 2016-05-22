@@ -19,6 +19,7 @@ class zmq_msg_proxy(object):
           self._domain = data["domain"]
           self._proxy_push_port = data["proxy_push_port"]
           self._proxy_pull_port = data["proxy_pull_port"]
+          self._proxy_pub_port = data["proxy_pub_port"]
           self._id = data["id"]
 
           self._uniq_id = None
@@ -43,7 +44,6 @@ class zmq_msg_proxy(object):
           print "pull front " + front + "push to front " + front_pull
 
           #send to broker
-          #data["pub_broker_port"]
           self.broker_push = self._context.socket(zmq.PUSH)
           push = url + str(data["broker_to_worker_front_port"])
           self.broker_push.connect(push)
@@ -54,6 +54,11 @@ class zmq_msg_proxy(object):
           self.broker  = ZMQStream(self.broker_pull)
           self.broker.on_recv(self.push_handle)
           print "push to " + push + "pull from " + pull
+
+          self.sub = self._context.socket(zmq.SUB)
+          sub = url + str(self._proxy_pub_port)
+          self.sub.connect (sub)
+
 
       def pull_handle(self,msg):
           
@@ -92,6 +97,15 @@ class zmq_msg_proxy(object):
 
       def set_identity(self,uniq_id):
           self._uniq_id = uniq_id
+          
+          topic_filter = "1" #self._uniq_id
+          self.sub.setsockopt(zmq.SUBSCRIBE, topic_filter)
+          self.sub  = ZMQStream(self.sub)
+          self.sub.on_recv(self.sub_handle)
+
+      def sub_handle(self,msg):
+          print "sub handle"
+          print msg
 
       def start(self):
 
