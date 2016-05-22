@@ -8,7 +8,7 @@ slot_mgr = game_mgr("slot_mgr")
 
 
 def handle(json_msg,socket_list):
-    print json_msg
+    #print json_msg
 
     socket = socket_list[0]
     rep = temp_handle(json_msg,socket_list)
@@ -18,7 +18,7 @@ def temp_handle(json_msg,socket_list):
 
     player_socket = socket_list[0]
     db = socket_list[1]
-    
+    print "get cmd %s" % json_msg['cmd']
 
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']
@@ -88,6 +88,7 @@ def temp_handle(json_msg,socket_list):
         server_ip = socket_list[2]
         if ip_uid[0] == server_ip:
             print "self server!!! close"
+            return None
         else:
             print "not my server pass"
             

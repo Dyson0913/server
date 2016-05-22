@@ -1,7 +1,7 @@
 import json
 
 def handle(json_msg,socket_list):
-    print json_msg
+    #print json_msg
     rep = normal_handle(json_msg,socket_list)
 #    rep = blocking_test(json_msg)
     socket = socket_list[0]
@@ -11,6 +11,8 @@ def normal_handle(json_msg,socket_list):
 
     player_socket = socket_list[0]
     db = socket_list[1]
+
+    print "get cmd %s" % json_msg['cmd']
 
     if json_msg['cmd'] == "login":
        name_pw = "test2_test2".split("_")

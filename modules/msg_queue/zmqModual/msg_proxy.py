@@ -62,7 +62,7 @@ class zmq_msg_proxy(object):
           #self.pub.send_multipart([str(self._id),str(msg)])
           
           if 'trans' in parsed:
-               print "get trans inf"
+               print "get trans info wait"
                print parsed
                return
 
