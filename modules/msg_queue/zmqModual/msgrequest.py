@@ -58,7 +58,7 @@ class zmq_request(object):
         
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])
-        print parsed
+        #print parsed
         
         if parsed == None:
             print "handle work msg  error = None"
@@ -85,6 +85,7 @@ class zmq_request(object):
         #proxy level msg TODO not find ,how to handle
         if 'trans' in parsed:
             print "get trans pass to other proxy "
+            #TODO pass by pub
             self._soc.send_json(parsed)
             return
 

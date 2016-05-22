@@ -63,7 +63,7 @@ class zmq_msg_proxy(object):
           
           if 'trans' in parsed:
                print "get trans info wait"
-               print parsed
+               #TODO pass close game to worker
                return
 
           self.broker_push.send_json(parsed)
@@ -71,11 +71,11 @@ class zmq_msg_proxy(object):
       def push_handle(self,msg):
 
           result = json.loads(msg[0])
-          print result
+          #print result
 
           #pass data to another module
           if 'module' in result:
-              print "pass back"
+              print "worker msg , pass back"
               self.broker_push.send_json(result)
 
               return
