@@ -54,7 +54,10 @@ class msgworker(object):
           db_pw = data['dbpw']
           self._db = db_proxy(db_host,db_port,db_pw)
 
-          #TODO sub implement
+          #sub from proxy
+          self._sub_from_proxy = self._context.socket(zmq.SUB)
+          sub_url = url + str(data["worker_pub_port"])
+          self._sub_from_proxy.connect (sub_url)
 
       def handle_from_broker(self,msg):
           
@@ -63,12 +66,9 @@ class msgworker(object):
           #dispatch to module
           self._module.execute_work(parsed,[self.push,self._db,self._uniq_id])
 
-      def push_handle(self,msg):
-
-          print "msg_broker %s" + msg
-#          self._front_push.send_json(msg)
-
       def set_identity(self,uniq_id):
+
+          #now using ip
           self._uniq_id = uniq_id
 
       def start(self):

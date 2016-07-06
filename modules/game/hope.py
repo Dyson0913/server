@@ -84,16 +84,15 @@ def temp_handle(json_msg,socket_list):
         #        
         playerstate = json.loads(db.get(json_msg['uuid']))
         uniq_id = playerstate['proxy_id']
-        ip_uid = uniq_id.split("_")
         server_ip = socket_list[2]
-        if ip_uid[0] == server_ip:
+        if uniq_id == server_ip:
             print "self server!!! close"
             return None
         else:
             print "not my server pass"
             
             to_other_proxy = header(json_msg)
-            to_other_proxy['trans'] = ip_uid[0]
+            to_other_proxy['trans'] = uniq_id
 #            to_other_proxy['module'] = "lobby"
 #            to_other_proxy['cmd'] = "request_gamelist"
             return to_other_proxy
