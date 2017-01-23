@@ -1,2 +1,2 @@
-python tavern.py --dbpw yourpw
+python tavern.py --dbpw dyson
 
