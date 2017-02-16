@@ -81,24 +81,24 @@ def temp_handle(json_msg,socket_list):
 
     if json_msg['cmd'] == "leave_game":
         
-        #        
-        playerstate = json.loads(db.get(json_msg['uuid']))
-        uniq_id = playerstate['proxy_id']
-        server_ip = socket_list[2]
-        if uniq_id == server_ip:
-            print "self server!!! close"
-            return None
-        else:
-            print "not my server pass"
+        #TODO multi serve handle         
+        #playerstate = json.loads(db.get(json_msg['uuid']))
+        #uniq_id = playerstate['proxy_id']
+        #server_ip = socket_list[2]
+        #if uniq_id == server_ip:
+        #    print "self server!!! close"
+        #    return None
+        #else:
+        #    print "not my server pass"
             
-            to_other_proxy = header(json_msg)
-            to_other_proxy['trans'] = uniq_id
+        #    to_other_proxy = header(json_msg)
+        #    to_other_proxy['trans'] = uniq_id
 #            to_other_proxy['module'] = "lobby"
 #            to_other_proxy['cmd'] = "request_gamelist"
-            return to_other_proxy
+        #    return to_other_proxy
 
-        #TODO send to mgr to close
-        #slot_mgr.del_game(json_msg['game_id'])
+        #close game ,return to lobby
+        slot_mgr.del_game(json_msg['game_id'])
         rep = header(json_msg)
         rep['module'] = "lobby"
         rep['cmd'] = "request_gamelist"

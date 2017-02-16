@@ -1,4 +1,13 @@
 import json
+import hashlib
+
+
+sha1 = hashlib.sha1()
+data = 'dyson123456'
+sha1.update(data.encode('utf-8'))
+sha1_data = sha1.hexdigest()
+print(sha1_data)
+
 
 def handle(json_msg,socket_list):
     #print json_msg
@@ -12,10 +21,11 @@ def normal_handle(json_msg,socket_list):
     player_socket = socket_list[0]
     db = socket_list[1]
 
-    print "get cmd %s" % json_msg['cmd']
+    print "auth get cmd %s" % json_msg['cmd']
 
     if json_msg['cmd'] == "login":
-       name_pw = "test2_test2".split("_")
+       name_pw = json_msg["token"].split("_")
+       #name_pw = "test2_test2".split("_")
        res_json = fake_login()
        rep = header(json_msg)
        if res_json['result'] == 1:
@@ -29,7 +39,7 @@ def normal_handle(json_msg,socket_list):
            msg = dict()
            msg['playerinfo'] = playerinfo
            rep['for_db'] = msg
-           rep['key'] = name_pw[0]
+           rep['key'] = token(json_msg["token"])
            db.save(rep)
        else:
            rep['state'] = "login_fail"
@@ -71,17 +81,6 @@ def fake_playerinfo():
     rep['result'] = 1000
     return rep
 
-def blocking_test(json_msg):
-
-    if json_msg['id'] == 2:
-       print "fake return"
-    else:
-       print "normal"
-       rep = header(json_msg)
-       rep['state'] = "login_ok"
-       rep['uuid'] = "fake_tester" 
-       return rep
-
 def header_for_close(json_msg):
 
     rep = dict()
@@ -96,3 +95,11 @@ def header(json_msg):
     rep['cmd'] = json_msg['cmd']
     rep['key'] = rep['client_id']
     return rep
+
+def token(name):
+    sha1 = hashlib.sha1()
+    data = name
+    sha1.update(data.encode('utf-8'))
+    sha1_data = sha1.hexdigest()
+    print(sha1_data)
+    return sha1_data
