@@ -1,14 +1,6 @@
 import json
 import hashlib
 
-
-sha1 = hashlib.sha1()
-data = 'dyson123456'
-sha1.update(data.encode('utf-8'))
-sha1_data = sha1.hexdigest()
-print(sha1_data)
-
-
 def handle(json_msg,socket_list):
     #print json_msg
     rep = normal_handle(json_msg,socket_list)
@@ -44,7 +36,7 @@ def normal_handle(json_msg,socket_list):
        else:
            rep['state'] = "login_fail"
            rep['reason'] = "no_such_account"
-       rep['uuid'] = name_pw[0]
+       rep['uuid'] = rep['key']
        return rep
 
     if json_msg['cmd'] == "self_close":

@@ -98,7 +98,7 @@ class zmq_request(object):
             #self._soc.send_json(parsed)
             return
 
-        print "get package %s " % parsed['state']
+        print "request.py get package %s " % parsed['state']
            
 
         myclient = get(parsed['uuid'])

@@ -11,7 +11,7 @@ def normal_handle(json_msg,socket_list):
     player_socket = socket_list[0]
     db = socket_list[1]
 
-    print "get cmd %s" % json_msg['cmd']
+    print "lobby get cmd %s" % json_msg['cmd']
    
     if json_msg['cmd'] == "request_gamelist":
        rep = header(json_msg)
