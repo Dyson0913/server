@@ -52,6 +52,7 @@ def temp_handle(json_msg,socket_list):
           #not myself 
           if game_info['creater'] != json_msg['uuid'] :
               rep['state'] = "game_join_fail"
+              rep['error_code'] = "room open by other"
           else:
               print "self game get init msg"
               #TODO keep seat func ,creat game by db state
