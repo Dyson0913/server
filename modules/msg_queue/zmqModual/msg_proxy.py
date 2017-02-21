@@ -85,7 +85,7 @@ class zmq_msg_proxy(object):
 
           #pass data to another module
           if 'module' in result:
-              print "worker msg , pass back"
+              print "worker pass msg , pass back(auth close)"
               self.broker_push.send_json(result)
 
               return

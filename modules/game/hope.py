@@ -18,7 +18,7 @@ def temp_handle(json_msg,socket_list):
 
     player_socket = socket_list[0]
     db = socket_list[1]
-    print "get cmd %s" % json_msg['cmd']
+    print "game get cmd %s" % json_msg['cmd']
 
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']
@@ -80,6 +80,7 @@ def temp_handle(json_msg,socket_list):
 
        return rep
 
+    #self chose leaving game
     if json_msg['cmd'] == "leave_game":
         
         #TODO multi serve handle         
@@ -105,7 +106,14 @@ def temp_handle(json_msg,socket_list):
         rep['cmd'] = "request_gamelist"
         return rep
 
-
+    #close whole windows but network is still working,so can send message to auth
+    if json_msg['cmd'] == "lost_connect":
+        slot_mgr.del_game(json_msg['game_id'])
+        rep = header(json_msg)
+        rep['cmd'] = "self_close"
+        rep['state'] = "self_close"
+        db.save(rep)
+        return rep
 
     if json_msg['cmd'] == "gamespin":
 #       json_msg['Line']

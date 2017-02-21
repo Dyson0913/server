@@ -2,9 +2,7 @@ import json
 import hashlib
 
 def handle(json_msg,socket_list):
-    #print json_msg
     rep = normal_handle(json_msg,socket_list)
-#    rep = blocking_test(json_msg)
     socket = socket_list[0]
     socket.send_json(rep)
 
@@ -31,7 +29,7 @@ def normal_handle(json_msg,socket_list):
            msg = dict()
            msg['playerinfo'] = playerinfo
            rep['for_db'] = msg
-           rep['key'] = token(json_msg["token"])
+           rep['key'] = name_pw[0] #token(json_msg["token"])
            db.save(rep)
        else:
            rep['state'] = "login_fail"
@@ -39,26 +37,24 @@ def normal_handle(json_msg,socket_list):
        rep['uuid'] = rep['key']
        return rep
 
+    #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "self_close":
 
        #TODO get player now where ,notify game close
        playerstate = json.loads(db.get(json_msg['uuid']))
        info = playerstate['state']
 
-       #notify game close self
+       #in game,pass msg to msg_proxy to notify game close self then update state
+       #not in game,just update state
        #TODO versus leave group
-       if info != "lobby_waitting":
-            to_game = header_for_close(json_msg)
-            to_game['module'] = playerstate['playing_module']
-            to_game['game_id'] = playerstate['playing_group']
-            to_game['cmd'] = "leave_game"
-            player_socket.send_json(to_game)    
-         
-
        rep = header_for_close(json_msg)
-       rep['state'] = "self_close"
-
-       db.save(rep)
+       if info != "lobby_waitting":
+           rep['module'] = playerstate['playing_module']
+           rep['game_id'] = playerstate['playing_group']
+           rep['cmd'] = "lost_connect"
+       else:
+           rep['state'] = "self_close"
+           db.save(rep)
 
 
        return rep

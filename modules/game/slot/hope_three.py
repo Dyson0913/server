@@ -99,9 +99,8 @@ class NG(State):
         print "NG update"
         self._idle_sec += 1
         
-        #if self._idle_sec == self._idle_kickout_sec:
-        #     self.game.kick_by_idle()
-#            self.fsm.stop_by_state(self.game._name)
+        if self._idle_sec == self._idle_kickout_sec:
+            self.game.kick_by_idle()
             #self.next_state = "FG"
             #self.next_state = "JP"
 
