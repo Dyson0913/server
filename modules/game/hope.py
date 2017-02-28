@@ -116,11 +116,10 @@ def temp_handle(json_msg,socket_list):
         return rep
 
     if json_msg['cmd'] == "gamespin":
-#       json_msg['Line']
-#       json_msg['Bet']
+        totalBet = json_msg['Line'] * json_msg['Bet']
         rep = header(json_msg)
         rep['state'] = "spin_result"
-        rep['GameResult'] = fake_react()
+        rep['gameResult'] = fake_react()
 
         return rep
 
@@ -128,7 +127,7 @@ def temp_handle(json_msg,socket_list):
 #       json_msg['freecount']
         rep = header(json_msg)
         rep['state'] = "spin_result"
-        rep['GameResult'] = fake_react()
+        rep['gameResult'] = fake_react()
         return rep
 
 
@@ -136,16 +135,16 @@ def fake_react():
     fake = dict()
     game_result = dict()
     game_result['state'] = 1
-    game_result['iGrid'] = ["W","S","W","S","W","S","W","S","W","S","W","S","W","S","W"]
-    game_result['WinLine'] =[ "1@3@200" , "8@3@2500" , "21@3@300" ]
-    game_result['BonusWin'] =[]
-    game_result['FreeMode'] = False
-    game_result['FreeCount'] = 0
-    game_result['FreeTotalCount'] = 0
-    game_result['FreeTotalPoint'] = 0
-    game_result['UsePoint'] = 200  #after spin point
-    game_result['NowJackPot'] = 10000  #jp
-    game_result['WinJackPotPoint'] = 0
+    game_result['grid'] = ["N0","N1","N2","N3","N4","N5","N6","N7","W","S","B","B","N1","N2","N7"]
+    game_result['winLine'] =[ "1@3@200" , "8@3@2500" , "21@3@300" ]
+    game_result['bonusWin'] = [0,0,0]
+    game_result['freeMode'] = False
+    game_result['freeCount'] = 0
+    game_result['freeTotalCount'] = 0
+    game_result['freeTotalPoint'] = 0
+    game_result['userPoint'] = 200  #after spin point
+    game_result['nowJackPot'] = 10000  #jp
+    game_result['winJackPotPoint'] = 0
 
     return game_result
 
