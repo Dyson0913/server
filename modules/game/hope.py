@@ -119,6 +119,7 @@ def temp_handle(json_msg,socket_list):
         totalBet = json_msg['Line'] * json_msg['Bet']
         rep = header(json_msg)
         rep['state'] = "spin_result"
+        # get game in db & get spin result msg
         rep['gameResult'] = fake_react()
 
         return rep
