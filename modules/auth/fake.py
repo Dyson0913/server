@@ -34,6 +34,8 @@ def normal_handle(json_msg,socket_list):
        else:
            rep['state'] = "login_fail"
            rep['reason'] = "no_such_account"
+           rep['for_db'] = "for_del_key"
+           rep['key'] = name_pw[0] #token(json_msg["token"])
        rep['uuid'] = rep['key']
        return rep
 
@@ -61,7 +63,7 @@ def normal_handle(json_msg,socket_list):
 
 def fake_login():
     rep = dict()
-    rep['result'] = 1
+    rep['result'] = 0
     return rep
 
 def fake_playerinfo():
