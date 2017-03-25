@@ -17,7 +17,7 @@ import sys
 sys.path.append('../../modules/')
 from  module_loader import *
 
-define("num", default=2, help="run num on the given", type=int)
+define("num", default=50, help="run num on the given", type=int)
 define("core", default=10, help="run num on the given", type=int)
 define("port", default=7000, help="run on the given port", type=int)
 
@@ -115,8 +115,10 @@ def thread_():
     time.sleep(1)
 
 def check(core_id,port):
-    clientMgr = ClientMgr('ws://52.193.112.227:'+str(port)+'/gamesocket/test_test')
-    #clientMgr = ClientMgr('ws://106.186.116.216:7000/gamesocket/1')
+    #clientMgr = ClientMgr('ws://52.193.112.227:'+str(port)+'/gamesocket/test_test')
+    #clientMgr = ClientMgr('wss://www.didusoftgaming.com:8001/gamesocket/token/a4a042cf4fd6bfb47701cbc8a1653ada')
+    clientMgr = ClientMgr('ws://52.197.7.184:8001/gamesocket/token/c51ce410c124a10e0db5e4b97fc2af39')
+    #clientMgr = ClientMgr('wss://www.mm9900.net:8001/gamesocket/token/c4bbee900fee11e7b04f0242ac13000b')
     clientMgr.create_user(options.num,core_id)
 
     while(True):

@@ -31,19 +31,28 @@ def normal_handle(json_msg,socket_list):
            rep['for_db'] = msg
            rep['key'] = name_pw[0] #token(json_msg["token"])
            db.save(rep)
+           rep['uuid'] = rep['key']
        else:
            rep['state'] = "login_fail"
            rep['reason'] = "no_such_account"
            rep['for_db'] = "for_del_key"
            rep['key'] = name_pw[0] #token(json_msg["token"])
-       rep['uuid'] = rep['key']
+           rep['uuid'] = rep['client_id']
        return rep
 
     #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "self_close":
 
        #TODO get player now where ,notify game close
-       playerstate = json.loads(db.get(json_msg['uuid']))
+       print json_msg['uuid']
+       playerdata = db.get(json_msg['uuid'])
+       print playerdata
+       #create account fail,just close socket 
+       if playerdata == None:
+           rep = header_for_close(json_msg)
+           return rep
+
+       playerstate = json.loads(playerdata)
        info = playerstate['state']
 
        #in game,pass msg to msg_proxy to notify game close self then update state

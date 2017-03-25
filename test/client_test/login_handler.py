@@ -1,4 +1,4 @@
-from httpquery import *
+#from httpquery import *
 
 
 def handler(client,data):
