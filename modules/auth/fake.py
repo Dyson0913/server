@@ -13,40 +13,16 @@ def normal_handle(json_msg,socket_list):
 
     print "auth get cmd %s" % json_msg['cmd']
 
+    if json_msg['cmd'] == "try_login":
+       return get_account(json_msg)
     if json_msg['cmd'] == "login":
-       name_pw = json_msg["token"].split("_")
-       #name_pw = "test2_test2".split("_")
-       res_json = fake_login()
-       rep = header(json_msg)
-       if res_json['result'] == 1:
-           rep['state'] = "login_ok"
-           playerinfo_json = fake_playerinfo()
-           playerinfo = dict()
-           playerinfo['credit'] = playerinfo_json['result']
-           playerinfo['name'] = name_pw[0]
-           playerinfo['pw'] = name_pw[1]
-
-           msg = dict()
-           msg['playerinfo'] = playerinfo
-           rep['for_db'] = msg
-           rep['key'] = name_pw[0] #token(json_msg["token"])
-           db.save(rep)
-           rep['uuid'] = rep['key']
-       else:
-           rep['state'] = "login_fail"
-           rep['reason'] = "no_such_account"
-           rep['for_db'] = "for_del_key"
-           rep['key'] = name_pw[0] #token(json_msg["token"])
-           rep['uuid'] = rep['client_id']
-       return rep
+       return get_account(json_msg)
 
     #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "self_close":
 
        #TODO get player now where ,notify game close
-       print json_msg['uuid']
        playerdata = db.get(json_msg['uuid'])
-       print playerdata
        #create account fail,just close socket 
        if playerdata == None:
            rep = header_for_close(json_msg)
@@ -79,6 +55,32 @@ def fake_playerinfo():
     rep = dict()
     rep['result'] = 1000
     return rep
+
+def get_account(json_msg):
+    name_pw = json_msg["token"].split("_")
+    res_json = fake_login()
+    rep = header(json_msg)
+    if res_json['result'] == 1:
+        rep['state'] = "login_ok"
+        playerinfo_json = fake_playerinfo()
+        playerinfo = dict()
+        playerinfo['credit'] = playerinfo_json['result']
+        playerinfo['name'] = name_pw[0]
+        playerinfo['pw'] = name_pw[1]
+
+        msg = dict()
+        msg['playerinfo'] = playerinfo
+        rep['for_db'] = msg
+        rep['key'] = name_pw[0] #token(json_msg["token"])
+        db.save(rep)
+        rep['uuid'] = rep['key']
+    else:
+        rep['state'] = "login_fail"
+        rep['reason'] = "no_such_account"
+        rep['for_db'] = "for_del_key"
+        rep['key'] = name_pw[0] #token(json_msg["token"])
+        rep['uuid'] = rep['client_id']
+        return rep
 
 def header_for_close(json_msg):
 
