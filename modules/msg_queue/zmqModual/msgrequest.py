@@ -71,7 +71,7 @@ class zmq_request(object):
             return
 
         if 'cmd' in parsed:
-            if parsed['cmd'] == 'login':
+            if parsed['cmd'] == 'login' or parsed['cmd'] == 'try_login':
                 if parsed['state'] == 'login_ok':
                     #remove temp client_id ,using uuid
                     wait_login_client = get(parsed['client_id'])
@@ -79,8 +79,8 @@ class zmq_request(object):
                     add(parsed['uuid'],wait_login_client)
 
                     #before send del client
-                    del parsed["client_id"]
-                    del parsed["cmd"]
+                del parsed["client_id"]
+                del parsed["cmd"]
 
             #handle self close
             elif parsed['cmd'] == "self_close":
@@ -101,7 +101,7 @@ class zmq_request(object):
 
         print "request.py get package %s " % parsed['state']
            
-
+       
         myclient = get(parsed['uuid'])
 
         if myclient == None:

@@ -81,7 +81,7 @@ class zmq_msg_proxy(object):
       def push_handle(self,msg):
 
           result = json.loads(msg[0])
-          #print result
+          print result
 
           #pass data to another module
           if 'module' in result:

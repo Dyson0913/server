@@ -1,6 +1,8 @@
 import json
 import hashlib
 
+_db = None
+
 def handle(json_msg,socket_list):
     rep = normal_handle(json_msg,socket_list)
     socket = socket_list[0]
@@ -9,9 +11,10 @@ def handle(json_msg,socket_list):
 def normal_handle(json_msg,socket_list):
 
     player_socket = socket_list[0]
-    db = socket_list[1]
+    global _db
+    _db = socket_list[1]
 
-    print "auth get cmd %s" % json_msg['cmd']
+    print "auth get cmd " + str(json_msg)
 
     if json_msg['cmd'] == "try_login":
        return get_account(json_msg)
@@ -22,34 +25,54 @@ def normal_handle(json_msg,socket_list):
     if json_msg['cmd'] == "self_close":
 
        #TODO get player now where ,notify game close
-       playerdata = db.get(json_msg['uuid'])
+       playerdata = _db.get(json_msg['uuid'])
        #create account fail,just close socket 
        if playerdata == None:
            rep = header_for_close(json_msg)
            return rep
 
-       playerstate = json.loads(playerdata)
-       info = playerstate['state']
+       playerstate = get_info(playerdata)
 
        #in game,pass msg to msg_proxy to notify game close self then update state
        #not in game,just update state
        #TODO versus leave group
        rep = header_for_close(json_msg)
-       if info != "lobby_waitting":
+       if playerstate['state'] != "lobby_waitting":
            rep['module'] = playerstate['playing_module']
            rep['game_id'] = playerstate['playing_group']
            rep['cmd'] = "lost_connect"
        else:
            rep['state'] = "self_close"
-           db.save(rep)
+           _db.save(rep)
 
 
        return rep
 
-def fake_login():
+def fake_login(id):
+    #get acc from db
+    global _db
+    acc = _db.get(id[0])
     rep = dict()
-    rep['result'] = 0
+    if acc != None:
+        #check multi login
+        playerstate = get_info(acc)
+        #pw not equal,1.self forget 2,someone try pw
+        if playerstate['for_db']['playerinfo']['pw'] != id[1]: 
+            rep['result'] = 0
+            rep['reason'] = "password error"
+        else:
+            #pw ok ,check is multi login by other socket
+            if playerstate['state'] != "self_close":
+                rep['result'] = 0
+                rep['reason'] = "multilogin! want to kick another login?"
+            else:
+                rep['result'] = 1
+    else:
+        rep['result'] = 1
     return rep
+
+def get_info(playerdata):
+    return json.loads(playerdata)
 
 def fake_playerinfo():
     rep = dict()
@@ -58,8 +81,10 @@ def fake_playerinfo():
 
 def get_account(json_msg):
     name_pw = json_msg["token"].split("_")
-    res_json = fake_login()
+    res_json = fake_login(name_pw)
     rep = header(json_msg)
+
+    global _db
     if res_json['result'] == 1:
         rep['state'] = "login_ok"
         playerinfo_json = fake_playerinfo()
@@ -72,15 +97,16 @@ def get_account(json_msg):
         msg['playerinfo'] = playerinfo
         rep['for_db'] = msg
         rep['key'] = name_pw[0] #token(json_msg["token"])
-        db.save(rep)
+        _db.save(rep)
         rep['uuid'] = rep['key']
     else:
         rep['state'] = "login_fail"
-        rep['reason'] = "no_such_account"
+        rep['reason'] = res_json['reason']
         rep['for_db'] = "for_del_key"
         rep['key'] = name_pw[0] #token(json_msg["token"])
         rep['uuid'] = rep['client_id']
-        return rep
+    
+    return rep
 
 def header_for_close(json_msg):
 
