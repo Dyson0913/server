@@ -1,5 +1,6 @@
 import json
 import hashlib
+import datetime
 
 _db = None
 
@@ -64,7 +65,7 @@ def fake_login(id):
             #pw ok ,check is multi login by other socket
             if playerstate['state'] != "self_close":
                 rep['result'] = 0
-                rep['reason'] = "multilogin! want to kick another login?"
+                rep['reason'] = "alreay login on other device!"
             else:
                 rep['result'] = 1
     else:
@@ -92,6 +93,7 @@ def get_account(json_msg):
         playerinfo['credit'] = playerinfo_json['result']
         playerinfo['name'] = name_pw[0]
         playerinfo['pw'] = name_pw[1]
+        playerinfo['lastlogin'] = str(datetime.datetime.utcnow())
 
         msg = dict()
         msg['playerinfo'] = playerinfo
