@@ -54,6 +54,13 @@ class msgworker(object):
           db_pw = data['dbpw']
           self._db = db_proxy(db_host,db_port,db_pw)
 
+          #lobby gamelist
+          gamelist = dict()
+          gamelist["app"] = data['module']["app"]
+          gamelist['key'] = "gamelist"
+          gamelist['for_db'] = ""
+          self._db.save(gamelist)
+
           #sub from proxy
           self._sub_from_proxy = self._context.socket(zmq.SUB)
           sub_url = url + str(data["worker_pub_port"])

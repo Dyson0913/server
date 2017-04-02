@@ -19,7 +19,8 @@ def normal_handle(json_msg,socket_list):
        db.save(rep)
 
        #TODO gamelist get
-       rep['gamelist'] = ["hope","baccarat"]
+       gamelist_json_data = json.loads(db.get("gamelist"))
+       rep['gamelist'] = gamelist_json_data["app"]
 
        return rep
 
