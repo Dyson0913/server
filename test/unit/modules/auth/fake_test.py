@@ -2,6 +2,7 @@ import sys
 sys.path.append("../../../../modules/auth")
 
 import unittest
+import json
 from mock import Mock
 from fake import *
 
@@ -30,11 +31,33 @@ class AuthTestCase(unittest.TestCase):
         mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
        
         #for_db dynamic generate ,test later 
-        del mock_rsp['for_db']
+        #del mock_rsp['for_db']
 
         #rsp subset of b
         self.assertDictContainsSubset(rsp,mock_rsp)
 
+    def test_success_login(self):
+
+        rsp = {'state':"login_ok","cmd":"login","key":self.name}
+
+	mock_db_socket = Mock()
+        mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'playerinfo':{'pw':self.pw}}})
+	mock_push_socket = Mock()
+        mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
+
+        self.assertDictContainsSubset(rsp,mock_rsp)
+
+    def test_multi_login(self):
+
+        rsp = {'state':"login_fail","cmd":"login","key":self.name}
+
+	mock_db_socket = Mock()
+        mock_db_socket.get.return_value = json.dumps({'state':"lobby",'for_db':{'playerinfo':{'pw':self.pw}}})
+	mock_push_socket = Mock()
+        mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
+
+        self.assertDictContainsSubset(rsp,mock_rsp)
+        self.assertEqual("alreay login on other device!",mock_rsp['reason'])
 
 if __name__ == '__main__':
     unittest.main()
