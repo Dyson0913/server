@@ -86,11 +86,12 @@ def get_account(json_msg):
     rep = header(json_msg)
 
     global _db
+
+    point = get_info(_db.get("TryPoint"))
     if res_json['result'] == 1:
         rep['state'] = "login_ok"
-        playerinfo_json = fake_playerinfo()
         playerinfo = dict()
-        playerinfo['credit'] = playerinfo_json['result']
+        playerinfo['credit'] = point['Freepoint']
         playerinfo['name'] = name_pw[0]
         playerinfo['pw'] = name_pw[1]
         playerinfo['lastlogin'] = str(datetime.datetime.utcnow())
