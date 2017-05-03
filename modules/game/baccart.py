@@ -1,7 +1,7 @@
 import json
 from player import *
 
-from baccarat_mgr import *
+from baccart_mgr import *
 
 mgr = game_mgr("mgr")
 
@@ -114,7 +114,7 @@ def temp_handle(json_msg,socket_list):
 #        rep['state'] = "spin_result"
         # get game in db & get spin result msg
 #        rep['gameResult'] = fake_react()
-
+        pass
 #        return rep
 
     if json_msg['cmd'] == "cancel_bet":
@@ -123,7 +123,7 @@ def temp_handle(json_msg,socket_list):
 #        rep['state'] = "spin_result"
 #        rep['gameResult'] = fake_react()
 #        return rep
-
+        pass
 
 def header(json_msg):
 

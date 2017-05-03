@@ -42,12 +42,12 @@ class baccarat(object):
 
     def deal_player_card(self):
         card = self._poker.deal_cards(1)
-        self._player.append(card)
+        self._player.append(card[0])
         logging.info( "player card " + str(self._player))
 
     def deal_banker_card(self):
         card = self._poker.deal_cards(1)
-        self._banker.append(card)
+        self._banker.append(card[0])
         logging.info( "banker card " + str(self._banker))
 
     def banker_extra_card(self):
@@ -73,6 +73,8 @@ class baccarat(object):
         playerpoint = PokerPoint.get_baccarat_point(self._player)
         bankerpoint = PokerPoint.get_baccarat_point(self._banker)
         winstate = ""
+        
+        logging.info( "settle p point:" + str(playerpoint) +" b point "+ str(bankerpoint))
         if playerpoint > bankerpoint:
             logging.info("player win")
             self._win = "player win"
@@ -108,7 +110,7 @@ class init(State):
         self.next_state = "wait_bet" 
 
     def execute(self):
-        self.app.reset()
+        self.game.reset()
 
 class wait_bet(State):
 
@@ -125,9 +127,9 @@ class player_card(State):
         self.next_state = "banker_card"
 
     def execute(self):
-        self.app.deal_player_card()
+        self.game.deal_player_card()
         
-        if self.app.banker_extra_card():
+        if self.game.banker_extra_card():
             self.next_state = "banker_card"
         else:
             self.next_state = "settle"
@@ -140,18 +142,18 @@ class banker_card(State):
         self.next_state = "player_card"
 
     def execute(self):
-        self.app.deal_banker_card()
+        self.game.deal_banker_card()
 
-        if self.app.get_banker_card_num() < 2:
+        if self.game.get_banker_card_num() < 2:
             return
 
-        if self.app.top_card_rule():
+        if self.game.top_card_rule():
             self.next_state = "settle"
 
-        if self.app.player_extra_card():
+        if self.game.player_extra_card():
             self.next_state = "player_card"
         else:
-           if self.app.banker_extra_card():
+           if self.game.banker_extra_card():
               self.next_state = "banker_card"
            else:
               self.next_state = "settle"
@@ -164,14 +166,14 @@ class settle(State):
         self.next_state = "init"
 
     def execute(self):
-        self.app.settle()
+        self.game.settle()
 
 def main():
     
     mygame = baccarat("main_baccarat")
 
     myfsm = fsm()
-    setattr(myfsm,'app',mygame)
+    setattr(myfsm,'game',mygame)
     myfsm.add(init(1))
     myfsm.add(wait_bet(1))
     myfsm.add(player_card(2))
