@@ -20,7 +20,7 @@ class Poker(object):
     def deal_cards(self, numbers):
 
         if self._test_data != None:
-           card = self._test_data[0]
+           card = self._test_data[0:1]
            self._test_data.pop(0)
            return card
 

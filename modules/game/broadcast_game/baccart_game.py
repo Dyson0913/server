@@ -51,9 +51,10 @@ class baccarat(object):
         logging.info( "banker card " + str(self._banker))
 
     def banker_extra_card(self):
-        return PokerPoint.check_baccarat_banker_extra_card_rule(
-            self._player,
-            self._banker)
+        if self.get_banker_card_num() != 2:
+            return True
+
+        return PokerPoint.check_baccarat_banker_extra_card_rule(self._player, self._banker)
 
     def top_card_rule(self):
         return PokerPoint.check_baccarat_top_card_rule(self._player) or PokerPoint.check_baccarat_top_card_rule(self._banker)
