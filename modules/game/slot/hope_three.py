@@ -128,14 +128,14 @@ def main():
     
     mygame = hope_three("main_hopethree",8,5,30)
 
-    myfms = fms()
-    setattr(myfms,'app',mygame)
-    myfms.add(init(-1))
-    myfms.add(NG(-1))
-    myfms.add(FG(-1))
-    myfms.add(JP(-1))
+    myfsm = fsm()
+    setattr(myfsm,'app',mygame)
+    myfsm.add(init(-1))
+    myfsm.add(NG(-1))
+    myfsm.add(FG(-1))
+    myfsm.add(JP(-1))
 
-    myfms.start("init")
+    myfsm.start("init")
 
 if __name__ == "__main__":
     main()

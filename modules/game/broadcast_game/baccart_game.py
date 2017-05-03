@@ -170,15 +170,15 @@ def main():
     
     mygame = baccarat("main_baccarat")
 
-    myfms = fms()
-    setattr(myfms,'app',mygame)
-    myfms.add(init(1))
-    myfms.add(wait_bet(1))
-    myfms.add(player_card(2))
-    myfms.add(banker_card(1))
-    myfms.add(settle(1))
+    myfsm = fsm()
+    setattr(myfsm,'app',mygame)
+    myfsm.add(init(1))
+    myfsm.add(wait_bet(1))
+    myfsm.add(player_card(2))
+    myfsm.add(banker_card(1))
+    myfsm.add(settle(1))
 
-    myfms.start("init")
+    myfsm.start("init")
 
 if __name__ == "__main__":
     main()

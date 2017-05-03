@@ -62,7 +62,7 @@ class State(object):
         return diff
 
 
-class fms(object):
+class fsm(object):
    
    def __init__(self):
        self._all_state ={}
@@ -80,10 +80,11 @@ class fms(object):
 
        if self._all_state.has_key(init_state) == False:
            logging.info( "init state error "+ init_state )
-           return
+           return False
 
        self.kick(init_state)
        threading.Timer(0.1, self.time).start()
+       return True
        #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
 #       self.timer = threading.Timer(1,self.time)
 #       self.timer.start()

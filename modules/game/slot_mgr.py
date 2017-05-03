@@ -26,7 +26,7 @@ class game_mgr(object):
     def create(self,game,room,player_info):
         
         serial_id = game + "_" + room
-        myfms = fms()
+        myfsm = fsm()
         mygame = None 
         if game == "hope":
             mygame = hope_three(serial_id,8,5,30)
@@ -34,17 +34,17 @@ class game_mgr(object):
             playerlist.add_player(player_info)
             setattr(mygame,'player_list',playerlist)
 
-        setattr(myfms,'game',mygame)
-        setattr(myfms,'game_mgr',self)
-        myfms.add(init(-1))
-        myfms.add(NG(-1))
-        myfms.add(FG(-1))
-        myfms.add(JP(-1))
+        setattr(myfsm,'game',mygame)
+        setattr(myfsm,'game_mgr',self)
+        myfsm.add(init(-1))
+        myfsm.add(NG(-1))
+        myfsm.add(FG(-1))
+        myfsm.add(JP(-1))
 
-        myfms.start("init")
+        myfsm.start("init")
 
-        self._running_game[serial_id] = myfms
-        return myfms.init_msg()
+        self._running_game[serial_id] = myfsm
+        return myfsm.init_msg()
 
     def del_game(self,game_id):
          
