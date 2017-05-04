@@ -4,7 +4,7 @@ sys.path.append('../')
 
 from fsm import *
 from poker import *
-import pylog
+from pylog import *
 
 from ba_paytable import *
 import ba_paytable
@@ -14,6 +14,9 @@ class baccarat(object):
       
     def __init__(self,name):
         self._poker = Poker()
+        self._poker.add_slot("playerPoker")
+        self._poker.add_slot("BankerPoker")
+        self._poker.point_define(Poker.POINT_DEF_BACCART)
         self._player =[]
         self._banker =[]
         self._win = ""
@@ -40,15 +43,8 @@ class baccarat(object):
         del self._player[:]
         self._poker.shuffle()
 
-    def deal_player_card(self):
-        card = self._poker.deal_cards(1)
-        self._player.append(card[0])
-        logging.info( "player card " + str(self._player))
-
-    def deal_banker_card(self):
-        card = self._poker.deal_cards(1)
-        self._banker.append(card[0])
-        logging.info( "banker card " + str(self._banker))
+    def deal_card(self,slotname):
+        self._poker.deal_cards(1, slotname)
 
     def banker_extra_card(self):
         if self.get_banker_card_num() != 2:
@@ -57,17 +53,18 @@ class baccarat(object):
         return PokerPoint.check_baccarat_banker_extra_card_rule(self._player, self._banker)
 
     def top_card_rule(self):
-        return PokerPoint.check_baccarat_top_card_rule(self._player) or PokerPoint.check_baccarat_top_card_rule(self._banker)
+        if self._poker.query("playerPoker",Poker.QUERY_POINT) >=8 or self._poker.query("BankerPoker",Poker.QUERY_POINT) >=8:
+            return True
+        return False
 
     def get_banker_card_num(self):
-        return len(self._banker)
+        return self._poker.query("BankerPoker",Poker.QUERY_AMOUNT)
 
     def player_extra_card(self):
-        if self.get_banker_card_num() == 2:
-            return PokerPoint.check_baccarat_player_extra_card_rule(
-                self._player)
-        else:
+        if self._poker.query("playerPoker",Poker.QUERY_POINT) >= 6:
             return False
+        return True
+
 
     def settle(self):
         logging.info( "settle" )
@@ -128,7 +125,7 @@ class player_card(State):
         self.next_state = "banker_card"
 
     def execute(self):
-        self.game.deal_player_card()
+        self.game.deal_card("playerPoker")
         
         if self.game.banker_extra_card():
             self.next_state = "banker_card"
@@ -143,13 +140,14 @@ class banker_card(State):
         self.next_state = "player_card"
 
     def execute(self):
-        self.game.deal_banker_card()
+        self.game.deal_card("BankerPoker")
 
         if self.game.get_banker_card_num() < 2:
             return
 
         if self.game.top_card_rule():
             self.next_state = "settle"
+            return
 
         if self.game.player_extra_card():
             self.next_state = "player_card"

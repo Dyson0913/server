@@ -252,17 +252,8 @@ class PokerPoint(object):
         return PokerPoint.baccarat_player_extra_card_rule(point)
 
     @staticmethod
-    def check_baccarat_top_card_rule(poker):
-        point = PokerPoint.get_baccarat_point(poker)
-        if point >=8:
-            return True 
-        return False
-
-    @staticmethod
     def baccarat_player_extra_card_rule(point):
-        if point >= 6:
-            return False
-        return True
+
 
     @staticmethod
     def check_baccarat_banker_extra_card_rule(player_poker,banker_poker):
