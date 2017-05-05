@@ -88,7 +88,7 @@ class Poker(object):
         if querytype == self.QUERY_POKER:
             poker = self._dataslot[slotname]
             if poker == None:
-                return -1
+                return []
             else:
                 return poker
 

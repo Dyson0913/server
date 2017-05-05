@@ -20,6 +20,7 @@ class State(object):
     def enter(self):         
         self.execute()
         self.game.flush_state(self.name)
+        print self.game.msg()
         
     def execute(self):
         pass
@@ -32,7 +33,9 @@ class State(object):
 
     def on_update(self):
         self.update()
-        self.game.flush_state(self.name)
+
+        # no need to update frequently,just flush after enter
+        #self.game.flush_state(self.name)
 #        print self.get_remain_time()
 
     def update(self):

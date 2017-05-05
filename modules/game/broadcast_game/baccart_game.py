@@ -18,7 +18,7 @@ class baccarat(object):
         self._win = ""
         self._name = name
         self._info_to_client = None
-        self._poker.test_script(["6_d","3_s","7_c","10_d","12_c","8_c"])
+        #self._poker.test_script(["6_d","3_s","7_c","10_d","12_c","8_c"])
 
 
     def flush_state(self,state):
@@ -139,7 +139,7 @@ class init(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.default_state = "wait_bet"
-        self.next_state = self.default_state;
+        self.next_state = self.default_state
 
     def execute(self):
         self.game.reset()
@@ -150,7 +150,7 @@ class wait_bet(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.default_state = "player_card"
-        self.next_state = self.default_state;
+        self.next_state = self.default_state
 
 class player_card(State):
 
@@ -158,7 +158,7 @@ class player_card(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.default_state = "banker_card"
-        self.next_state = self.default_state;
+        self.next_state = self.default_state
 
     def execute(self):
         self.game.deal_card("playerPoker")
@@ -174,7 +174,7 @@ class banker_card(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.default_state = "player_card"
-        self.next_state = self.default_state;
+        self.next_state = self.default_state
 
     def execute(self):
         self.game.deal_card("BankerPoker")
@@ -204,7 +204,7 @@ class settle(State):
         self.period = stay_period
         self.name = self.__class__.__name__
         self.default_state = "init"
-        self.next_state = self.default_state;
+        self.next_state = self.default_state
 
     def execute(self):
         self.game.settle()
