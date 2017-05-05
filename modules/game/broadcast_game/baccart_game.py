@@ -14,20 +14,18 @@ class baccarat(object):
       
     def __init__(self,name):
         self._poker = Poker()
-        self._poker.add_slot("playerPoker")
-        self._poker.add_slot("BankerPoker")
         self._poker.point_define(Poker.POINT_DEF_BACCART)
-        self._player =[]
-        self._banker =[]
         self._win = ""
         self._name = name
-        self._info_to_client = None 
+        self._info_to_client = None
+        self._poker.test_script(["6_d","3_s","7_c","10_d","12_c","8_c"])
+
 
     def flush_state(self,state):
         msg = dict()
         msg['state'] = state
-        msg['playerpoker'] = self._player
-        msg['bankerpoker'] = self._banker
+        msg['playerpoker'] = self._poker.query("playerPoker",Poker.QUERY_POKER)
+        msg['bankerpoker'] = self._poker.query("BankerPoker",Poker.QUERY_POKER)
 
         self._info_to_client = msg
 
@@ -39,37 +37,74 @@ class baccarat(object):
         return self._info_to_client
 
     def reset(self):
-        del self._banker[:]
-        del self._player[:]
+        self._poker.add_slot("playerPoker")
+        self._poker.add_slot("BankerPoker")
         self._poker.shuffle()
+
 
     def deal_card(self,slotname):
         self._poker.deal_cards(1, slotname)
 
     def banker_extra_card(self):
-        if self.get_banker_card_num() != 2:
+        if self._poker.query("BankerPoker",Poker.QUERY_AMOUNT) != 2:
             return True
 
-        return PokerPoint.check_baccarat_banker_extra_card_rule(self._player, self._banker)
+        bankerPoint = self._poker.query("BankerPoker",Poker.QUERY_Mod_10_Point)
+        poker = self._poker.query("playerPoker", Poker.QUERY_POKER)
+        self._poker.add_slot("lastPoker")
+        self._poker.copy_To("lastPoker",poker[-1:])
+        player_third_point = self._poker.query("lastPoker",Poker.QUERY_Mod_10_Point)
+
+        if bankerPoint <= 2:
+            return True
+
+        if bankerPoint == 3:
+            if player_third_point == 8:
+                return False
+            else:
+                return True
+
+        if bankerPoint == 4:
+            if player_third_point == 0 or player_third_point == 1 or player_third_point == 8 or player_third_point == 9:
+                return False
+            else:
+                return True
+
+        if bankerPoint == 5:
+            if player_third_point == 0 or player_third_point == 1 or player_third_point == 2 or player_third_point == 3 or player_third_point == 8 or player_third_point == 9:
+                return False
+            else:
+                return True
+
+        if bankerPoint == 6:
+
+            if self._poker.query("playerPoker",Poker.QUERY_AMOUNT) != 3:
+                return False
+            else:
+                if player_third_point == 6 or player_third_point == 7:
+                    return True
+                else:
+                    return False
+
+        return False
 
     def top_card_rule(self):
-        if self._poker.query("playerPoker",Poker.QUERY_POINT) >=8 or self._poker.query("BankerPoker",Poker.QUERY_POINT) >=8:
+        if self._poker.query("playerPoker",Poker.QUERY_Mod_10_Point)  >=8 or self._poker.query("BankerPoker",Poker.QUERY_Mod_10_Point) >=8:
             return True
         return False
 
-    def get_banker_card_num(self):
-        return self._poker.query("BankerPoker",Poker.QUERY_AMOUNT)
-
     def player_extra_card(self):
-        if self._poker.query("playerPoker",Poker.QUERY_POINT) >= 6:
+        if self._poker.query("playerPoker",Poker.QUERY_Mod_10_Point) >= 6:
             return False
         return True
 
+    def get_banker_card_num(self):
+        return self._poker.query("BankerPoker", Poker.QUERY_AMOUNT)
 
     def settle(self):
         logging.info( "settle" )
-        playerpoint = PokerPoint.get_baccarat_point(self._player)
-        bankerpoint = PokerPoint.get_baccarat_point(self._banker)
+        playerpoint = self._poker.query("playerPoker",Poker.QUERY_Mod_10_Point)
+        bankerpoint = self._poker.query("BankerPoker",Poker.QUERY_Mod_10_Point)
         winstate = ""
         
         logging.info( "settle p point:" + str(playerpoint) +" b point "+ str(bankerpoint))
@@ -91,10 +126,8 @@ class baccarat(object):
             # if playerpoint > bankerpoint:
             #     winstate = Baccarat.wintype_pair
 
-        #msg['winstate'] = winstate
         logging.info( "settle" + str(ba_paytable.paytable(winstate)) )
-#        msg['paytable'] = ba_paytable.paytable(winstate)
-#        msg['message_type'] = MSG_TYPE_ROUND_INFO
+
 
         #TODO redis
 #        self.publish(msg)
@@ -105,7 +138,8 @@ class init(State):
     def __init__(self,stay_period):
         self.period = stay_period
         self.name = self.__class__.__name__
-        self.next_state = "wait_bet" 
+        self.default_state = "wait_bet"
+        self.next_state = self.default_state;
 
     def execute(self):
         self.game.reset()
@@ -115,14 +149,16 @@ class wait_bet(State):
     def __init__(self,stay_period):
         self.period = stay_period
         self.name = self.__class__.__name__
-        self.next_state = "player_card"
+        self.default_state = "player_card"
+        self.next_state = self.default_state;
 
 class player_card(State):
 
     def __init__(self,stay_period):
         self.period = stay_period
         self.name = self.__class__.__name__
-        self.next_state = "banker_card"
+        self.default_state = "banker_card"
+        self.next_state = self.default_state;
 
     def execute(self):
         self.game.deal_card("playerPoker")
@@ -137,12 +173,17 @@ class banker_card(State):
     def __init__(self,stay_period):
         self.period = stay_period
         self.name = self.__class__.__name__
-        self.next_state = "player_card"
+        self.default_state = "player_card"
+        self.next_state = self.default_state;
 
     def execute(self):
         self.game.deal_card("BankerPoker")
 
         if self.game.get_banker_card_num() < 2:
+            return
+
+        if self.game.get_banker_card_num() == 3:
+            self.next_state = "settle"
             return
 
         if self.game.top_card_rule():
@@ -162,7 +203,8 @@ class settle(State):
     def __init__(self,stay_period):
         self.period = stay_period
         self.name = self.__class__.__name__
-        self.next_state = "init"
+        self.default_state = "init"
+        self.next_state = self.default_state;
 
     def execute(self):
         self.game.settle()

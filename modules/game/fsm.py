@@ -9,6 +9,7 @@ class State(object):
 
     period = 0
     name = None
+    default_state = None
     next_state = None
 
     def on_enter(self):
@@ -22,6 +23,9 @@ class State(object):
         
     def execute(self):
         pass
+
+    def deault_state(self):
+        self.next_state = self.default_state
 
     def next_state(self,next_state):
         self._next_state = next_state
@@ -109,7 +113,9 @@ class fsm(object):
    def transitions(self,state_name):
 #       logging.info("transistion to " + state_name)
        if self._all_state.has_key(state_name):
+           self._current_state.deault_state()
            self.kick(state_name)
+
        else:
           logging.info("error !! no such state")
 

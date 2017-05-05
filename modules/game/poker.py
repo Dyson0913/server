@@ -7,6 +7,8 @@ class Poker(object):
 
     QUERY_AMOUNT = "len"
     QUERY_POINT = "point"
+    QUERY_Mod_10_Point = "Modpoint"
+    QUERY_POKER = "poker"
 
     POINT_DEF_BACCART = "baccart"
 
@@ -19,7 +21,7 @@ class Poker(object):
                        "4_c", "4_d", "4_h", "4_s", "5_c", "5_d", "5_h", "5_s", "6_c", "6_d", "6_h", "6_s",
                        "7_c", "7_d", "7_h", "7_s", "8_c", "8_d", "8_h", "8_s", "9_c", "9_d", "9_h", "9_s",
                        "10_c", "10_d", "10_h", "10_s", "11_c", "11_d", "11_h", "11_s", "12_c", "12_d", "12_h", "12_s",
-                       "13_c", "13d", "13_h", "13_s"]
+                       "13_c", "13_d", "13_h", "13_s"]
 
     def add_slot(self, slotname):
         self._dataslot.update({slotname: None})
@@ -38,7 +40,16 @@ class Poker(object):
         if self._test_data != None:
             card = self._test_data[0:1]
             self._test_data.pop(0)
-            return card
+            poker = self._dataslot[slotname]
+            if poker == None:
+                self._dataslot[slotname] = card
+                logging.info(slotname + " card " + str(self._dataslot[slotname]))
+                return
+            else:
+                poker.extend(card)
+                self._dataslot[slotname] = poker
+                logging.info(slotname + " card " + str(self._dataslot[slotname]))
+                return
 
         if (numbers + self._dealed_cards) <= len(self._cards):
             start = self._dealed_cards
@@ -69,9 +80,20 @@ class Poker(object):
             else:
                 point_list = map(lambda x:self._point_def[int(x.split("_")[0])], poker)
                 point = reduce(lambda x,y: x+y, point_list)
-                point = point % 10
                 return point
 
+        if querytype == self.QUERY_Mod_10_Point:
+            return self.query(slotname,self.QUERY_POINT) % 10
+
+        if querytype == self.QUERY_POKER:
+            poker = self._dataslot[slotname]
+            if poker == None:
+                return -1
+            else:
+                return poker
+
+    def copy_To(self, slotname,data ):
+        self._dataslot[slotname] = data
 
     def get_remain_cards(self):
         remain = len(self._cards) - self._dealed_cards
@@ -238,50 +260,6 @@ class PokerPoint(object):
         else:
             value = PokerPoint.check_pair_type(cards)
             return value
-
-    @staticmethod
-    def check_baccarat_top_card_rule(poker):
-        point = PokerPoint.get_baccarat_point(poker)
-        if point >= 8:
-            return True
-        return False
-
-    @staticmethod
-    def check_baccarat_banker_extra_card_rule(player_poker, banker_poker):
-        banker_point = PokerPoint.get_baccarat_point(banker_poker)
-        player_third_point = PokerPoint.get_baccarat_point(player_poker[-1:])
-
-        if banker_point <= 2:
-            return True
-
-        if banker_point == 3:
-            if player_third_point == 8:
-                return False
-            else:
-                return True
-
-        if banker_point == 4:
-            if player_third_point == 0 or player_third_point == 1 or player_third_point == 8 or player_third_point == 9:
-                return False
-            else:
-                return True
-
-        if banker_point == 5:
-            if player_third_point == 0 or player_third_point == 1 or player_third_point == 2 or player_third_point == 3 or player_third_point == 8 or player_third_point == 9:
-                return False
-            else:
-                return True
-
-        if banker_point == 6:
-            if len(player_poker) != 3:
-                return False
-            else:
-                if player_third_point == 6 or player_third_point == 7:
-                    return True
-                else:
-                    return False
-
-        return False
 
     @staticmethod
     def check_newnew_five_wawa(cards):
