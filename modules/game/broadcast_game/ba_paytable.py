@@ -2,11 +2,11 @@ odd_split = "|"
 zone_split = "_"
 
 #betzone
-Baccarat_banker = 1
-Baccarat_player = 2
-Baccarat_tie = 3
-Baccarat_banker_pair = 4
-Baccarat_player_pair = 5
+Baccarat_banker = 0
+Baccarat_player = 1
+Baccarat_tie = 2
+Baccarat_banker_pair = 3
+Baccarat_player_pair = 4
 
 #odds
 ba_odds_11 = 1
@@ -27,7 +27,7 @@ def split_symbol():
     return [zone_split,odd_split]
 
 def bet_zone():
-    return [1,2,3]
+    return [0,1,2]
 
 def paytable(winstate):
     winzone = winstate.split(zone_split)[:-1]

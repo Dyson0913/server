@@ -15,8 +15,6 @@ class baccarat(object):
     def __init__(self,name):
         self._poker = Poker()
         self._poker.point_define(Poker.POINT_DEF_BACCART)
-        self._win = ""
-        self._name = name
         self._info_to_client = None
         #self._poker.test_script(["6_d","3_s","7_c","10_d","12_c","8_c"])
 
@@ -24,23 +22,23 @@ class baccarat(object):
     def flush_state(self,state):
         msg = dict()
         msg['state'] = state
+        msg['betzone'] = ba_paytable.bet_zone()
         msg['playerpoker'] = self._poker.query("playerPoker",Poker.QUERY_POKER)
         msg['bankerpoker'] = self._poker.query("BankerPoker",Poker.QUERY_POKER)
-
+        msg['settle'] = self._paytable
         self._info_to_client = msg
 
     def test_script(self,script_name,args):
         self._poker.test_script(args)
 
     def msg(self):
-        logging.info( "client msg " + str(self._info_to_client))
         return self._info_to_client
 
     def reset(self):
         self._poker.add_slot("playerPoker")
         self._poker.add_slot("BankerPoker")
+        self._paytable = []
         self._poker.shuffle()
-
 
     def deal_card(self,slotname):
         self._poker.deal_cards(1, slotname)
@@ -106,31 +104,20 @@ class baccarat(object):
         playerpoint = self._poker.query("playerPoker",Poker.QUERY_Mod_10_Point)
         bankerpoint = self._poker.query("BankerPoker",Poker.QUERY_Mod_10_Point)
         winstate = ""
-        
-        logging.info( "settle p point:" + str(playerpoint) +" b point "+ str(bankerpoint))
+
         if playerpoint > bankerpoint:
-            logging.info("player win")
-            self._win = "player win"
             winstate += ba_paytable.combine_winstate(Baccarat_player,ba_odds_1)
         elif playerpoint < bankerpoint:
-            logging.info("banker win")
-            self._win = "banker win"
             winstate += ba_paytable.combine_winstate(Baccarat_banker,ba_odds_095)
         else:
-            logging.info("tie")
-            self._win = "tie"
             winstate += ba_paytable.combine_winstate(Baccarat_tie,ba_odds_8)
-            # pair
-            # playerpoint = PokerPoint.get_baccarat_point(self.playerpoker[2:])
-            # bankerpoint = PokerPoint.get_baccarat_point(self.bankerpoker[2:])
-            # if playerpoint > bankerpoint:
-            #     winstate = Baccarat.wintype_pair
+        # pair
 
-        logging.info( "settle" + str(ba_paytable.paytable(winstate)) )
-
+        self._paytable = ba_paytable.paytable(winstate)
+        logging.info("settle p point:" + str(playerpoint) + " b point " + str(bankerpoint) )
+        logging.info( "settle" + str(self._paytable) )
 
         #TODO redis
-#        self.publish(msg)
 
 
 class init(State):
@@ -216,7 +203,7 @@ def main():
     myfsm = fsm()
     setattr(myfsm,'game',mygame)
     myfsm.add(init(1))
-    myfsm.add(wait_bet(1))
+    myfsm.add(wait_bet(10))
     myfsm.add(player_card(2))
     myfsm.add(banker_card(1))
     myfsm.add(settle(1))

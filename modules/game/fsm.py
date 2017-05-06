@@ -20,7 +20,7 @@ class State(object):
     def enter(self):         
         self.execute()
         self.game.flush_state(self.name)
-        print self.game.msg()
+        print self.msg()
         
     def execute(self):
         pass
