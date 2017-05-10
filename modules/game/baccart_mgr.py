@@ -3,7 +3,7 @@ import sys
 sys.path.append('broadcast_game/')
 
 from fsm import *
-from baccart_game import *
+from baccarat import *
 
 class game_mgr(object):
 
@@ -29,7 +29,7 @@ class game_mgr(object):
         serial_id = self._mgrname + str(len(self._running_game))
         new_game = baccarat(serial_id)
         myfsm = fsm()
-        setattr(myfsm,'app',new_game)
+        setattr(myfsm,'game',new_game)
         myfsm.add(init(1))
         myfsm.add(wait_bet(1))
         myfsm.add(player_card(2))
