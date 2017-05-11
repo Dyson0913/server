@@ -34,7 +34,7 @@ class baccarat(object):
 
     def init_msg(self):
         init = dict()
-        init['game_id'] = self._name
+        init['game_id'] = self._gameid
         return init
 
     def msg(self):
