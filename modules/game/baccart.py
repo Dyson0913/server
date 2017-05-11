@@ -33,7 +33,7 @@ def temp_handle(json_msg,socket_list):
 
            #create game instance
            player = player_info(json_msg['uuid'],player_socket)
-           init_msg = slot_mgr.spawn(module,room,player)
+           init_msg = mgr.spawn(module,room,player)
            rep['state'] = "game_join_ok"
            rep['proxy_id'] = json_msg['proxy_id']
            rep['playing_module'] = module
@@ -93,7 +93,7 @@ def temp_handle(json_msg,socket_list):
         #    return to_other_proxy
 
         #close game ,return to lobby
-        slot_mgr.del_game(json_msg['game_id'])
+        mgr.del_game(json_msg['game_id'])
         rep = header(json_msg)
         rep['module'] = "lobby"
         rep['cmd'] = "request_gamelist"
@@ -101,7 +101,7 @@ def temp_handle(json_msg,socket_list):
 
     #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "lost_connect":
-        slot_mgr.del_game(json_msg['game_id'])
+        mgr.del_game(json_msg['game_id'])
         rep = header(json_msg)
         rep['cmd'] = "self_close"
         rep['state'] = "self_close"
