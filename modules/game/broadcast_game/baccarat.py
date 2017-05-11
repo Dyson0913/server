@@ -12,16 +12,18 @@ import ba_paytable
 
 class baccarat(object):
       
-    def __init__(self,name):
+    def __init__(self,game_id):
         self._poker = Poker()
         self._poker.point_define(Poker.POINT_DEF_BACCART)
         self._info_to_client = None
+        self._gameid = game_id
         #self._poker.test_script(["6_d","3_s","7_c","10_d","12_c","8_c"])
 
 
     def flush_state(self,state):
         msg = dict()
         msg['state'] = state
+        msg['game_id'] = self._gameid
         msg['betzone'] = ba_paytable.bet_zone()
         msg['playerpoker'] = self._poker.query("playerPoker",Poker.QUERY_POKER)
         msg['bankerpoker'] = self._poker.query("BankerPoker",Poker.QUERY_POKER)
