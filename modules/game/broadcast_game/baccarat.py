@@ -23,7 +23,6 @@ class baccarat(object):
     def flush_state(self,state):
         msg = dict()
         msg['state'] = state
-        msg['game_id'] = self._gameid
         msg['betzone'] = ba_paytable.bet_zone()
         msg['playerpoker'] = self._poker.query("playerPoker",Poker.QUERY_POKER)
         msg['bankerpoker'] = self._poker.query("BankerPoker",Poker.QUERY_POKER)
@@ -32,6 +31,11 @@ class baccarat(object):
 
     def test_script(self,script_name,args):
         self._poker.test_script(args)
+
+    def init_msg(self):
+        init = dict()
+        init['game_id'] = self._name
+        return init
 
     def msg(self):
         return self._info_to_client

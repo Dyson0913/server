@@ -46,7 +46,7 @@ class game_mgr(object):
         myfsm.start("init")
 
         self._running_game[serial_id] = myfsm
-        return myfsm.msg()
+        return myfsm.init_msg()
 
     def del_game(self, game_id):
         game = self._running_game[game_id]
