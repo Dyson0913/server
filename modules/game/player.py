@@ -14,10 +14,7 @@ class player_info(object):
 
     def send_msg(self,msg):
         header = self.header()
-        print "header"
-        print header
         header.update(msg)
-        print header
         self._socket.send_json(header)
 
 class player_list(object):

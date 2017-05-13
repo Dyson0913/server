@@ -96,6 +96,9 @@ class fsm(object):
        #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
 #       self.timer = threading.Timer(1,self.time)
 #       self.timer.start()
+   def delay_start(self, init_state,delay):
+
+       threading.Timer(delay, self.start(init_state)).start()
 
    def time(self):
 

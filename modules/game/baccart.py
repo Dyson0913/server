@@ -40,7 +40,7 @@ def temp_handle(json_msg,socket_list):
            rep['playing_group'] = config
            db.save(rep)
 
-           rep['game_id'] = init_msg['game_id']
+           rep.update(init_msg)
 
        else:
           print "room open"

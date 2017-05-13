@@ -43,7 +43,7 @@ class game_mgr(object):
         myfsm.add(player_card(3))
         myfsm.add(banker_card(3))
         myfsm.add(settle(5))
-        myfsm.start("init")
+        myfsm.delay_start("init",2)
 
         self._running_game[serial_id] = myfsm
         return myfsm.init_msg()
