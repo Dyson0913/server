@@ -39,10 +39,10 @@ class game_mgr(object):
 
         setattr(myfsm,'game',mygame)
         myfsm.add(init(1))
-        myfsm.add(wait_bet(1))
-        myfsm.add(player_card(2))
-        myfsm.add(banker_card(1))
-        myfsm.add(settle(1))
+        myfsm.add(wait_bet(10))
+        myfsm.add(player_card(3))
+        myfsm.add(banker_card(3))
+        myfsm.add(settle(5))
         myfsm.start("init")
 
         self._running_game[serial_id] = myfsm
