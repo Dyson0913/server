@@ -92,7 +92,7 @@ class fsm(object):
 
        self.kick(init_state)
        threading.Timer(0.1, self.time).start()
-       return
+
        #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
 #       self.timer = threading.Timer(1,self.time)
 #       self.timer.start()
