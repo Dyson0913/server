@@ -20,12 +20,13 @@ class State(object):
     def enter(self):         
         self.execute()
         self.game.flush_state(self.name)
-        print self.msg()
+        self.game.player_list.broadcast(self.msg())
+        #print self.msg()
         
     def execute(self):
         pass
 
-    def deault_state(self):
+    def default_State(self):
         self.next_state = self.default_state
 
     def next_state(self,next_state):
@@ -116,7 +117,8 @@ class fsm(object):
    def transitions(self,state_name):
 #       logging.info("transistion to " + state_name)
        if self._all_state.has_key(state_name):
-           self._current_state.deault_state()
+           #before trans A to B, reset A default state
+           self._current_state.default_State()
            self.kick(state_name)
 
        else:

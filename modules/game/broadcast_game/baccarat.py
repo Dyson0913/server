@@ -17,16 +17,17 @@ class baccarat(object):
         self._poker.point_define(Poker.POINT_DEF_BACCART)
         self._info_to_client = None
         self._gameid = game_id
+        self._serial_no = 0;
         #self._poker.test_script(["6_d","3_s","7_c","10_d","12_c","8_c"])
 
 
     def flush_state(self,state):
         msg = dict()
         msg['state'] = state
-        msg['betzone'] = ba_paytable.bet_zone()
         msg['playerpoker'] = self._poker.query("playerPoker",Poker.QUERY_POKER)
         msg['bankerpoker'] = self._poker.query("BankerPoker",Poker.QUERY_POKER)
         msg['settle'] = self._paytable
+        msg['sn'] = self._serial_no
         self._info_to_client = msg
 
     def test_script(self,script_name,args):
@@ -35,6 +36,7 @@ class baccarat(object):
     def init_msg(self):
         init = dict()
         init['game_id'] = self._gameid
+        init['betzone'] = ba_paytable.bet_zone()
         return init
 
     def msg(self):
@@ -123,7 +125,7 @@ class baccarat(object):
         logging.info("settle p point:" + str(playerpoint) + " b point " + str(bankerpoint) )
         logging.info( "settle" + str(self._paytable) )
 
-        #TODO redis
+        self._serial_no +=1
 
 
 class init(State):
@@ -144,6 +146,9 @@ class wait_bet(State):
         self.name = self.__class__.__name__
         self.default_state = "player_card"
         self.next_state = self.default_state
+
+    def update(self):
+        self.game.player_list.broadcast(self.msg())
 
 class player_card(State):
 

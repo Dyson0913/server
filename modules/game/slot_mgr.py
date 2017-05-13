@@ -19,9 +19,6 @@ class game_mgr(object):
         
         msg = self.create(game_module,room,player_info)
         return msg
- 
-        #TODO wait in backi( match algo),ready, open a game to service
-
 
     def create(self,game,room,player_info):
         
