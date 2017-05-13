@@ -38,7 +38,7 @@ class game_mgr(object):
         setattr(mygame, 'player_list', playerlist)
 
         setattr(myfsm,'game',mygame)
-        myfsm.add(init(1))
+        myfsm.add(init(2))
         myfsm.add(wait_bet(10))
         myfsm.add(player_card(3))
         myfsm.add(banker_card(3))
