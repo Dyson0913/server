@@ -96,9 +96,12 @@ class fsm(object):
        #self.timer = threading.Timer(1,self.on_update,args=["WOW"])
 #       self.timer = threading.Timer(1,self.time)
 #       self.timer.start()
-   def delay_start(self, init_state,delay):
 
-       threading.Timer(delay, self.start,init_state).start()
+   # The thread will block, but the process is still alive.
+   # In a single threaded application, this means everything is blocked while you sleep. In a multithreaded application, only the thread you explicitly 'sleep' will #block and the other threads still run within the process.
+   def delay_start(self, init_state,delay):
+       time.sleep(delay)
+       self.start(init_state)
 
    def time(self):
 
