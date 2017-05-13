@@ -212,6 +212,7 @@ def main():
     mygame = baccarat("main_baccarat")
 
     myfsm = fsm()
+
     setattr(myfsm,'game',mygame)
     myfsm.add(init(1))
     myfsm.add(wait_bet(10))
@@ -219,7 +220,7 @@ def main():
     myfsm.add(banker_card(1))
     myfsm.add(settle(1))
 
-    myfsm.start("init")
+    myfsm.delay_start("init",2)
 
 if __name__ == "__main__":
     main()
