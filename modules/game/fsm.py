@@ -12,6 +12,8 @@ class State(object):
     default_state = None
     next_state = None
 
+    delay_state = None
+
     def on_enter(self):
         self._state_time = time.time()
         logging.info( "on_enter " + self.name)
@@ -100,8 +102,11 @@ class fsm(object):
    # The thread will block, but the process is still alive.
    # In a single threaded application, this means everything is blocked while you sleep. In a multithreaded application, only the thread you explicitly 'sleep' will #block and the other threads still run within the process.
    def delay_start(self, init_state,delay):
-       time.sleep(delay)
-       self.start(init_state)
+       self.delay_state = init_state
+       threading.Timer(delay, self.delaykick).start()
+
+   def delaykick(self):
+       self.start(self.delay_state)
 
    def time(self):
 
