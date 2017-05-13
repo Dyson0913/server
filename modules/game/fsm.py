@@ -98,7 +98,7 @@ class fsm(object):
 #       self.timer.start()
    def delay_start(self, init_state,delay):
 
-       threading.Timer(delay, self.start(init_state)).start()
+       threading.Timer(delay, self.start,init_state).start()
 
    def time(self):
 
