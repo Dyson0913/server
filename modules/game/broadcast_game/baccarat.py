@@ -28,6 +28,8 @@ class baccarat(object):
         msg['playerpoker'] = self._poker.query("playerPoker",Poker.QUERY_POKER)
         msg['bankerpoker'] = self._poker.query("BankerPoker",Poker.QUERY_POKER)
         msg['settle'] = self._paytable
+        msg['settlePoint'] = self._settlepoint
+        msg['winstate'] = self._winstate
         msg['sn'] = self._serial_no
         self._info_to_client = msg
 
@@ -46,6 +48,8 @@ class baccarat(object):
         self._poker.add_slot("playerPoker")
         self._poker.add_slot("BankerPoker")
         self._paytable = []
+        self._winstate = ""
+        self,_settlepoint =[];
         self._poker.shuffle()
 
     def deal_card(self,slotname):
@@ -115,12 +119,15 @@ class baccarat(object):
 
         if playerpoint > bankerpoint:
             winstate += ba_paytable.combine_winstate(Baccarat_player,ba_odds_1)
+            self._winstate ="player"
         elif playerpoint < bankerpoint:
             winstate += ba_paytable.combine_winstate(Baccarat_banker,ba_odds_095)
+            self._winstate = "banker"
         else:
             winstate += ba_paytable.combine_winstate(Baccarat_tie,ba_odds_8)
+            self._winstate = "tie"
         # pair
-
+        self._settlepoint = [playerpoint,bankerpoint]
         self._paytable = ba_paytable.paytable(winstate)
         logging.info("settle p point:" + str(playerpoint) + " b point " + str(bankerpoint) )
         logging.info( "settle" + str(self._paytable) )
