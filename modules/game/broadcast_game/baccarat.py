@@ -49,7 +49,7 @@ class baccarat(object):
         self._poker.add_slot("BankerPoker")
         self._paytable = []
         self._winstate = ""
-        self,_settlepoint =[];
+        self._settlepoint =[]
         self._poker.shuffle()
 
     def deal_card(self,slotname):
