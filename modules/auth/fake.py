@@ -1,6 +1,6 @@
 import json
 import hashlib
-import datetime
+import datetimeglobal _db
 
 _db = None
 
@@ -91,7 +91,7 @@ def get_account(json_msg):
     if res_json['result'] == 1:
         rep['state'] = "login_ok"
         playerinfo = dict()
-        playerinfo['credit'] = point['Freepoint']
+        playerinfo['credit'] = {'total':point['Freepoint']}
         playerinfo['name'] = name_pw[0]
         playerinfo['pw'] = name_pw[1]
         playerinfo['lastlogin'] = str(datetime.datetime.utcnow())

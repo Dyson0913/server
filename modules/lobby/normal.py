@@ -18,7 +18,6 @@ def normal_handle(json_msg,socket_list):
        rep['state'] = "lobby_waitting"
        db.save(rep)
 
-       #TODO gamelist get
        gamelist_json_data = json.loads(db.get("gamelist"))
        rep['gamelist'] = gamelist_json_data["app"]
 
