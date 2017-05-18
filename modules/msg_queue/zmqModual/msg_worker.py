@@ -26,6 +26,7 @@ class msgworker(object):
           module_list =[]
           module_list.append( data['module']['auth'] )
           module_list.append( data['module']['lobby'] )
+          module_list.append( data['module']['credit'])
           modual_list = data["module"]['app']
           for item in modual_list:
               module_list.append( item['game'] )
