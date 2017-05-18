@@ -8,7 +8,7 @@ slot_mgr = game_mgr("slot_mgr")
 
 
 def handle(json_msg,socket_list):
-    #print json_msg
+    print json_msg
 
     socket = socket_list[0]
     rep = temp_handle(json_msg,socket_list)

@@ -18,6 +18,7 @@ def temp_handle(json_msg,socket_list):
     player_socket = socket_list[0]
     db = socket_list[1]
     print "game get cmd %s" % json_msg['cmd']
+    print json_msg
 
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']

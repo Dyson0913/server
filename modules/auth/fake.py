@@ -1,6 +1,6 @@
 import json
 import hashlib
-import datetimeglobal _db
+import datetime
 
 _db = None
 

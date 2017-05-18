@@ -32,10 +32,12 @@ def key_check(id):
     #get acc from db
     global _db
     acc = _db.get(id)
-
+    print acc
     if acc != None:
         playerstate = get_info(acc)
+        print playerstate
         credit_info = get_info(playerstate['for_db']['playerinfo']['credit'])
+        print credit_info
         return credit_info['total']
     else:
        # illegle acc ,return 0 point

@@ -10,6 +10,7 @@
  "module":{
            "auth":"fake",
            "lobby":"normal",
+           "credit":"creditHandler",
            "app":[
                    {"game":"hope"},
                    {"game":"ThreeKingdoms"},
