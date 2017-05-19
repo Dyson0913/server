@@ -14,13 +14,30 @@ def normal_handle(json_msg,socket_list):
     _db = socket_list[1]
 
     print "credit get cmd %s" % json_msg['cmd']
-   
-    if json_msg['cmd'] == "takein":
-       rep = header(json_msg)
-       rep['state'] = "userCredit_update"
-       rep['total_Credit'] = key_check(json_msg['uuid'])
-       return rep
 
+    rep = header(json_msg)
+    if json_msg['cmd'] == "query_credit":
+
+        rep['state'] = "userCredit_update"
+        rep['total_Credit'] = key_check(json_msg['uuid'])
+        return rep
+
+    if json_msg['cmd'] == "take_in":
+        mycredit = key_check(json_msg['uuid'])
+        takein = json_msg['takein_credit']
+        if takein > mycredit:
+            rep['state'] = "takein_result"
+            rep['result'] = "fail"
+            rep['reason'] = "credit not enough"
+        else:
+            new_credit = dict()
+            new_credit['credit'] = mycredit - takein
+            new_credit[json_msg['game']] = takein
+            update_credit(json_msg['uuid'],new_credit)
+
+            rep['state'] = "takein_result"
+            rep['result'] = "ok"
+        return rep
 
 def header(json_msg):
     rep = dict()
@@ -41,6 +58,15 @@ def key_check(id):
        # illegle acc ,return 0 point
         return 0
 
-
 def get_info(playerdata):
     return json.loads(playerdata)
+
+def update_credit(id,credit):
+    global _db
+    acc = _db.get(id)
+    if acc != None:
+        playerstate = get_info(acc)
+        playerstate['for_db']['playerinfo']['credit'].update(credit)
+    else:
+        # illegle acc ,no handle
+        pass
