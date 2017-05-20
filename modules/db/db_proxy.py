@@ -18,8 +18,6 @@ class db_proxy(object):
  
         new_json = dict()
         new_json.update(json_msg)
-        #new_json['state'] = json_msg['state']
-        #new_json['key'] = json_msg['key']
 
         json_data = self.get(key)
         if json_data != None:
@@ -28,6 +26,12 @@ class db_proxy(object):
         else:
             new_json['for_db'] = json_msg['for_db']
         
+        self._module.save(key,json.dumps(new_json))
+
+    def update(self,json_msg):
+        key = json_msg['key']
+        new_json = dict()
+        new_json.update(json_msg)
         self._module.save(key,json.dumps(new_json))
 
     def create_game(self,player,module,room):

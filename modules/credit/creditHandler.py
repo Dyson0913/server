@@ -5,6 +5,7 @@ _db = None
 def handle(json_msg,socket_list):
 
     rep = normal_handle(json_msg,socket_list)
+    print rep
     socket = socket_list[0]
     socket.send_json(rep)
 
@@ -31,7 +32,7 @@ def normal_handle(json_msg,socket_list):
             rep['reason'] = "credit not enough"
         else:
             new_credit = dict()
-            new_credit['credit'] = mycredit - takein
+            new_credit['total'] = mycredit - takein
             new_credit[json_msg['game']] = takein
             update_credit(json_msg['uuid'],new_credit)
 
@@ -67,6 +68,7 @@ def update_credit(id,credit):
     if acc != None:
         playerstate = get_info(acc)
         playerstate['for_db']['playerinfo']['credit'].update(credit)
+        _db.update(playerstate) 
     else:
         # illegle acc ,no handle
         pass
