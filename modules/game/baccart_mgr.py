@@ -27,14 +27,13 @@ class game_mgr(object):
 #       wait in backi( match algo),ready, open a game to service
 
 
-    def spawn(self,game,room,player_info):
+    def spawn(self,serial_id,player):
 
-        serial_id = game + "_" + room
         myfsm = fsm()
         mygame = baccarat(serial_id)
 
         playerlist = player_list()
-        playerlist.add_player(player_info)
+        playerlist.add_player(player)
         setattr(mygame, 'player_list', playerlist)
 
         setattr(myfsm,'game',mygame)
@@ -54,6 +53,13 @@ class game_mgr(object):
 
         del self._running_game[game_id]
         del game
+
+    def join_game(self, game_id,player):
+        gamefsm = self._running_game[game_id]
+
+        #add player to game
+        gamefsm.playerlist.add_player(player)
+        return gamefsm.init_msg()
 
 def main():
     

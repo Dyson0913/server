@@ -23,8 +23,8 @@ def temp_handle(json_msg,socket_list):
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']
        room = json_msg['room']
-       config = module + "_" + room
-       result = db.get(config)
+       serial_id = module + "_" + room
+       result = db.get(serial_id)
 
        rep = header(json_msg)
 
@@ -38,39 +38,22 @@ def temp_handle(json_msg,socket_list):
            rep['state'] = "game_join_ok"
            rep['proxy_id'] = json_msg['proxy_id']
            rep['playing_module'] = module
-           rep['playing_group'] = config
+           rep['playing_group'] = serial_id
            db.save(rep)
 
            rep.update(init_msg)
 
        else:
-          print "room open"
-          game_info = json.loads(result)
-          #not myself 
-          if game_info['creater'] != json_msg['uuid'] :
-              rep['state'] = "game_join_fail"
-              rep['error_code'] = "room open by other"
-          else:
-              print "self game get init msg"
-              #TODO keep seat func ,creat game by db state
-              #TODO game_info['module'] && config
-              #TODO versu_game join player   
-              player = player_info(json_msg['uuid'],player_socket)
-              init_msg = mgr.spawn(game_info['module'],game_info['room'],player)
-              rep['state'] = "game_join_ok"
-              rep['proxy_id'] = json_msg['proxy_id']
-              rep['playing_module'] = module
-              rep['playing_group'] = config
-              db.save(rep)
+           #find game and join
+           player = player_info(json_msg['uuid'],player_socket)
+           init_msg = mgr.join_game(serial_id,player)
+           rep['state'] = "game_join_ok"
+           rep['proxy_id'] = json_msg['proxy_id']
+           rep['playing_module'] = module
+           rep['playing_group'] = serial_id
+           db.save(rep)
 
-              rep['game_id'] = init_msg['game_id']
-#              rep['room'] = init_msg['']
-
-       
-       playerstate = json.loads(db.get(json_msg['uuid']))
-       info = playerstate['for_db']
-       data =  info['playerinfo']
-       rep['UserPoint'] = data['credit']
+           rep.update(init_msg)
 
        return rep
 

@@ -41,11 +41,7 @@ def temp_handle(json_msg,socket_list):
            rep['playing_group'] = config
            db.save(rep)
 
-           rep['Line'] = init_msg['Line']
-           rep['Symbol_Num'] = init_msg['Symbol_num']
-           rep['odds'] = init_msg['odds']
-           rep['game_id'] = init_msg['game_id']
-
+           rep.update(init_msg)
        else:
           print "room open"
           game_info = json.loads(result)
@@ -66,17 +62,7 @@ def temp_handle(json_msg,socket_list):
               rep['playing_group'] = config
               db.save(rep)
 
-              rep['Line'] = init_msg['Line']
-              rep['Symbol_Num'] = init_msg['Symbol_num']
-              rep['odds'] = init_msg['odds']
-              rep['game_id'] = init_msg['game_id']
-#              rep['room'] = init_msg['']
-
-       
-       playerstate = json.loads(db.get(json_msg['uuid']))
-       info = playerstate['for_db']
-       data =  info['playerinfo']
-       rep['UserPoint'] = data['credit']
+              rep.update(init_msg)
 
        return rep
 
