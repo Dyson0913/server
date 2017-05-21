@@ -22,7 +22,7 @@ def temp_handle(json_msg,socket_list):
 
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']
-       room = json_msg['room']
+       room = str(json_msg['room'])
        serial_id = module + "_" + room
        result = db.get(serial_id)
 
@@ -34,7 +34,7 @@ def temp_handle(json_msg,socket_list):
 
            #create game instance
            player = player_info(json_msg['uuid'],player_socket)
-           init_msg = mgr.spawn(module,room,player)
+           init_msg = mgr.spawn(serial_id,player)
            rep['state'] = "game_join_ok"
            rep['proxy_id'] = json_msg['proxy_id']
            rep['playing_module'] = module
@@ -77,6 +77,7 @@ def temp_handle(json_msg,socket_list):
         #    return to_other_proxy
 
         #close game ,return to lobby
+        print json_msg['game_id']
         mgr.del_game(json_msg['game_id'])
         rep = header(json_msg)
         rep['module'] = "lobby"

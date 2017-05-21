@@ -15,18 +15,6 @@ class game_mgr(object):
         self._running_game = {}
         self._mgrname = name
 
-    def order(self,json_msg):
-        
-       #if json_msg['cmd'] == "request_join":
-       if json_msg['cmd'] == "request_open":
-          #TODO open self_config game by client
-#          json_msg['config']
-           msg = self.spawn()
-           return msg
- 
-#       wait in backi( match algo),ready, open a game to service
-
-
     def spawn(self,serial_id,player):
 
         myfsm = fsm()
@@ -49,6 +37,9 @@ class game_mgr(object):
 
     def del_game(self, game_id):
         game = self._running_game[game_id]
+        if game == None:
+            return
+
         game.stop()
 
         del self._running_game[game_id]
@@ -56,9 +47,10 @@ class game_mgr(object):
 
     def join_game(self, game_id,player):
         gamefsm = self._running_game[game_id]
-
+        if gamefsm == None:
+            return
         #add player to game
-        gamefsm.playerlist.add_player(player)
+        gamefsm.game.player_list.add_player(player)
         return gamefsm.init_msg()
 
 def main():
