@@ -96,7 +96,6 @@ def temp_handle(json_msg,socket_list):
     if json_msg['cmd'] == "lost_connect":
         slot_mgr.del_game(json_msg['game_id'])
         rep = header(json_msg)
-        rep['cmd'] = "self_close"
         rep['state'] = "self_close"
         db.save(rep)
         return rep
