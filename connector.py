@@ -84,7 +84,6 @@ class wshandler(tornado.websocket.WebSocketHandler):
         wshandler.sender.send(msg)
 
     def on_message(self,data):
-        #print data
         json_msg = json.loads(data)
         wshandler.sender.send(json_msg)
 

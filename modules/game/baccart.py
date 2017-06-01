@@ -42,7 +42,6 @@ def temp_handle(json_msg,socket_list):
            db.save(rep)
 
            rep.update(init_msg)
-
        else:
            #find game and join
            player = player_info(json_msg['uuid'],player_socket)
@@ -75,13 +74,25 @@ def temp_handle(json_msg,socket_list):
 #            to_other_proxy['module'] = "lobby"
 #            to_other_proxy['cmd'] = "request_gamelist"
         #    return to_other_proxy
+        module = json_msg['module']
+        room = str(json_msg['room'])
+        serial_id = module + "_" + room
+        game_info = db.get(serial_id)
 
-        #close game ,return to lobby
-        print json_msg['game_id']
-        mgr.del_game(json_msg['game_id'])
+        #can't close if not create
+        json_game_info = get_info(game_info)
+        if json_game_info['creater'] == json_msg['uuid']:
+            mgr.del_game(json_msg['game_id'])
+
+        #return point
         rep = header(json_msg)
-        rep['module'] = "lobby"
-        rep['cmd'] = "request_gamelist"
+        rep['module'] = "credit"
+        rep['cmd'] = "return_point_from_game"
+        rep['game_serial'] = serial_id
+
+        # rep = header(json_msg)
+        # rep['module'] = "lobby"
+        # rep['cmd'] = "request_gamelist"
         return rep
 
     #close whole windows but network is still working,so can send message to auth
@@ -117,4 +128,7 @@ def header(json_msg):
     rep['key'] = json_msg['uuid']
     rep['for_db'] = None
     return rep
+
+def get_info(playerdata):
+    return json.loads(playerdata)
 

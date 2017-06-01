@@ -20,11 +20,11 @@ def normal_handle(json_msg,socket_list):
     if json_msg['cmd'] == "query_credit":
 
         rep['state'] = "userCredit_update"
-        rep['total_Credit'] = key_check(json_msg['uuid'])
+        rep['total_Credit'] = query_point(json_msg['uuid'], "total")
         return rep
 
     if json_msg['cmd'] == "take_in":
-        mycredit = key_check(json_msg['uuid'])
+        mycredit = query_point(json_msg['uuid'], "total")
         takein = json_msg['takein_credit']
         if takein > mycredit:
             rep['state'] = "takein_result"
@@ -40,6 +40,19 @@ def normal_handle(json_msg,socket_list):
             rep['result'] = "ok"
         return rep
 
+    if json_msg['cmd'] == "return_point_from_game":
+        mycredit = query_point(json_msg['uuid'], "total")
+        game_credit = query_point(json_msg['uuid'], json_msg['game_serial'])
+
+        new_credit = dict()
+        new_credit['total'] = mycredit + game_credit
+        update_credit(json_msg['uuid'], new_credit)
+
+        rep['module'] = "lobby"
+        rep['cmd'] = "request_gamelist"
+        return rep
+
+
 def header(json_msg):
     rep = dict()
     rep['uuid'] = json_msg['uuid']
@@ -47,14 +60,16 @@ def header(json_msg):
     rep['for_db'] = None
     return rep
 
-def key_check(id):
+def query_point(id, field):
     #get acc from db
     global _db
     acc = _db.get(id)
     if acc != None:
         playerstate = get_info(acc)
         credit_info = playerstate['for_db']['playerinfo']['credit']
-        return credit_info['total']
+        if field in credit_info:
+            return credit_info[field]
+        return 0
     else:
        # illegle acc ,return 0 point
         return 0
