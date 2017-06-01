@@ -79,10 +79,12 @@ def temp_handle(json_msg,socket_list):
         serial_id = module + "_" + room
         game_info = db.get(serial_id)
 
-        #can't close if not create
+        #remove if create by self
         json_game_info = get_info(game_info)
         if json_game_info['creater'] == json_msg['uuid']:
             mgr.del_game(json_msg['game_id'])
+            db.clean(serial_id)
+
 
         #return point
         rep = header(json_msg)

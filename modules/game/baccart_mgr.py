@@ -36,8 +36,8 @@ class game_mgr(object):
         return myfsm.init_msg()
 
     def del_game(self, game_id):
-	if self._running_game.has_key(game_id) == False:
-	    return
+	    if self._running_game.has_key(game_id) == False:
+	        return
 
         game = self._running_game[game_id]
         game.stop()
@@ -46,8 +46,9 @@ class game_mgr(object):
         del game
 
     def join_game(self, game_id,player):
-	if self._running_game.has_key(game_id) == False:
-	    return
+	    if self._running_game.has_key(game_id) == False:
+	        return
+
         gamefsm = self._running_game[game_id]
 
         #add player to game
