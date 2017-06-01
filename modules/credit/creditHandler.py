@@ -5,7 +5,10 @@ _db = None
 def handle(json_msg,socket_list):
 
     rep = normal_handle(json_msg,socket_list)
-    print rep
+
+    if rep == None:
+        return
+
     socket = socket_list[0]
     socket.send_json(rep)
 
@@ -59,8 +62,6 @@ def normal_handle(json_msg,socket_list):
         new_credit = dict()
         new_credit['total'] = mycredit + game_credit
         update_credit(json_msg['uuid'], new_credit, True)
-
-
 
 def header(json_msg):
     rep = dict()
