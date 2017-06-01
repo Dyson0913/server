@@ -52,6 +52,15 @@ def normal_handle(json_msg,socket_list):
         rep['cmd'] = "request_gamelist"
         return rep
 
+    if json_msg['cmd'] == "just_return_point":
+        mycredit = query_point(json_msg['uuid'], "total")
+        game_credit = query_point(json_msg['uuid'], json_msg['game_serial'])
+
+        new_credit = dict()
+        new_credit['total'] = mycredit + game_credit
+        update_credit(json_msg['uuid'], new_credit, True)
+
+
 
 def header(json_msg):
     rep = dict()

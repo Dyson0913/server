@@ -83,14 +83,7 @@ def temp_handle(json_msg,socket_list):
         close_game(game_info,json_msg)
 
         #return point
-        return return_point(json_msg)
-
-        # rep = header(json_msg)
-        # rep['module'] = "credit"
-        # rep['cmd'] = "return_point_from_game"
-        # rep['game_serial'] = serial_id
-
-
+        return return_point(json_msg,"return_point_from_game")
 
     #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "lost_connect":
@@ -103,7 +96,7 @@ def temp_handle(json_msg,socket_list):
         _db.save(rep)
 
         # return point
-        return return_point(json_msg)
+        return return_point(json_msg,"just_return_point")
 
         #lost connect ,no need return pack
         #return rep
@@ -132,9 +125,9 @@ def close_game(game_info,json_msg):
         mgr.del_game(json_msg['game_id'])
         _db.clean(json_msg['game_id'])
 
-def return_point(json_msg):
+def return_point(json_msg,cmd):
     rep = header(json_msg)
     rep['module'] = "credit"
-    rep['cmd'] = "return_point_from_game"
+    rep['cmd'] = cmd
     rep['game_serial'] = json_msg['game_id']
     return rep
