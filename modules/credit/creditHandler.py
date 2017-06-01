@@ -46,7 +46,7 @@ def normal_handle(json_msg,socket_list):
 
         new_credit = dict()
         new_credit['total'] = mycredit + game_credit
-        update_credit(json_msg['uuid'], new_credit)
+        update_credit(json_msg['uuid'], new_credit,True)
 
         rep['module'] = "lobby"
         rep['cmd'] = "request_gamelist"
@@ -77,12 +77,15 @@ def query_point(id, field):
 def get_info(playerdata):
     return json.loads(playerdata)
 
-def update_credit(id,credit):
+def update_credit(id,credit,override = False):
     global _db
     acc = _db.get(id)
     if acc != None:
         playerstate = get_info(acc)
-        playerstate['for_db']['playerinfo']['credit'].update(credit)
+        if override == True :
+            playerstate['for_db']['playerinfo']['credit'] = credit
+        else:
+            playerstate['for_db']['playerinfo']['credit'].update(credit)
         _db.update(playerstate) 
     else:
         # illegle acc ,no handle
