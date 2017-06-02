@@ -53,7 +53,17 @@ class zmq_request(object):
             del data['client']
 
         if data['cmd'] == 'self_close':
-            data['uuid'] = get_client_id(data['client'])
+            uid = get_client_id(data['client'])
+            if uid == None:
+                print "return by no such a client"
+                return
+            else:
+                #remove socket
+                self_close_client = get(uid)
+                remove(self_close_client)
+                print "client self close, remove socket"
+
+            data['uuid'] = uid
             del data['client']
 
         self._soc.send_json(data)
@@ -83,11 +93,11 @@ class zmq_request(object):
                 del parsed["cmd"]
 
             #handle self close
-            elif parsed['cmd'] == "self_close":
-                self_close_client = get(parsed['uuid'])
-                remove(self_close_client)
-                print "client self close"
-                return
+            # elif parsed['cmd'] == "self_close":
+            #     self_close_client = get(parsed['uuid'])
+            #     remove(self_close_client)
+            #     print "client self close"
+            #     return
 
         #proxy level msg TODO not find ,how to handle
         if 'trans' in parsed:

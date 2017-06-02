@@ -6,6 +6,10 @@ _db = None
 
 def handle(json_msg,socket_list):
     rep = normal_handle(json_msg,socket_list)
+
+    if rep == None:
+        return
+
     socket = socket_list[0]
     socket.send_json(rep)
 
@@ -25,7 +29,7 @@ def normal_handle(json_msg,socket_list):
     #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "self_close":
 
-       #TODO get player now where ,notify game close
+       #get player now where ,notify game close
        playerdata = _db.get(json_msg['uuid'])
        #create account fail,just close socket 
        if playerdata == None:
@@ -42,12 +46,11 @@ def normal_handle(json_msg,socket_list):
            rep['module'] = playerstate['playing_module']
            rep['game_id'] = playerstate['playing_group']
            rep['cmd'] = "lost_connect"
+           return rep
        else:
            rep['state'] = "self_close"
            _db.save(rep)
 
-
-       return rep
 
 def fake_login(id):
     #get acc from db
