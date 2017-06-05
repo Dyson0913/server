@@ -43,6 +43,7 @@ def normal_handle(json_msg,socket_list):
             rep['result'] = "ok"
         return rep
 
+    #leaving from game, return point
     if json_msg['cmd'] == "return_point_from_game":
         mycredit = query_point(json_msg['uuid'], "total")
         game_credit = query_point(json_msg['uuid'], json_msg['game_serial'])
@@ -55,6 +56,7 @@ def normal_handle(json_msg,socket_list):
         rep['cmd'] = "request_gamelist"
         return rep
 
+    #lost connect ,return point
     if json_msg['cmd'] == "just_return_point":
         mycredit = query_point(json_msg['uuid'], "total")
         game_credit = query_point(json_msg['uuid'], json_msg['game_serial'])

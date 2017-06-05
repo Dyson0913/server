@@ -27,9 +27,9 @@ class AuthTestCase(unittest.TestCase):
     def test_first_login(self):
         rsp = {'state':"login_ok","cmd":"login","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = None
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
        
         #for_db dynamic generate ,test later 
@@ -47,9 +47,9 @@ class AuthTestCase(unittest.TestCase):
 
         rsp = {'state':"login_ok","cmd":"login","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'playerinfo':{'pw':self.pw}}})
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
 
         self.assertDictContainsSubset(rsp,mock_rsp)
@@ -63,9 +63,9 @@ class AuthTestCase(unittest.TestCase):
 
         rsp = {'state':"login_fail","cmd":"login","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"lobby",'for_db':{'playerinfo':{'pw':self.pw}}})
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
 
         self.assertDictContainsSubset(rsp,mock_rsp)
@@ -80,9 +80,9 @@ class AuthTestCase(unittest.TestCase):
 
         rsp = {'state':"login_fail","cmd":"login","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"lobby",'for_db':{'playerinfo':{'pw':"errorpw"}}})
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.client_login,[mock_push_socket,mock_db_socket])
 
         self.assertDictContainsSubset(rsp,mock_rsp)
@@ -92,9 +92,9 @@ class AuthTestCase(unittest.TestCase):
 
         rsp = {'uuid':self.name,"cmd":"self_close","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = None
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.close_nodata,[mock_push_socket,mock_db_socket])
         self.assertDictContainsSubset(rsp,mock_rsp)
 
@@ -102,10 +102,10 @@ class AuthTestCase(unittest.TestCase):
 
         rsp = {'state':"self_close",'uuid':self.name,"cmd":"self_close","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"lobby_waitting",'playing_module':"slot_1",'playing_group':1})
         mock_db_socket.save.retrun_value = None
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.close_nodata,[mock_push_socket,mock_db_socket])
         self.assertDictContainsSubset(rsp,mock_rsp)
 
@@ -113,9 +113,9 @@ class AuthTestCase(unittest.TestCase):
 
         rsp = {'module':"slot_1",'game_id':1,'uuid':self.name,"cmd":"lost_connect","key":self.name}
 
-	mock_db_socket = Mock()
+        mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"in_game",'playing_module':"slot_1",'playing_group':1})
-	mock_push_socket = Mock()
+        mock_push_socket = Mock()
         mock_rsp = normal_handle(self.close_nodata,[mock_push_socket,mock_db_socket])
         self.assertDictContainsSubset(rsp,mock_rsp)
 
