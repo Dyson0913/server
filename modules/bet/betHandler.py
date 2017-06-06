@@ -26,11 +26,14 @@ def normal_handle(json_msg,socket_list):
         bet_info = json_msg['bet_info']
 
         result = query_bet(uid, game_id,bet_info)
-        rep['state'] = "bet_ok"
+        if result == True:
+            rep['state'] = "bet_ok"
+        else:
+            rep['state'] = "bet_fail"
         return rep
 
     if json_msg['cmd'] == "cancel_bet":
-        pass
+        pass 
 
 
 def header(json_msg):
@@ -41,7 +44,6 @@ def header(json_msg):
     return rep
 
 def query_bet(id, game_id,bet_info):
-    #get acc from db
     global _db
     acc = _db.get(id)
     if acc != None:
@@ -51,11 +53,25 @@ def query_bet(id, game_id,bet_info):
         #check crdit enough
         if game_id in credit_info:
             my_rest_credit = credit_info[game_id]
-
+            
             #count new betlist can affordable
+            bet_total = 0
             for bet in bet_info:
-                print bet['type']
-                print bet['amount']
+                rep = dict()
+                bet_total += bet['amount']
+ 
+            if my_rest_credit > bet_total:
+               my_rest_credit -= bet_total
+               credit_info[game_id] = my_rest_credit
+               playerstate['for_db']['playerinfo']['credit'] = credit_info
+
+               #saving bill
+               if 'bill' in playerstate['for_db']:
+                   playerstate['for_db']['bill'].append(bet_info)
+               else:
+                   playerstate['for_db']['bill'] = bet_info
+               _db.update(playerstate)
+               return True
         return False
     else:
        # illegle acc ,return 0 point
@@ -64,16 +80,3 @@ def query_bet(id, game_id,bet_info):
 def get_info(playerdata):
     return json.loads(playerdata)
 
-def update_credit(id,credit,override = False):
-    global _db
-    acc = _db.get(id)
-    if acc != None:
-        playerstate = get_info(acc)
-        if override == True :
-            playerstate['for_db']['playerinfo']['credit'] = credit
-        else:
-            playerstate['for_db']['playerinfo']['credit'].update(credit)
-        _db.update(playerstate) 
-    else:
-        # illegle acc ,no handle
-        pass
