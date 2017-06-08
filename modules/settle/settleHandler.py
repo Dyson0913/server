@@ -24,7 +24,6 @@ def normal_handle(json_msg,socket_list):
         game_id = json_msg['game_id']
         player_id = json_msg['settle_player_id']
         win_state = json_msg['game_result']
-        #cmd:settle, game_id:ba_1, settle_player_id:[123, 123, 123], game_result:[0, 1, 0, 0, 0]
         for playerid in player_id:
             query_settle(playerid,game_id,win_state)
 
@@ -34,19 +33,17 @@ def query_settle(id, game_id, win_state):
     acc = _db.get(id)
     if acc != None:
         playerstate = get_info(acc)
-        if 'bill' in playerstate['for_db']['playerinfo']:
+        if 'bill' in playerstate['for_db']:
 
-            bill_info = playerstate['for_db']['playerinfo']['bill']['bet']
-
+            bill_info = playerstate['for_db']['bill']['bet']
             #settle crdit
             total_winlose = 0
             for bet in bill_info:
                 total_winlose += win_state[bet['type']] * bet['amount']
 
-
             #del betlist
-            #del playerstate['for_db']['playerinfo']['bill']
-
+            del playerstate['for_db']['bill']
+	    
             #update total_winlose
             credit_info = playerstate['for_db']['playerinfo']['credit']
             if game_id in credit_info:

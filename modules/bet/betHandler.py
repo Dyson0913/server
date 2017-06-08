@@ -49,7 +49,6 @@ def query_bet(id, game_id,bet_info):
     if acc != None:
         playerstate = get_info(acc)
         credit_info = playerstate['for_db']['playerinfo']['credit']
-
         #check crdit enough
         if game_id in credit_info:
             my_rest_credit = credit_info[game_id]
@@ -67,9 +66,12 @@ def query_bet(id, game_id,bet_info):
 
                #saving bill
                if 'bill' in playerstate['for_db']:
-                   playerstate['for_db']['bill'].append(bet_info)
+                   playerstate['for_db']['bill']['bet'].extend(bet_info)
                else:
-                   playerstate['for_db']['bill'] = bet_info
+                   new_json = dict()
+                   new_json['game_id'] = game_id
+                   new_json['bet'] = bet_info
+                   playerstate['for_db']['bill'] = new_json
                _db.update(playerstate)
                return True
         return False

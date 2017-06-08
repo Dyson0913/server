@@ -30,12 +30,13 @@ class betTestCase(unittest.TestCase):
         mock_rsp = normal_handle(self.first_bet, [mock_push_socket, mock_db_socket])
         self.assertDictContainsSubset(rsp, mock_rsp)
 
+#    @unittest.skip("testing skipping")
     def test_second_bet(self):
 
         rsp = {'state':"bet_ok"}
 
         mock_db_socket = Mock()
-        mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'bill':[{'amount':300,'type':1}],'playerinfo':{"credit": {"total":10000,"ba_1":2000}}}})
+        mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'bill':{'game_id':"ba_1",'bet':[{'amount':300,'type':1}]},'playerinfo':{"credit": {"total":10000,"ba_1":2000}}}})
         mock_push_socket = Mock()
         mock_rsp = normal_handle(self.first_bet, [mock_push_socket, mock_db_socket])
         self.assertDictContainsSubset(rsp, mock_rsp)
@@ -61,6 +62,8 @@ class betTestCase(unittest.TestCase):
         mock_rsp = normal_handle(self.first_bet, [mock_push_socket, mock_db_socket])
         self.assertDictContainsSubset(rsp, mock_rsp)
         
+
+# @unittest.skipIf(sys.version_info < (2, 6),"not supported in this veresion")
 
 if __name__ == '__main__':
     unittest.main()
