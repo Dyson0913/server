@@ -34,7 +34,7 @@ def paytable(winstate):
 
     for winlist in winzone:
         info = winlist.split(odd_split)
-    if str(Baccarat_tie) == info[0]:
+    	if str(Baccarat_tie) == info[0]:
             paytable = [1] * (Baccarat_player_pair+1)
             break
         else:
