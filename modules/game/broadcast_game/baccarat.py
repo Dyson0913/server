@@ -134,6 +134,17 @@ class baccarat(object):
 
         self._serial_no +=1
 
+    def caculat_winlose(self):
+
+        # settle winlose
+        # cmd:settle,game_id:ba_1,settle_player_id:[123,123,123],game_result:[0,1,0,0,0]
+        rep = dict()
+        rep['cmd'] = "settle"
+        rep['game_id'] = self._gameid
+        rep['settle_player_id'] = self.player_list.query_uid()
+        rep['game_result'] = self._paytable
+
+        self.proxy_socket.send_json(rep)
 
 class init(State):
 
@@ -213,6 +224,10 @@ class settle(State):
 
     def execute(self):
         self.game.settle()
+
+        # settle winlose
+        self.game.caculat_winlose()
+
 
 def main():
     

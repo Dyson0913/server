@@ -15,15 +15,17 @@ class game_mgr(object):
         self._running_game = {}
         self._mgrname = name
 
-    def spawn(self,serial_id,player):
+    def spawn(self,serial_id,uid,player_socket):
 
-        myfsm = fsm()
         mygame = baccarat(serial_id)
 
         playerlist = player_list()
+        player = player_info(uid, player_socket)
         playerlist.add_player(player)
         setattr(mygame, 'player_list', playerlist)
+        setattr(mygame, 'proxy_socket', player_socket)
 
+        myfsm = fsm()
         setattr(myfsm,'game',mygame)
         myfsm.add(init(2))
         myfsm.add(wait_bet(10))
@@ -46,13 +48,14 @@ class game_mgr(object):
         del self._running_game[game_id]
         del game
 
-    def join_game(self, game_id,player):
+    def join_game(self, game_id,uid,player_socket):
         if self._running_game.has_key(game_id) == False:
             return
 
         gamefsm = self._running_game[game_id]
 
         #add player to game
+        player = player_info(uid, player_socket)
         gamefsm.game.player_list.add_player(player)
         return gamefsm.init_msg()
 

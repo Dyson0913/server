@@ -17,6 +17,9 @@ class player_info(object):
         header.update(msg)
         self._socket.send_json(header)
 
+    def get_uid(self):
+        return self._uuid
+
 class player_list(object):
 
     def __init__(self):
@@ -39,3 +42,10 @@ class player_list(object):
 
         for player in self._players:
             player.send_msg(msg)
+
+    def query_uid(self):
+
+        player_uid = []
+        for player in self._players:
+            player_uid.append(player.get_uid())
+        return  player_uid

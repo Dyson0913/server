@@ -1,5 +1,4 @@
 import json
-from player import *
 
 from baccart_mgr import *
 
@@ -26,6 +25,7 @@ def temp_handle(json_msg,socket_list):
        module = json_msg['module']
        room = str(json_msg['room'])
        serial_id = module + "_" + room
+       uid = json_msg['uuid']
        result = _db.get(serial_id)
 
        rep = header(json_msg)
@@ -35,8 +35,8 @@ def temp_handle(json_msg,socket_list):
            _db.create_game(json_msg['uuid'],module,room)
 
            #create game instance
-           player = player_info(json_msg['uuid'],player_socket)
-           init_msg = mgr.spawn(serial_id,player)
+
+           init_msg = mgr.spawn(serial_id,uid,player_socket)
            rep['state'] = "game_join_ok"
            rep['proxy_id'] = json_msg['proxy_id']
            rep['playing_module'] = module
@@ -46,8 +46,7 @@ def temp_handle(json_msg,socket_list):
            rep.update(init_msg)
        else:
            #find game and join
-           player = player_info(json_msg['uuid'],player_socket)
-           init_msg = mgr.join_game(serial_id,player)
+           init_msg = mgr.join_game(serial_id,uid,player_socket)
            rep['state'] = "game_join_ok"
            rep['proxy_id'] = json_msg['proxy_id']
            rep['playing_module'] = module
