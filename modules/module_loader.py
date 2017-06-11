@@ -4,6 +4,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','auth'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','lobby'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','credit'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','bet'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'..','modules','settle'))
 
 #module
 
@@ -12,7 +14,7 @@ from importlib import import_module
 class module_load(object):
 
     def __init__(self,module_list):
-        self._default_module = ['auth','lobby','credit']
+        self._default_module = ['auth','lobby','credit','bet','settle']
         self.config = module_list
 #        print self.config 
         self.modules = []

@@ -11,6 +11,8 @@
            "auth":"fake",
            "lobby":"normal",
            "credit":"creditHandler",
+           "bet":"betHandler",
+           "settle":"settleHandler",
            "app":[
                    {"game":"hope"},
                    {"game":"ThreeKingdoms"},

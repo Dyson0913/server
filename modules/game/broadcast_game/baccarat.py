@@ -140,6 +140,7 @@ class baccarat(object):
         # cmd:settle,game_id:ba_1,settle_player_id:[123,123,123],game_result:[0,1,0,0,0]
         rep = dict()
         rep['cmd'] = "settle"
+        rep['module'] = "settle"
         rep['game_id'] = self._gameid
         rep['settle_player_id'] = self.player_list.query_uid()
         rep['game_result'] = self._paytable

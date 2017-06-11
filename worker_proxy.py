@@ -11,6 +11,8 @@ sys.path.append("modules/db/noSQL")
 sys.path.append('modules/game')
 sys.path.append('modules/game/slot/')
 sys.path.append('modules/game/broadcast_game/')
+sys.path.append('modules/bet')
+sys.path.append('modules/settle')
 
 
 from config_parser import * 
