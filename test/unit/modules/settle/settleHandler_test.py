@@ -23,7 +23,6 @@ class betTestCase(unittest.TestCase):
         pass
 
     def test_banker_win(self):
-
         mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'bill':{'game_id':"ba_1",'bet':[{'amount':100,'type':0},{'amount':100,'type':1}]},'playerinfo':{"credit": {"total":10000,"ba_1":2000}}}})
         mock_push_socket = Mock()
@@ -31,7 +30,6 @@ class betTestCase(unittest.TestCase):
 
     #@unittest.skip("testing skipping")
     def test_player_win(self):
-
         mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'bill':{'game_id':"ba_1",'bet':[{'amount':100,'type':0},{'amount':100,'type':1}]},'playerinfo':{"credit": {"total":10000,"ba_1":2000}}}})
         mock_push_socket = Mock()
@@ -39,12 +37,18 @@ class betTestCase(unittest.TestCase):
 
 #    @unittest.skip("testing skipping")
     def test_tie_win(self):
-
         mock_db_socket = Mock()
         mock_db_socket.get.return_value = json.dumps({'state':"self_close",'for_db':{'bill':{'game_id':"ba_1",'bet':[{'amount':100,'type':0},{'amount':100,'type':2}]},'playerinfo':{"credit": {"total":10000,"ba_1":2000}}}})
         mock_push_socket = Mock()
         mock_rsp = normal_handle(self.settle_tie, [mock_push_socket, mock_db_socket])
-        
+
+    def test_loseConnect_settle_(self):
+        mock_db_socket = Mock()
+        mock_db_socket.get.return_value = json.dumps({'state': "self_close", 'for_db': {
+            'bill': {'game_id': "ba_1", 'bet': [{'amount': 100, 'type': 1}]},
+            'playerinfo': {"credit": {"total": 10000}}}})
+        mock_push_socket = Mock()
+        mock_rsp = normal_handle(self.settle_player_win, [mock_push_socket, mock_db_socket])
 
 if __name__ == '__main__':
     unittest.main()
