@@ -19,8 +19,8 @@ ba_odds = {
             "0": {"odds": 0},
             "1":{"odds":1.95},
             "2": {"odds": 2},
-            "3":{"odds":12},
-            "4":{"odds":9},
+            "3":{"odds":9},
+            "4":{"odds":12},
           }
 
 def split_symbol():
