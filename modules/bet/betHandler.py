@@ -59,7 +59,7 @@ def query_bet(id, game_id,bet_info):
                 rep = dict()
                 bet_total += bet['amount']
  
-            if my_rest_credit > bet_total:
+            if my_rest_credit >= bet_total:
                my_rest_credit -= bet_total
                credit_info[game_id] = my_rest_credit
                playerstate['for_db']['playerinfo']['credit'] = credit_info
