@@ -61,8 +61,6 @@ def query_settle(id, game_id, win_state):
                 rest_credit += total_winlose
                 credit_info['total'] = rest_credit
                 playerstate['for_db']['playerinfo']['credit'] = credit_info
-                print playerstate
-                print add
                 _db.update(playerstate)
 
 
