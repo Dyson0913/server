@@ -18,8 +18,6 @@ class baccarat(object):
         self._info_to_client = None
         self._gameid = game_id
         self._serial_no = 0;
-#        self._poker.test_script(["9_s","12_c","13_s","10_d","11_h","10_h"])
-
 
     def flush_state(self,state):
         msg = dict()
@@ -51,6 +49,8 @@ class baccarat(object):
         self._winstate = ""
         self._settlepoint =[]
         self._poker.shuffle()
+        #tie scrite
+        #self._poker.test_script(["10_s","12_c","13_s","10_d","11_h","10_h"])
 
     def deal_card(self,slotname):
         self._poker.deal_cards(1, slotname)
