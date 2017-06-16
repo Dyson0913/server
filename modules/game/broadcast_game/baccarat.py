@@ -128,10 +128,10 @@ class baccarat(object):
             winstate += ba_paytable.combine_winstate(Baccarat_tie,ba_odds_8)
             self._winstate = "tie"
         # pair
-        if len(self._poker.query("playerPoker",Poker.Poker.QUERY_PAIR)) != 0 :
+        if len(self._poker.query("playerPoker",Poker.QUERY_PAIR)) != 0 :
             winstate += ba_paytable.combine_winstate(Baccarat_player_pair, ba_odds_11)
 
-        if len(self._poker.query("BankerPoker",Poker.Poker.QUERY_PAIR)) != 0 :
+        if len(self._poker.query("BankerPoker",Poker.QUERY_PAIR)) != 0 :
             winstate += ba_paytable.combine_winstate(Baccarat_banker_pair, ba_odds_11)
 
         self._settlepoint = [playerpoint,bankerpoint]
