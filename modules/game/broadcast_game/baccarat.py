@@ -7,7 +7,6 @@ from poker import *
 from pylog import *
 
 from ba_paytable import *
-import ba_paytable
 
 
 class baccarat(object):
@@ -15,6 +14,7 @@ class baccarat(object):
     def __init__(self,game_id):
         self._poker = Poker()
         self._poker.point_define(Poker.POINT_DEF_BACCART)
+        self._poker.color_define(Poker.COLOR_DEF_SHDC)
         self._info_to_client = None
         self._gameid = game_id
         self._serial_no = 0;
@@ -127,6 +127,12 @@ class baccarat(object):
             winstate += ba_paytable.combine_winstate(Baccarat_tie,ba_odds_8)
             self._winstate = "tie"
         # pair
+        if len(self._poker.query("playerPoker",Poker.Poker.QUERY_PAIR)) != 0 ):
+            winstate += ba_paytable.combine_winstate(Baccarat_player_pair, ba_odds_11)
+
+        if len(self._poker.query("BankerPoker",Poker.Poker.QUERY_PAIR)) != 0 ):
+            winstate += ba_paytable.combine_winstate(Baccarat_banker_pair, ba_odds_11)
+
         self._settlepoint = [playerpoint,bankerpoint]
         self._paytable = ba_paytable.paytable(winstate)
         logging.info("settle p point:" + str(playerpoint) + " b point " + str(bankerpoint) )
