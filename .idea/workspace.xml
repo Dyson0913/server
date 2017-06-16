@@ -15,7 +15,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="ba_paytable.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ba_paytable.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/ba_paytable.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
@@ -81,13 +81,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="baccarat.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="baccarat.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/baccarat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="137" column="59" lean-forward="true" selection-start-line="137" selection-start-column="59" selection-end-line="137" selection-end-column="59" />
+            <state relative-caret-position="238">
+              <caret line="132" column="77" lean-forward="false" selection-start-line="132" selection-start-column="77" selection-end-line="132" selection-end-column="77" />
               <folding>
-                <marker date="1497587571733" expanded="true" signature="1482:1483" ph="..." />
+                <marker date="1497587782335" expanded="true" signature="1482:1483" ph="..." />
               </folding>
             </state>
           </provider>
@@ -590,7 +590,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25053304" sideWeight="0.49434572" order="0" side_tool="false" content_ui="combo" />
@@ -1091,22 +1091,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/baccarat.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="137" column="59" lean-forward="true" selection-start-line="137" selection-start-column="59" selection-end-line="137" selection-end-column="59" />
-          <folding>
-            <marker date="1497587571733" expanded="true" signature="1482:1483" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/ba_paytable.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="20" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="20" />
           <folding>
             <marker date="1497425359551" expanded="true" signature="908:949" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/baccarat.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="132" column="77" lean-forward="false" selection-start-line="132" selection-start-column="77" selection-end-line="132" selection-end-column="77" />
+          <folding>
+            <marker date="1497587782335" expanded="true" signature="1482:1483" ph="..." />
           </folding>
         </state>
       </provider>
