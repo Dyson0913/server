@@ -6,6 +6,7 @@ from fsm import *
 from poker import *
 from pylog import *
 
+import ba_paytable
 from ba_paytable import *
 
 

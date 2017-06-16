@@ -84,10 +84,10 @@
       <file leaf-file-name="baccarat.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/baccarat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="132" column="77" lean-forward="false" selection-start-line="132" selection-start-column="77" selection-end-line="132" selection-end-column="77" />
+            <state relative-caret-position="136">
+              <caret line="8" column="18" lean-forward="false" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
               <folding>
-                <marker date="1497587782335" expanded="true" signature="1482:1483" ph="..." />
+                <marker date="1497587933463" expanded="true" signature="1501:1502" ph="..." />
               </folding>
             </state>
           </provider>
@@ -656,7 +656,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/modules/game/broadcast_game/baccarat.py</url>
-          <line>57</line>
+          <line>58</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -1103,10 +1103,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/game/broadcast_game/baccarat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="132" column="77" lean-forward="false" selection-start-line="132" selection-start-column="77" selection-end-line="132" selection-end-column="77" />
+        <state relative-caret-position="136">
+          <caret line="8" column="18" lean-forward="false" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
           <folding>
-            <marker date="1497587782335" expanded="true" signature="1482:1483" ph="..." />
+            <marker date="1497587933463" expanded="true" signature="1501:1502" ph="..." />
           </folding>
         </state>
       </provider>
