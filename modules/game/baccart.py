@@ -32,7 +32,8 @@ def temp_handle(json_msg,socket_list):
 
        #create _db game data
        if result == None :
-           _db.create_game(json_msg['uuid'],module,room)
+           #first user creat,never close
+           _db.create_game("**",module,room)
 
            #create game instance
 
