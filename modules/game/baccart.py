@@ -29,6 +29,7 @@ def temp_handle(json_msg,socket_list):
 
        rep = header(json_msg)
 
+       init_msg = None
        #create _db game data
        if result == None :
            #first user creat,never close
