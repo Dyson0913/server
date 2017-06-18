@@ -24,6 +24,7 @@ class player_list(object):
 
     def __init__(self):
         self._players = list()
+        self._lost_Connect_player = list()
 
     def get_player_num(self):
         return len(self._players)
@@ -39,6 +40,8 @@ class player_list(object):
         for p in self._players:
             if p.get_uid() == uid:
                 player = p
+                #if game not settle leving,recode for settle
+                self._lost_Connect_player.append(uid)
 
         if player != None:
             self._players.remove(player)
@@ -54,5 +57,18 @@ class player_list(object):
 
         player_uid = []
         for player in self._players:
-            player_uid.append(player.get_uid())
+            uid  = player.get_uid()
+
+            # leaving user come back before settle,remove uid
+            if uid in self._lost_Connect_player:
+                self._lost_Connect_player.remove(uid)
+
+            player_uid.append(uid)
+
+        #leaving user not come back,need to settle
+        for id in self._lost_Connect_player:
+            player_uid.append(uid)
+
+        del self._lost_Connect_player[:]
+
         return  player_uid
