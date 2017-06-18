@@ -69,7 +69,6 @@ class zmq_request(object):
         
 
     def handle_worker_msg(self,msg):
-        #print "handle_reply  %s" % msg
         
         #rece_json with [{data:value}], so get msg[0]
         parsed = json.loads(msg[0])
@@ -100,14 +99,11 @@ class zmq_request(object):
             #self.pub_to_proxy.send_json(parsed)
             #self._soc.send_json(parsed)
             return
-
-        print "request.py get package %s " % parsed['state']
-           
        
         myclient = get(parsed['uuid'])
 
         if myclient == None:
-            print "get client None error"
+            print "get client None"
             return
 
         myclient.write_message(parsed)
