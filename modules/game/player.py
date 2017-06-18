@@ -67,7 +67,7 @@ class player_list(object):
 
         #leaving user not come back,need to settle
         for id in self._lost_Connect_player:
-            player_uid.append(uid)
+            player_uid.append(id)
 
         del self._lost_Connect_player[:]
 
