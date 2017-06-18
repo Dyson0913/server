@@ -19,7 +19,6 @@ def temp_handle(json_msg,socket_list):
     global _db
     _db = socket_list[1]
     print "game get cmd %s" % json_msg['cmd']
-    print json_msg
 
     if json_msg['cmd'] == "request_join":
        module = json_msg['module']
@@ -34,33 +33,27 @@ def temp_handle(json_msg,socket_list):
        if result == None :
            #first user creat,never close
            _db.create_game("**",module,room)
-
            #create game instance
-
            init_msg = mgr.spawn(serial_id,uid,player_socket)
-           rep['state'] = "game_join_ok"
-           rep['proxy_id'] = json_msg['proxy_id']
-           rep['playing_module'] = module
-           rep['playing_group'] = serial_id
-           _db.save(rep)
-
-           rep.update(init_msg)
        else:
            #find game and join
            init_msg = mgr.join_game(serial_id,uid,player_socket)
-           rep['state'] = "game_join_ok"
-           rep['proxy_id'] = json_msg['proxy_id']
-           rep['playing_module'] = module
-           rep['playing_group'] = serial_id
-           _db.save(rep)
 
-           rep.update(init_msg)
+       rep['state'] = "game_join_ok"
+       rep['proxy_id'] = json_msg['proxy_id']
+       rep['playing_module'] = module
+       rep['playing_group'] = serial_id
+       _db.save(rep)
+
+       rep.update(init_msg)
 
        return rep
 
     #self chose leaving game
     if json_msg['cmd'] == "leave_game":
-        
+        uid = json_msg['uuid']
+        game_id = json_msg['game_id']
+
         #TODO multi serve handle         
         #playerstate = json.loads(_db.get(json_msg['uuid']))
         #uniq_id = playerstate['proxy_id']
@@ -77,19 +70,22 @@ def temp_handle(json_msg,socket_list):
 #            to_other_proxy['cmd'] = "request_gamelist"
         #    return to_other_proxy
 
-        game_info = _db.get(json_msg['game_id'])
+        game_info = _db.get(game_id)
 
         #remove if create by self
-        close_game(game_info,json_msg)
+        close_game(game_info,game_id,uid)
 
         #return point
         return return_point(json_msg,"return_point_from_game")
 
     #close whole windows but network is still working,so can send message to auth
     if json_msg['cmd'] == "lost_connect":
-        game_info = _db.get(json_msg['game_id'])
+        uid = json_msg['uuid']
+        game_id = json_msg['game_id']
+
+        game_info = _db.get(game_id)
         #lost_connect ,diff handle by game
-        close_game(game_info, json_msg)
+        close_game(game_info,game_id,uid)
 
         rep = header(json_msg)
         rep['state'] = "self_close"
@@ -97,15 +93,6 @@ def temp_handle(json_msg,socket_list):
 
         # return point
         return return_point(json_msg,"just_return_point")
-
-        #lost connect ,no need return pack
-        #return rep
-
-    if json_msg['cmd'] == "bet":
-        pass
-
-    if json_msg['cmd'] == "cancel_bet":
-        pass
 
 def header(json_msg):
     rep = dict()
@@ -117,13 +104,15 @@ def header(json_msg):
 def get_info(playerdata):
     return json.loads(playerdata)
 
-def close_game(game_info,json_msg):
+def close_game(game_info,game_id,uid):
     global _db
 
     json_game_info = get_info(game_info)
-    if json_game_info['creater'] == json_msg['uuid']:
-        mgr.del_game(json_msg['game_id'])
-        _db.clean(json_msg['game_id'])
+    if json_game_info['creater'] == uid:
+        mgr.del_game(game_id)
+        _db.clean(game_id)
+    else:
+        mgr.remove_player(game_id,uid)
 
 def return_point(json_msg,cmd):
     rep = header(json_msg)

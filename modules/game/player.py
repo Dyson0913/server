@@ -32,9 +32,16 @@ class player_list(object):
         logging.info("add_player")
         self._players.append(player)
 
-    def remove_player(self, player):
+    def remove_player(self, uid):
         logging.info("remove_player")
-        self._players.remove(player)
+
+        player = None
+        for p in self._players:
+            if p.get_uid() == uid:
+                player = p
+
+        if player != None:
+            self._players.remove(player)
 
     def broadcast(self, msg):
         if self.get_player_num() == 0:

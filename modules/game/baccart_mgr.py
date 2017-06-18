@@ -59,6 +59,14 @@ class game_mgr(object):
         gamefsm.game.player_list.add_player(player)
         return gamefsm.init_msg()
 
+    def remove_player(self,game_id,uid):
+        if self._running_game.has_key(game_id) == False:
+            return
+
+        gamefsm = self._running_game[game_id]
+        gamefsm.game.player_list.remove_player(uid)
+
+
 def main():
     
     ba_mgr = game_mgr("baccarat")
