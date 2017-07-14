@@ -151,12 +151,11 @@ class baccarat(object):
 
         self._serial_no +=1
 
+        self._history.append(result)
+
         #hisotry
         if len(self._history) > 60:
-            del self._history[0:5]
-        else:
-            #[0,"t","pp"] point,b|p|t,pp|bp
-            self._history.append(result)
+           del self._history[0:6]
 
         #logging.info("settle" + str(self._history))
 

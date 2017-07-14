@@ -67,8 +67,20 @@ class baccaratTestCase(unittest.TestCase):
 
 
     #@unittest.skip("skipping")
+    def test_baccarat_history(self):
+        self.myfsm.kick("init")
 
+        for i in range(61):
+            self.myfsm.test_script("tie", ["3_d", "5_d", "5_s", "3_c"])
+            self.myfsm.next()
+            self.myfsm.next()
+            self.myfsm.next()
+            self.myfsm.next()
+            self.myfsm.next()
+            self.myfsm.next()
+            self.myfsm.next()
 
+        self.assertEqual(55, len(self.myfsm._current_state.game._history))
 
 
 if __name__ == '__main__':
