@@ -3,21 +3,30 @@ sys.path.append("../../../../../modules/game")
 sys.path.append("../../../../../modules/game/broadcast_game")
 
 import unittest
-from baccart_game import *
+from baccarat import *
 from fsm import *
+from poker import *
 
 class baccaratTestCase(unittest.TestCase):
     # prepare work before every test
     def setUp(self):
         mygame = baccarat("test_baccart")
 
+        playerlist = player_list()
+        player = player_info("11", None)
+        playerlist.add_player(player)
+        setattr(mygame, 'player_list', playerlist)
+        setattr(mygame, 'proxy_socket', None)
+
         self.myfsm = fsm()
         setattr(self.myfsm,'game',mygame)
-        self.myfsm.add(init(1))
-        self.myfsm.add(wait_bet(5))
-        self.myfsm.add(player_card(2))
-        self.myfsm.add(banker_card(1))
-        self.myfsm.add(settle(1))
+
+        #for test ,step by step
+        self.myfsm.add(init(-1))
+        self.myfsm.add(wait_bet(-1))
+        self.myfsm.add(player_card(-1))
+        self.myfsm.add(banker_card(-1))
+        self.myfsm.add(settle(-1))
         #myfsm.start("init")
 
     # clean work after every test
@@ -27,35 +36,40 @@ class baccaratTestCase(unittest.TestCase):
     def test_baccarat_state(self):
 
         self.myfsm.kick("init")
-        self.myfsm.test_script("tie",["3d","5d","5s","3c"])
-        self.assertEqual([],self.myfsm._current_state.game._player)
-        self.assertEqual([],self.myfsm._current_state.game._banker)
+        self.myfsm.test_script("tie",["3_d","5_d","5_s","3_c"])
+        self.assertEqual([],self.myfsm._current_state.game._poker.query("playerPoker",Poker.QUERY_POKER))
+        self.assertEqual([],self.myfsm._current_state.game._poker.query("BankerPoker",Poker.QUERY_POKER))
 
         self.myfsm.next()
-        self.assertEqual([],self.myfsm._current_state.game._player)
-        self.assertEqual([],self.myfsm._current_state.game._banker)
+        self.assertEqual([],self.myfsm._current_state.game._poker.query("playerPoker",Poker.QUERY_POKER))
+        self.assertEqual([],self.myfsm._current_state.game._poker.query("BankerPoker",Poker.QUERY_POKER))
         
         self.myfsm.next()
-        self.assertEqual(["3d"],self.myfsm._current_state.game._player)
-        self.assertEqual([],self.myfsm._current_state.game._banker)
+        self.assertEqual(["3_d"],self.myfsm._current_state.game._poker.query("playerPoker",Poker.QUERY_POKER))
+        self.assertEqual([],self.myfsm._current_state.game._poker.query("BankerPoker",Poker.QUERY_POKER))
 
         self.myfsm.next()
-        self.assertEqual(["3d"],self.myfsm._current_state.game._player)
-        self.assertEqual(["5d"],self.myfsm._current_state.game._banker)
+        self.assertEqual(["3_d"],self.myfsm._current_state.game._poker.query("playerPoker",Poker.QUERY_POKER))
+        self.assertEqual(["5_d"],self.myfsm._current_state.game._poker.query("BankerPoker",Poker.QUERY_POKER))
 
         self.myfsm.next()
-        self.assertEqual(["3d","5s"],self.myfsm._current_state.game._player)
-        self.assertEqual(["5d"],self.myfsm._current_state.game._banker)
+        self.assertEqual(["3_d","5_s"],self.myfsm._current_state.game._poker.query("playerPoker",Poker.QUERY_POKER))
+        self.assertEqual(["5_d"],self.myfsm._current_state.game._poker.query("BankerPoker",Poker.QUERY_POKER))
 
         self.myfsm.next()
-        self.assertEqual(["3d","5s"],self.myfsm._current_state.game._player)
-        self.assertEqual(["5d","3c"],self.myfsm._current_state.game._banker)
+        self.assertEqual(["3_d","5_s"],self.myfsm._current_state.game._poker.query("playerPoker",Poker.QUERY_POKER))
+        self.assertEqual(["5_d","3_c"],self.myfsm._current_state.game._poker.query("BankerPoker",Poker.QUERY_POKER))
 
         self.myfsm.next()
-        self.assertEqual("tie",self.myfsm._current_state.game._win)
+        self.assertEqual("tie",self.myfsm._current_state.game._winstate)
+
+        self.assertEqual([[8,"t"]], self.myfsm._current_state.game._history)
 
 
     #@unittest.skip("skipping")
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

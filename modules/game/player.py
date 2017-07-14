@@ -13,6 +13,9 @@ class player_info(object):
         return rep
 
     def send_msg(self,msg):
+        if self._socket == None :
+            return
+
         header = self.header()
         header.update(msg)
         self._socket.send_json(header)

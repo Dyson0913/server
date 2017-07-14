@@ -3,6 +3,8 @@ import sys
 sys.path.append('../')
 
 from fsm import *
+from player import *
+
 from poker import *
 from pylog import *
 
@@ -18,7 +20,8 @@ class baccarat(object):
         self._poker.color_define(Poker.COLOR_DEF_SHDC)
         self._info_to_client = None
         self._gameid = game_id
-        self._serial_no = 0;
+        self._serial_no = 0
+        self._history = []
 
     def flush_state(self,state):
         msg = dict()
@@ -29,6 +32,7 @@ class baccarat(object):
         msg['settle'] = self._paytable
         msg['settlePoint'] = self._settlepoint
         msg['winstate'] = self._winstate
+        msg['history'] = self._history
         msg['sn'] = self._serial_no
         self._info_to_client = msg
 
@@ -117,6 +121,7 @@ class baccarat(object):
         playerpoint = self._poker.query("playerPoker",Poker.QUERY_Mod_10_Point)
         bankerpoint = self._poker.query("BankerPoker",Poker.QUERY_Mod_10_Point)
         winstate = ""
+        result = None
 
         if playerpoint > bankerpoint:
             winstate += ba_paytable.combine_winstate(Baccarat_player,ba_odds_1)
@@ -127,12 +132,17 @@ class baccarat(object):
         else:
             winstate += ba_paytable.combine_winstate(Baccarat_tie,ba_odds_8)
             self._winstate = "tie"
+
+        result = [max(playerpoint, bankerpoint), self._winstate[0:1]]
+
         # pair
         if len(self._poker.query("playerPoker",Poker.QUERY_PAIR)) != 0 :
             winstate += ba_paytable.combine_winstate(Baccarat_player_pair, ba_odds_11)
+            result.append("pp")
 
         if len(self._poker.query("BankerPoker",Poker.QUERY_PAIR)) != 0 :
             winstate += ba_paytable.combine_winstate(Baccarat_banker_pair, ba_odds_11)
+            result.append("bp")
 
         self._settlepoint = [playerpoint,bankerpoint]
         self._paytable = ba_paytable.paytable(winstate)
@@ -140,6 +150,16 @@ class baccarat(object):
         logging.info( "settle" + str(self._paytable) )
 
         self._serial_no +=1
+
+        #hisotry
+        if len(self._history) > 60:
+            del self._history[0:5]
+        else:
+            #[0,"t","pp"] point,b|p|t,pp|bp
+            self._history.append(result)
+
+        #logging.info("settle" + str(self._history))
+
 
     def caculat_winlose(self):
 
@@ -151,6 +171,9 @@ class baccarat(object):
         rep['game_id'] = self._gameid
         rep['settle_player_id'] = self.player_list.query_uid()
         rep['game_result'] = self._paytable
+
+        if self.proxy_socket == None:
+            return
 
         self.proxy_socket.send_json(rep)
 
@@ -241,11 +264,17 @@ def main():
     
     mygame = baccarat("main_baccarat")
 
-    myfsm = fsm()
+    playerlist = player_list()
+    player = player_info("11", None)
+    playerlist.add_player(player)
+    setattr(mygame, 'player_list', playerlist)
+    setattr(mygame, 'proxy_socket', None)
 
+    myfsm = fsm()
     setattr(myfsm,'game',mygame)
+
     myfsm.add(init(1))
-    myfsm.add(wait_bet(10))
+    myfsm.add(wait_bet(1))
     myfsm.add(player_card(2))
     myfsm.add(banker_card(1))
     myfsm.add(settle(1))
